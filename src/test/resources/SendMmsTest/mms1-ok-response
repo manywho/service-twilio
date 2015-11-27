@@ -1,0 +1,64 @@
+{
+    "outputs": [{
+        "typeElementPropertyId": null,
+        "contentValue": null,
+        "objectData": [{
+            "internalId": null,
+            "isSelected": false,
+            "externalId": "1",
+            "typeElementId": null,
+            "developerName": "MMS",
+            "properties": [
+                {
+                    "typeElementPropertyId": null,
+                    "contentValue": "",
+                    "objectData": null,
+                    "contentFormat": null,
+                    "developerName": "To",
+                    "contentType": null
+                },
+                {
+                    "typeElementPropertyId": null,
+                    "contentValue": "",
+                    "objectData": null,
+                    "contentFormat": null,
+                    "developerName": "From",
+                    "contentType": null
+                },
+                {
+                    "typeElementPropertyId": null,
+                    "contentValue": "",
+                    "objectData": null,
+                    "contentFormat": null,
+                    "developerName": "Body",
+                    "contentType": null
+                },
+                {
+                    "typeElementPropertyId": null,
+                    "contentValue": "",
+                    "objectData": null,
+                    "contentFormat": null,
+                    "developerName": "Media",
+                    "contentType": null
+                }
+            ],
+            "order": 0
+        }],
+        "typeElementId": null,
+        "typeElementPropertyDeveloperName": null,
+        "valueElementId": null,
+        "developerName": "Reply",
+        "typeElementDeveloperName": "MMS",
+        "contentType": "ContentObject"
+    }],
+    "mode": null,
+    "invokeType": "WAIT",
+    "waitMessage": "Sending an MMS",
+    "rootFaults": null,
+    "culture": null,
+    "tenantId": null,
+    "annotations": null,
+    "selectedOutcomeId": null,
+    "valueFaults": null,
+    "token": "260c1542-648d-4bfd-8f06-350e10299c71"
+}

@@ -1,0 +1,10 @@
+{
+    "invokeType": null,
+    "responseBody": null,
+    "responseHeaders": null,
+    "kind": "service",
+    "action": null,
+    "message": "Validation errors occurred: {call=A Call object must be provided when a outbound call is created}, ",
+    "uri": "/calls/outbound",
+    "statusCode": 400
+}

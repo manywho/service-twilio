@@ -1,0 +1,13 @@
+{
+    "token": "e3420e62-872e-4c14-a1ac-5e9ac54fa6d2",
+    "tenantId": null,
+    "culture": null,
+    "annotations": null,
+    "invokeType": "WAIT",
+    "waitMessage": "Making outbound call to: 441234567899",
+    "outputs": null,
+    "selectedOutcomeId": null,
+    "rootFaults": null,
+    "valueFaults": null,
+    "mode": null
+}

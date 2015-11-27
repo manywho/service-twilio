@@ -1,0 +1,10 @@
+{
+    "invokeType": null,
+    "responseBody": null,
+    "responseHeaders": null,
+    "kind": "service",
+    "action": null,
+    "message": "Validation errors occurred: {from=The From value must not be null or blank, to=The To value must not be null or blank, body=The Body value must not be null or blank}, ",
+    "uri": "/messages/smssimple",
+    "statusCode": 400
+}

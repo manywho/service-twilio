@@ -1,0 +1,51 @@
+{
+    "joinPlayerUri": "https://flow.manywho.com/67204d5c-6022-474d-8f80-0d576b43d02d/play/default?join=374538e8-1ee8-4e41-be5a-0e87ed30271a",
+    "playerUri": "https://flow.manywho.com/67204d5c-6022-474d-8f80-0d576b43d02d/play/default?flow-id=5907638d-3c46-4042-bc31-4ce8497bf58e",
+    "uri": "https://1fe30533.ngrok.io/messages/smssimple",
+    "inputs": [],
+    "outcomes": null,
+    "token": "77f1b110-4fc1-44bb-9b4b-474742dd254e",
+    "tenantId": "67204d5c-6022-474d-8f80-0d576b43d02d",
+    "stateId": "374538e8-1ee8-4e41-be5a-0e87ed30271a",
+    "callbackUri": "https://flow.manywho.com/api/run/1/response",
+    "culture": {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "configurationValues": [{
+        "valueElementId": null,
+        "typeElementId": null,
+        "typeElementPropertyId": null,
+        "developerName": "Account SID",
+        "typeElementDeveloperName": null,
+        "typeElementPropertyDeveloperName": null,
+        "contentValue": "mockAppSid",
+        "contentType": null,
+        "objectData": null
+    }, {
+        "valueElementId": null,
+        "typeElementId": null,
+        "typeElementPropertyId": null,
+        "developerName": "Auth Token",
+        "typeElementDeveloperName": null,
+        "typeElementPropertyDeveloperName": null,
+        "contentValue": "mockAuthToken",
+        "contentType": null,
+        "objectData": null
+    }],
+    "authorization": {
+        "serviceElementId": "2bef9843-70f5-4852-9426-7049e31a7db4",
+        "globalAuthenticationType": "PUBLIC",
+        "streamBehaviourType": "NONE",
+        "groups": null,
+        "users": null,
+        "locations": null
+    },
+    "annotations": null,
+    "attributes": null
+}

@@ -1,0 +1,10 @@
+{
+    "invokeType": null,
+    "responseBody": null,
+    "responseHeaders": null,
+    "kind": "service",
+    "action": null,
+    "message": "Validation errors occurred: {authToken=The Auth Token configuration value must not be null or blank, accountSid=The Account SID configuration value must not be null or blank}, ",
+    "uri": "/messages/sms",
+    "statusCode": 400
+}

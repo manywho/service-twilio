@@ -1,0 +1,28 @@
+{
+    "culture": null,
+    "uri": "https://fdac76b2.ngrok.io",
+    "configurationValues": [
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Account SID",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "mockAppSid",
+            "contentType": null,
+            "objectData": null
+        },
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Auth Token",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "mockAuthToken",
+            "contentType": null,
+            "objectData": null
+        }
+    ]
+}

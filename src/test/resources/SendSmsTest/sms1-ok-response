@@ -1,0 +1,60 @@
+{
+    "token": "260c1542-648d-4bfd-8f06-350e10299c71",
+    "tenantId": null,
+    "culture": null,
+    "annotations": null,
+    "invokeType": "WAIT",
+    "waitMessage": "Sending an SMS",
+    "outputs": [
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Reply",
+            "typeElementDeveloperName": "SMS",
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": null,
+            "contentType": "ContentObject",
+            "objectData": [
+                {
+                    "internalId": null,
+                    "externalId": "1",
+                    "developerName": "SMS",
+                    "typeElementId": null,
+                    "order": 0,
+                    "properties": [
+                        {
+                            "typeElementPropertyId": null,
+                            "developerName": "To",
+                            "contentType": null,
+                            "contentValue": "",
+                            "objectData": null,
+                            "contentFormat": null
+                        },
+                        {
+                            "typeElementPropertyId": null,
+                            "developerName": "From",
+                            "contentType": null,
+                            "contentValue": "",
+                            "objectData": null,
+                            "contentFormat": null
+                        },
+                        {
+                            "typeElementPropertyId": null,
+                            "developerName": "Body",
+                            "contentType": null,
+                            "contentValue": "",
+                            "objectData": null,
+                            "contentFormat": null
+                        }
+                    ],
+                    "isSelected": false
+                }
+            ]
+        }
+    ],
+    "selectedOutcomeId": null,
+    "rootFaults": null,
+    "valueFaults": null,
+    "mode": null
+}

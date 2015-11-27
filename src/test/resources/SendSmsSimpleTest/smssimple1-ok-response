@@ -1,0 +1,47 @@
+{
+    "outputs": [
+        {
+            "typeElementPropertyId": null,
+            "contentValue": "",
+            "objectData": null,
+            "typeElementId": null,
+            "typeElementPropertyDeveloperName": null,
+            "valueElementId": null,
+            "developerName": "From",
+            "typeElementDeveloperName": null,
+            "contentType": "ContentString"
+        },
+        {
+            "typeElementPropertyId": null,
+            "contentValue": "",
+            "objectData": null,
+            "typeElementId": null,
+            "typeElementPropertyDeveloperName": null,
+            "valueElementId": null,
+            "developerName": "To",
+            "typeElementDeveloperName": null,
+            "contentType": "ContentString"
+        },
+        {
+            "typeElementPropertyId": null,
+            "contentValue": "",
+            "objectData": null,
+            "typeElementId": null,
+            "typeElementPropertyDeveloperName": null,
+            "valueElementId": null,
+            "developerName": "Body",
+            "typeElementDeveloperName": null,
+            "contentType": "ContentString"
+        }
+    ],
+    "mode": null,
+    "invokeType": "WAIT",
+    "waitMessage": "Sending an SMS",
+    "rootFaults": null,
+    "culture": null,
+    "tenantId": null,
+    "annotations": null,
+    "selectedOutcomeId": null,
+    "valueFaults": null,
+    "token": "77f1b110-4fc1-44bb-9b4b-474742dd254e"
+}

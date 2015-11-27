@@ -1,0 +1,10 @@
+{
+    "invokeType": null,
+    "responseBody": null,
+    "responseHeaders": null,
+    "kind": "service",
+    "action": null,
+    "message": "Validation errors occurred: {message=A Message object must be provided when sending a mms}, ",
+    "uri": "/messages/mms",
+    "statusCode": 400
+}

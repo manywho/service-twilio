@@ -1,0 +1,279 @@
+{
+    "providesAutoBinding": false,
+    "providesLogic": true,
+    "providesSocial": false,
+    "providesListening": false,
+    "providesViews": false,
+    "providesSharing": false,
+    "providesSmartSave": false,
+    "configurationValues": [
+        {
+            "contentValue": null,
+            "developerName": "Account SID",
+            "contentType": "ContentString",
+            "typeElementDeveloperName": null,
+            "required": true,
+            "ordinal": 0
+        },
+        {
+            "contentValue": null,
+            "developerName": "Auth Token",
+            "contentType": "ContentPassword",
+            "typeElementDeveloperName": null,
+            "required": true,
+            "ordinal": 0
+        }
+    ],
+    "uri": null,
+    "providesDatabase": false,
+    "providesFiles": false,
+    "providesIdentity": false,
+    "install": {"typeElements": [
+        {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The Call object structure",
+            "bindings": null,
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "Call",
+            "properties": [
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Timeout",
+                    "contentType": "ContentNumber",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                }
+            ]
+        },
+        {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The MMS object structure",
+            "bindings": null,
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "MMS",
+            "properties": [
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Body",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Media",
+                    "contentType": "ContentList",
+                    "typeElementDeveloperName": "Media",
+                    "contentFormat": null
+                }
+            ]
+        },
+        {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The Media object structure",
+            "bindings": null,
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "Media",
+            "properties": [{
+                "typeElementId": null,
+                "id": null,
+                "developerName": "URL",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "contentFormat": null
+            }]
+        },
+        {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The SMS object structure",
+            "bindings": null,
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "SMS",
+            "properties": [
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                },
+                {
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Body",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "contentFormat": null
+                }
+            ]
+        }
+    ]},
+    "culture": {
+        "country": "US",
+        "developerSummary": null,
+        "variant": null,
+        "language": "EN",
+        "id": null,
+        "developerName": null,
+        "brand": null
+    },
+    "providesVoting": false,
+    "providesNotifications": false,
+    "actions": [
+        {
+            "uriPart": "messages/mms",
+            "developerSummary": "Send an MMS message to a phone number",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "serviceInputs": [{
+                "contentValue": null,
+                "developerName": "Message",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "MMS",
+                "required": true,
+                "ordinal": 0
+            }],
+            "serviceOutputs": [{
+                "contentValue": null,
+                "developerName": "Reply",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "MMS",
+                "required": false,
+                "ordinal": 0
+            }],
+            "developerName": "Send MMS"
+        },
+        {
+            "uriPart": "messages/sms",
+            "developerSummary": "Send an SMS message to a phone number",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "serviceInputs": [{
+                "contentValue": null,
+                "developerName": "Message",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "SMS",
+                "required": true,
+                "ordinal": 0
+            }],
+            "serviceOutputs": [{
+                "contentValue": null,
+                "developerName": "Reply",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "SMS",
+                "required": false,
+                "ordinal": 0
+            }],
+            "developerName": "Send SMS"
+        },
+        {
+            "uriPart": "messages/smssimple",
+            "developerSummary": "Send an SMS message to a phone number without using an Object",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "serviceInputs": [
+                {
+                    "contentValue": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Body",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                }
+            ],
+            "serviceOutputs": [{
+                "contentValue": null,
+                "developerName": "Reply",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "required": false,
+                "ordinal": 0
+            }],
+            "developerName": "Send SMS (Simple)"
+        },
+        {
+            "uriPart": "calls/outbound",
+            "developerSummary": "Start an outbound phone call",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "serviceInputs": [{
+                "contentValue": null,
+                "developerName": "Call",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "Call",
+                "required": true,
+                "ordinal": 0
+            }],
+            "serviceOutputs": null,
+            "developerName": "Start Outbound Call"
+        }
+    ]
+}

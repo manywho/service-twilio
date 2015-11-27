@@ -1,0 +1,101 @@
+{
+    "joinPlayerUri": "https://flow.manywho.com/67204d5c-6022-474d-8f80-0d576b43d02d/play/default?join=b6ad80af-d085-4f51-80b3-4571200e5b4f",
+    "playerUri": "https://flow.manywho.com/67204d5c-6022-474d-8f80-0d576b43d02d/play/default?flow-id=5907638d-3c46-4042-bc31-4ce8497bf58e",
+    "uri": "https://fdac76b2.ngrok.io/messages/sms",
+    "inputs": [
+        {
+            "valueElementId": "1ebf51ff-8672-4761-bd71-ac5ee28ddc67",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Message",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": null,
+            "contentType": "ContentObject",
+            "objectData": [
+                {
+                    "internalId": "8253d12c-3889-4d02-b573-cfb176b813c8",
+                    "externalId": "8253d12c-3889-4d02-b573-cfb176b813c8",
+                    "developerName": "SMS",
+                    "typeElementId": "810c41e9-f353-47f1-b805-668c543f1ffe",
+                    "order": 0,
+                    "properties": [
+                        {
+                            "typeElementPropertyId": "9d2bacbc-aeb3-4bf6-b0c2-5eb67d7f8ce1",
+                            "developerName": "To",
+                            "contentValue": "00440123456788",
+                            "contentType": "ContentString",
+                            "contentFormat": null,
+                            "objectData": null
+                        },
+                        {
+                            "typeElementPropertyId": "885b7488-975a-4f03-a84d-c12d2cea9edb",
+                            "developerName": "From",
+                            "contentValue": "440123456789",
+                            "contentType": "ContentString",
+                            "contentFormat": null,
+                            "objectData": null
+                        },
+                        {
+                            "typeElementPropertyId": "c9275272-b8b4-4d19-b974-d029f7cf3d14",
+                            "developerName": "Body",
+                            "contentValue": "hello message",
+                            "contentType": "ContentString",
+                            "contentFormat": null,
+                            "objectData": null
+                        }
+                    ],
+                    "isSelected": false
+                }
+            ]
+        }
+    ],
+    "outcomes": null,
+    "token": "260c1542-648d-4bfd-8f06-350e10299c71",
+    "tenantId": "67204d5c-6022-474d-8f80-0d576b43d02d",
+    "stateId": "b6ad80af-d085-4f51-80b3-4571200e5b4f",
+    "callbackUri": "https://flow.manywho.com/api/run/1/response",
+    "culture": {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "configurationValues": [
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Account SID",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "mockAppSid",
+            "contentType": null,
+            "objectData": null
+        },
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Auth Token",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "mockAuthToken",
+            "contentType": null,
+            "objectData": null
+        }
+    ],
+    "authorization": {
+        "serviceElementId": "2bef9843-70f5-4852-9426-7049e31a7db4",
+        "globalAuthenticationType": "PUBLIC",
+        "streamBehaviourType": "NONE",
+        "groups": null,
+        "users": null,
+        "locations": null
+    },
+    "annotations": null,
+    "attributes": null
+}
