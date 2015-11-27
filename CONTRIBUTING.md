@@ -6,9 +6,9 @@ accepted without any problems.
 
 ## TL;DR
 
-* **File an issue** - if you've found a bug, want to request an improvement, or want to implement new functionality
+* **File an issue** if you've found a bug, want to request an improvement, or want to implement new functionality
 yourself. Make sure to check no one else has created a similar ticket!
-* **Create a pull request** - make sure your commit include the issue number
+* **Create a pull request** and make sure your commit includes the issue number
 
 ## The Long Version
 
@@ -32,7 +32,7 @@ $ git remote add upstream git@github.com:manywho/service-example.git # Replace t
 
 ### Step 4: Create a Feature Branch
 
-Make sure to give your branch a descriptive name that start with `feature` and includes the issue number, 
+Make sure to give your branch a descriptive name that starts with `feature` and includes the issue number, 
 e.g. `feature/123-add-contact-type`.
 
 ### Step 5: Push to your Fork
