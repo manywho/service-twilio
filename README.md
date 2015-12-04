@@ -1,6 +1,9 @@
 ManyWho Twilio Service
 ======================
 
+[![Build Status](https://travis-ci.org/manywho/service-twilio.svg?branch=develop)](https://travis-ci.org/manywho/service-twilio)
+
+
 This service allows you to integrate your flows with Twilio. Currently the service allows your flow to send and receive
 SMS and MMS messages.
 
