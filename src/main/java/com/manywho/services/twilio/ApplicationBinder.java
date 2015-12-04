@@ -23,10 +23,6 @@ import javax.inject.Singleton;
 public class ApplicationBinder extends AbstractBinder {
     @Override
     protected void configure() {
-        bindFactory(JedisPoolFactory.class).to(JedisPool.class).in(Singleton.class);
-
-        bind(ExceptionMapperProvider.class).to(ExceptionMapperProvider.class);
-
         bind(Redis.class).to(RedisConfiguration.class).in(Singleton.class);
         bind(TwilioConfiguration.class).to(TwilioConfiguration.class).in(Singleton.class);
         bind(TwilioRestClientFactory.class).to(TwilioRestClientFactory.class).in(Singleton.class);
