@@ -1,24 +1,31 @@
 package com.manywho.services.twilio.types;
 
-import com.manywho.sdk.entities.draw.elements.type.TypeElementProperty;
-import com.manywho.sdk.entities.draw.elements.type.TypeElementPropertyCollection;
 import com.manywho.sdk.enums.ContentType;
-import com.manywho.sdk.services.describe.types.AbstractType;
+import com.manywho.sdk.services.annotations.TypeElement;
+import com.manywho.sdk.services.annotations.TypeProperty;
 
-public class Call extends AbstractType {
+@TypeElement(name = Call.NAME)
+public class Call {
     public final static String NAME = "Call";
 
-    @Override
-    public String getDeveloperName() {
-        return NAME;
+    @TypeProperty(name = "To", contentType = ContentType.String, bound = false)
+    private String to;
+
+    @TypeProperty(name = "From", contentType = ContentType.String, bound = false)
+    private String from;
+
+    @TypeProperty(name = "Timeout", contentType = ContentType.Number, bound = false)
+    private int timeout;
+
+    public String getTo() {
+        return to;
     }
 
-    @Override
-    public TypeElementPropertyCollection getProperties() {
-        return new TypeElementPropertyCollection() {{
-            add(new TypeElementProperty("To", ContentType.String));
-            add(new TypeElementProperty("From", ContentType.String));
-            add(new TypeElementProperty("Timeout", ContentType.Number));
-        }};
+    public String getFrom() {
+        return from;
+    }
+
+    public int getTimeout() {
+        return timeout;
     }
 }

@@ -1,24 +1,35 @@
 package com.manywho.services.twilio.types;
 
-import com.manywho.sdk.entities.draw.elements.type.TypeElementProperty;
-import com.manywho.sdk.entities.draw.elements.type.TypeElementPropertyCollection;
 import com.manywho.sdk.enums.ContentType;
-import com.manywho.sdk.services.describe.types.AbstractType;
+import com.manywho.sdk.services.annotations.TypeElement;
+import com.manywho.sdk.services.annotations.TypeProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
-public class Sms extends AbstractType {
+@TypeElement(name = Sms.NAME)
+public class Sms {
     public final static String NAME = "SMS";
 
-    @Override
-    public String getDeveloperName() {
-        return NAME;
+    @TypeProperty(name = "To", contentType = ContentType.String, bound = false)
+    @NotEmpty(message = "The To value must not be null or blank")
+    private String to;
+
+    @TypeProperty(name = "From", contentType = ContentType.String, bound = false)
+    @NotEmpty(message = "The From value must not be null or blank")
+    private String from;
+
+    @TypeProperty(name = "Body", contentType = ContentType.String, bound = false)
+    @NotEmpty(message = "The Body value must not be null or blank")
+    private String body;
+
+    public String getTo() {
+        return to;
     }
 
-    @Override
-    public TypeElementPropertyCollection getProperties() {
-        return new TypeElementPropertyCollection() {{
-            add(new TypeElementProperty("To", ContentType.String));
-            add(new TypeElementProperty("From", ContentType.String));
-            add(new TypeElementProperty("Body", ContentType.String));
-        }};
+    public String getFrom() {
+        return from;
+    }
+
+    public String getBody() {
+        return body;
     }
 }

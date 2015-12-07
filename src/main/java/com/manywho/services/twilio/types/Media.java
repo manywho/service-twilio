@@ -1,22 +1,17 @@
 package com.manywho.services.twilio.types;
 
-import com.manywho.sdk.entities.draw.elements.type.TypeElementProperty;
-import com.manywho.sdk.entities.draw.elements.type.TypeElementPropertyCollection;
 import com.manywho.sdk.enums.ContentType;
-import com.manywho.sdk.services.describe.types.AbstractType;
+import com.manywho.sdk.services.annotations.TypeElement;
+import com.manywho.sdk.services.annotations.TypeProperty;
 
-public class Media extends AbstractType {
+@TypeElement(name = Media.NAME)
+public class Media {
     public final static String NAME = "Media";
 
-    @Override
-    public String getDeveloperName() {
-        return NAME;
-    }
+    @TypeProperty(name = "URL", contentType = ContentType.String, bound = false)
+    private String url;
 
-    @Override
-    public TypeElementPropertyCollection getProperties() {
-        return new TypeElementPropertyCollection() {{
-            add(new TypeElementProperty("URL", ContentType.String));
-        }};
+    public String getUrl() {
+        return url;
     }
 }
