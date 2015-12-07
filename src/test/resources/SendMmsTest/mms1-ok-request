@@ -48,7 +48,7 @@
                             "typeElementPropertyId": "c9275272-b8b4-4d19-b974-d029f7cf3d14",
                             "developerName": "Media",
                             "contentValue": null,
-                            "contentType": "ContentString",
+                            "contentType": "ContentList",
                             "contentFormat": null,
                             "objectData": [
                                 {

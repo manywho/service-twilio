@@ -4,7 +4,6 @@ import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.services.annotations.TypeElement;
 import com.manywho.sdk.services.annotations.TypeProperty;
 
-import java.util.Collection;
 import java.util.List;
 
 @TypeElement(name = Mms.NAME)

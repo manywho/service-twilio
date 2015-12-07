@@ -1,7 +1,8 @@
 package com.manywho.services.twilio.entities.requests;
 
 import com.manywho.sdk.services.annotations.Property;
-import com.manywho.services.twilio.entities.types.Mms;
+import com.manywho.services.twilio.types.Mms;
+
 import javax.validation.constraints.NotNull;
 
 public class SendMms {

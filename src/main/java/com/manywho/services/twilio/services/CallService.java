@@ -23,13 +23,13 @@ public class CallService {
     @Inject
     private TwilioRestClientFactory twilioClientFactory;
 
-    public Call startOutboundCall(String accountSid, String authToken, String from, String to, String timeout) throws Exception {
+    public Call startOutboundCall(String accountSid, String authToken, String from, String to, int timeout) throws Exception {
         final Account account = twilioClientFactory.createTwilioRestClient(accountSid, authToken).getAccount();
 
         final Map<String, String> callParameters = new HashMap<String, String>() {{
             put("To", to);
             put("From", from);
-            put("Timeout", StringUtils.isNotEmpty(timeout) ? timeout : "60");
+            put("Timeout", String.valueOf(timeout));
             put("IfMachine", "Continue");
             put("ApplicationSid", twiMLApplication.getApplicationSid(accountSid, authToken, from));
         }};

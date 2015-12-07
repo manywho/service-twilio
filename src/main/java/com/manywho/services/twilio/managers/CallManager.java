@@ -15,7 +15,7 @@ public class CallManager {
     @Inject
     private CallService callService;
 
-    public void startOutboundCall(ServiceRequest serviceRequest, Configuration configuration, String from, String to, String timeout) throws Exception {
+    public void startOutboundCall(ServiceRequest serviceRequest, Configuration configuration, String from, String to, int timeout) throws Exception {
         // Begin the outbound call. Twilio will callback to the service to request some TwiML for the call
         Call call = callService.startOutboundCall(
                 configuration.getAccountSid(),

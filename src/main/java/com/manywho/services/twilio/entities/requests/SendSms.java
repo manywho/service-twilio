@@ -1,7 +1,7 @@
 package com.manywho.services.twilio.entities.requests;
 
 import com.manywho.sdk.services.annotations.Property;
-import com.manywho.services.twilio.entities.types.Sms;
+import com.manywho.services.twilio.types.Sms;
 
 import javax.validation.constraints.NotNull;
 
