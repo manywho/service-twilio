@@ -229,7 +229,7 @@
                     "developerName": "From",
                     "contentType": "ContentString",
                     "typeElementDeveloperName": null,
-                    "required": false,
+                    "required": true,
                     "ordinal": 0
                 },
                 {
@@ -237,7 +237,7 @@
                     "developerName": "To",
                     "contentType": "ContentString",
                     "typeElementDeveloperName": null,
-                    "required": false,
+                    "required": true,
                     "ordinal": 0
                 },
                 {
@@ -245,7 +245,7 @@
                     "developerName": "Body",
                     "contentType": "ContentString",
                     "typeElementDeveloperName": null,
-                    "required": false,
+                    "required": true,
                     "ordinal": 0
                 }
             ],
@@ -272,7 +272,7 @@
                 "required": true,
                 "ordinal": 0
             }],
-            "serviceOutputs": null,
+            "serviceOutputs": [],
             "developerName": "Start Outbound Call"
         }
     ]

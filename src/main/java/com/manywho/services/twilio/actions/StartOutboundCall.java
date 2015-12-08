@@ -1,36 +1,19 @@
 package com.manywho.services.twilio.actions;
 
-import com.manywho.sdk.entities.describe.DescribeValue;
-import com.manywho.sdk.entities.describe.DescribeValueCollection;
 import com.manywho.sdk.enums.ContentType;
-import com.manywho.sdk.services.describe.actions.AbstractAction;
+import com.manywho.sdk.services.annotations.Action;
+import com.manywho.sdk.services.annotations.ActionInput;
 import com.manywho.services.twilio.types.Call;
 
-public class StartOutboundCall extends AbstractAction {
-    @Override
-    public String getUriPart() {
-        return "calls/outbound";
-    }
+import javax.validation.constraints.NotNull;
 
-    @Override
-    public String getDeveloperName() {
-        return "Start Outbound Call";
-    }
+@Action(name = "Start Outbound Call", summary = "Start an outbound phone call", uriPart = "calls/outbound")
+public class StartOutboundCall {
+    @NotNull(message = "A Call object must be provided when a outbound call is created")
+    @ActionInput(name = "Call", contentType = ContentType.Object)
+    private Call call;
 
-    @Override
-    public String getDeveloperSummary() {
-        return "Start an outbound phone call";
-    }
-
-    @Override
-    public DescribeValueCollection getServiceInputs() {
-        return new DescribeValueCollection() {{
-            add(new DescribeValue("Call", ContentType.Object, true, null, Call.NAME));
-        }};
-    }
-
-    @Override
-    public DescribeValueCollection getServiceOutputs() {
-        return null;
+    public Call getCall() {
+        return call;
     }
 }

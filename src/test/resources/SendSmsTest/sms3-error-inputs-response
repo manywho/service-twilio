@@ -4,7 +4,7 @@
     "responseHeaders": null,
     "kind": "service",
     "action": null,
-    "message": "Validation errors occurred: {message=A Message object must be provided when sending a sms}, ",
+    "message": "Validation errors occurred: {message=A Message object must be provided when sending an SMS}, ",
     "uri": "/messages/sms",
     "statusCode": 400
 }

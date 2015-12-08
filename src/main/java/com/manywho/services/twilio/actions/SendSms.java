@@ -1,38 +1,27 @@
 package com.manywho.services.twilio.actions;
 
-import com.manywho.sdk.entities.describe.DescribeValue;
-import com.manywho.sdk.entities.describe.DescribeValueCollection;
 import com.manywho.sdk.enums.ContentType;
-import com.manywho.sdk.services.describe.actions.AbstractAction;
+import com.manywho.sdk.services.annotations.Action;
+import com.manywho.sdk.services.annotations.ActionInput;
+import com.manywho.sdk.services.annotations.ActionOutput;
 import com.manywho.services.twilio.types.Sms;
 
-public class SendSms extends AbstractAction {
-    @Override
-    public String getUriPart() {
-        return "messages/sms";
+import javax.validation.constraints.NotNull;
+
+@Action(name = "Send SMS", summary = "Send an SMS message to a phone number", uriPart = "messages/sms")
+public class SendSms {
+    @NotNull(message = "A Message object must be provided when sending an SMS")
+    @ActionInput(name = "Message", contentType = ContentType.Object)
+    private Sms message;
+
+    @ActionOutput(name = "Reply", contentType = ContentType.Object, required = false)
+    private Sms reply;
+
+    public Sms getMessage() {
+        return message;
     }
 
-    @Override
-    public String getDeveloperName() {
-        return "Send SMS";
-    }
-
-    @Override
-    public String getDeveloperSummary() {
-        return "Send an SMS message to a phone number";
-    }
-
-    @Override
-    public DescribeValueCollection getServiceInputs() {
-        return new DescribeValueCollection() {{
-            add(new DescribeValue("Message", ContentType.Object, true, null, Sms.NAME));
-        }};
-    }
-
-    @Override
-    public DescribeValueCollection getServiceOutputs() {
-        return new DescribeValueCollection() {{
-            add(new DescribeValue("Reply", ContentType.Object, false, null, Sms.NAME));
-        }};
+    public Sms getReply() {
+        return reply;
     }
 }

@@ -5,8 +5,8 @@ import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.sdk.services.annotations.AuthorizationRequired;
 import com.manywho.sdk.services.controllers.AbstractController;
+import com.manywho.services.twilio.actions.StartOutboundCall;
 import com.manywho.services.twilio.entities.Configuration;
-import com.manywho.services.twilio.entities.requests.StartOutboundCall;
 import com.manywho.services.twilio.managers.CallManager;
 
 import javax.inject.Inject;

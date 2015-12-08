@@ -1,39 +1,41 @@
 package com.manywho.services.twilio.actions;
 
-import com.manywho.sdk.entities.describe.DescribeValue;
-import com.manywho.sdk.entities.describe.DescribeValueCollection;
 import com.manywho.sdk.enums.ContentType;
-import com.manywho.sdk.services.describe.actions.AbstractAction;
+import com.manywho.sdk.services.annotations.Action;
+import com.manywho.sdk.services.annotations.ActionInput;
+import com.manywho.sdk.services.annotations.ActionOutput;
+import org.hibernate.validator.constraints.NotEmpty;
 
-public class SendSmsSimple extends AbstractAction {
-    @Override
-    public String getUriPart() {
-        return "messages/smssimple";
+@Action(name = "Send SMS (Simple)", summary = "Send an SMS message to a phone number without using an Object", uriPart = "messages/smssimple")
+public class SendSmsSimple {
+    @NotEmpty(message = "The From value must not be null or blank")
+    @ActionInput(name = "From", contentType = ContentType.String)
+    private String from;
+
+    @NotEmpty(message = "The To value must not be null or blank")
+    @ActionInput(name = "To", contentType = ContentType.String)
+    private String to;
+
+    @NotEmpty(message = "The Body value must not be null or blank")
+    @ActionInput(name = "Body", contentType = ContentType.String)
+    private String body;
+
+    @ActionOutput(name = "Reply", contentType = ContentType.String, required = false)
+    private String reply;
+
+    public String getFrom() {
+        return from;
     }
 
-    @Override
-    public String getDeveloperName() {
-        return "Send SMS (Simple)";
+    public String getTo() {
+        return to;
     }
 
-    @Override
-    public String getDeveloperSummary() {
-        return "Send an SMS message to a phone number without using an Object";
+    public String getBody() {
+        return body;
     }
 
-    @Override
-    public DescribeValueCollection getServiceInputs() {
-        return new DescribeValueCollection() {{
-            add(new DescribeValue("From", ContentType.String));
-            add(new DescribeValue("To", ContentType.String));
-            add(new DescribeValue("Body", ContentType.String));
-        }};
-    }
-
-    @Override
-    public DescribeValueCollection getServiceOutputs() {
-        return new DescribeValueCollection() {{
-            add(new DescribeValue("Reply", ContentType.String));
-        }};
+    public String getReply() {
+        return reply;
     }
 }
