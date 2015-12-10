@@ -16,21 +16,10 @@ import com.manywho.services.twilio.types.Sms;
 import javax.inject.Inject;
 import java.util.HashMap;
 
-public class CallbackService {
+public class CallbackMessageService {
 
     @Inject
     private RunService runService;
-
-    public InvokeType sendCallResponse(ServiceRequest serviceRequest, String answeredBy) throws Exception {
-        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), new ServiceResponse() {{
-            setInvokeType(InvokeType.Forward);
-            setOutputs(new EngineValueCollection() {{
-                add(new EngineValue("Result", ContentType.String, answeredBy));
-            }});
-            setTenantId(serviceRequest.getTenantId());
-            setToken(serviceRequest.getToken());
-        }});
-    }
 
     public InvokeType sendMessageResponse(ServiceRequest serviceRequest, InvokeType invokeType, String waitMessageText, String errorMessageText) throws Exception {
         return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), new ServiceResponse() {{
