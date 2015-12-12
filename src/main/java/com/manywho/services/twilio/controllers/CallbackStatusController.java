@@ -32,7 +32,16 @@ public class CallbackStatusController {
     @Consumes("application/x-www-form-urlencoded")
     public void messageCallback(@BeanParam MessageCallback callback) throws Exception {
         // If the callback is from a message reply, process it
-        if (callback.getSmsStatus() == null || !callback.getSmsStatus().equalsIgnoreCase("received")) {
+        if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("received")) {
+            callbackManager.processMessageReply(
+                    callback.getAccountSid(),
+                    callback.getMessageSid(),
+                    callback.getFrom(),
+                    callback.getTo(),
+                    callback.getBody()
+            );
+        } else {
+            // Otherwise, send back the status
             callbackManager.processMessage(
                     callback.getAccountSid(),
                     callback.getMessageSid(),

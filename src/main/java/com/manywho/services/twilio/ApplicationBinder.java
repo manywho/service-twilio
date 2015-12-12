@@ -1,20 +1,12 @@
 package com.manywho.services.twilio;
 
 import com.manywho.sdk.services.config.RedisConfiguration;
+import com.manywho.services.twilio.configuration.TwilioConfiguration;
 import com.manywho.services.twilio.facades.TwilioClientFacade;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
+import com.manywho.services.twilio.managers.*;
+import com.manywho.services.twilio.services.*;
 import com.manywho.services.twilio.configuration.Redis;
-import com.manywho.services.twilio.configuration.TwilioConfiguration;
-import com.manywho.services.twilio.managers.CacheManager;
-import com.manywho.services.twilio.managers.CallManager;
-import com.manywho.services.twilio.managers.CallbackManager;
-import com.manywho.services.twilio.managers.MessageManager;
-import com.manywho.services.twilio.services.CallService;
-import com.manywho.services.twilio.services.CallbackMessageService;
-import com.manywho.services.twilio.services.CallbackVoiceService;
-import com.manywho.services.twilio.services.MessageService;
-import com.manywho.services.twilio.managers.TwimlApplicationManager;
-import com.manywho.services.twilio.services.TwilioComponentService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import javax.inject.Singleton;

@@ -6,52 +6,35 @@ import com.manywho.sdk.entities.run.EngineInitializationRequest;
 import com.manywho.sdk.entities.run.EngineInitializationResponse;
 import com.manywho.sdk.entities.run.EngineInvokeRequest;
 import com.manywho.sdk.entities.run.EngineInvokeResponse;
-import com.manywho.sdk.entities.run.EngineValue;
-import com.manywho.sdk.entities.run.EngineValueCollection;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
-import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
-import com.manywho.sdk.entities.run.elements.map.MapElementInvokeRequest;
-import com.manywho.sdk.entities.run.elements.map.MapElementInvokeResponse;
-import com.manywho.sdk.entities.run.elements.map.OutcomeAvailable;
-import com.manywho.sdk.entities.run.elements.map.OutcomeResponse;
-import com.manywho.sdk.entities.run.elements.map.OutcomeResponseCollection;
-import com.manywho.sdk.entities.run.elements.ui.PageComponentDataResponse;
-import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequest;
-import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequestCollection;
-import com.manywho.sdk.entities.run.elements.ui.PageComponentResponse;
-import com.manywho.sdk.entities.run.elements.ui.PageRequest;
-import com.manywho.sdk.entities.run.elements.ui.PageResponse;
-import com.manywho.sdk.enums.ContentType;
+import com.manywho.sdk.entities.run.elements.map.*;
+import com.manywho.sdk.entities.run.elements.type.Object;
+import com.manywho.sdk.entities.run.elements.type.ObjectCollection;
+import com.manywho.sdk.entities.run.elements.type.Property;
+import com.manywho.sdk.entities.run.elements.type.PropertyCollection;
+import com.manywho.sdk.entities.run.elements.ui.*;
 import com.manywho.sdk.enums.InvokeType;
+import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
 import com.manywho.services.twilio.services.CallbackMessageService;
 import com.manywho.services.twilio.services.CallbackVoiceService;
 import com.manywho.services.twilio.services.TwilioComponentService;
-import com.twilio.sdk.verbs.Gather;
-import com.twilio.sdk.verbs.Pause;
-import com.twilio.sdk.verbs.Play;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
-import com.twilio.sdk.verbs.Verb;
+import com.manywho.services.twilio.types.*;
+import com.twilio.sdk.verbs.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
-import org.jsoup.Jsoup;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CallbackManager {
     private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
+
+    public static final String BASE_CALLBACK_LOCATION = "https://manywhoservices.ngrok.io";
 
     @Inject
     private CacheManager cacheManager;
@@ -94,7 +77,7 @@ public class CallbackManager {
         ServiceRequest request = cacheManager.getMessageRequest(accountSid, messageSid);
 
         // Send the callback back to ManyWho, with any WAIT messages or error messages
-        InvokeType response = callbackMessageService.sendMessageResponse(request, InvokeType.Forward, waitMessage, errorMessage);
+        InvokeType response = callbackMessageService.sendMessageResponse(request, InvokeType.Forward, errorMessage, errorMessage);
 
         // If the message has been sent, and the Engine is waiting, assume we're waiting for a reply
         if (messageStatus.equalsIgnoreCase("sent") && response.equals(InvokeType.Wait)) {
@@ -110,10 +93,10 @@ public class CallbackManager {
         InvokeType responseInvokeType = callbackMessageService.sendMessageReplyResponse(request, messageSid, from, body);
 
         // Only delete the requests if the flow progresses
-        if (!responseInvokeType.equals(InvokeType.Wait)) {
-            cacheManager.deleteMessageRequest(accountSid, to + from);
-            cacheManager.deleteMessageRequest(accountSid, messageSid);
-        }
+        //if (!responseInvokeType.equals(InvokeType.Wait)) {
+        //    cacheManager.deleteMessageRequest(accountSid, to + from);
+        //    cacheManager.deleteMessageRequest(accountSid, messageSid);
+        //}
     }
 
     public void sendCallResponse(String callSid, String answeredBy) throws Exception {
@@ -158,7 +141,7 @@ public class CallbackManager {
         return new RunService().executeFlow(null, null, tenantId, invokeRequest);
     }
 
-    public String continueFlowAsTwiml(String stateId, String callSid, String digits) throws Exception {
+    public String continueFlowAsTwiml(String stateId, String callSid, String digits, String recordingUrl) throws Exception {
         if (cacheManager.hasFlowExecution(stateId, callSid)) {
             TenantInvokeResponseTuple tuple = cacheManager.getFlowExecution(stateId, callSid);
             EngineInvokeResponse invokeResponse = tuple.getInvokeResponse();
@@ -177,12 +160,7 @@ public class CallbackManager {
             }
 
             if (invokeResponse.getInvokeType().equals(InvokeType.Wait)) {
-                TwiMLResponse waitResponse = new TwiMLResponse();
-                waitResponse.append(new Say(invokeResponse.getWaitMessage()));
-                waitResponse.append(twilioComponentService.createPauseComponent(10));
-                waitResponse.append(twilioComponentService.createRedirectComponent("https://manywhoservices.ngrok.com/api/twilio/2/callback/twiml/voice/flow/state/" + stateId));
-
-                return waitResponse.toXML();
+                return getWaitTwimlResponse(10, invokeResponse).toXML();
             }
 
             MapElementInvokeResponse mapElementInvokeResponse = invokeResponse.getMapElementInvokeResponses().get(0);
@@ -199,7 +177,7 @@ public class CallbackManager {
                     .filter(outcomeResponse -> outcomeResponse.getDeveloperName().equals(digits))
                     .findFirst();
 
-            List<String> inputComponentTypes = Arrays.asList("INPUT", "Twilio.Twiml.VoiceRequest");
+            List<String> inputComponentTypes = Arrays.asList("INPUT", "Record");
 
             boolean inputsExist = pageResponse.getPageComponentResponses().stream().anyMatch(component -> inputComponentTypes.contains(component.getComponentType()));
 
@@ -232,28 +210,62 @@ public class CallbackManager {
                 outcomeForDigits = outcomes.stream().findFirst();
             }
 
-            if (pageResponse.getPageComponentResponses().stream().anyMatch(component -> component.getComponentType().equals("Twilio.Twiml.VoiceRequest"))) {
-                if (cacheManager.hasTranscription(stateId)) {
+            if (pageResponse.getPageComponentResponses().stream().anyMatch(component -> component.getComponentType().equals("Record"))) {
+                if (cacheManager.hasRecordingCallback(stateId, callSid) ||
+                        (recordingUrl != null &&
+                         recordingUrl.isEmpty() == false)) {
                     Optional<PageComponentResponse> voiceComponent = pageResponse.getPageComponentResponses().stream()
-                            .filter(component -> component.getComponentType().equals("Twilio.Twiml.VoiceRequest"))
+                            .filter(component -> component.getComponentType().equals("Record"))
                             .findFirst();
 
                     if (voiceComponent.isPresent()) {
+                        PageComponentResponse voiceComponentResponse = voiceComponent.get();
+                        final String recordingIdentifier;
+                        final String recordingTranscription;
+                        final String recordingUri;
+
+                        if (recordingUrl != null && recordingUrl.isEmpty() == false) {
+                            // As this is not a recording callback, we don't have an identifier
+                            recordingIdentifier = UUID.randomUUID().toString();
+                            recordingTranscription = null;
+                            recordingUri = recordingUrl;
+                        } else {
+                            RecordingCallback recordingCallback = cacheManager.getRecordingCallback(stateId, callSid);
+                            recordingIdentifier = recordingCallback.getSid();
+                            recordingTranscription = recordingCallback.getTranscription();
+                            recordingUri = recordingCallback.getRecordingUrl();
+                        }
+
+                        if (voiceComponentResponse.getAttributes() != null &&
+                                voiceComponent.get().getAttributes().containsKey("transcribe")) {
+                            // Check to see if the user wants transcription - if they do, we need to wait for any transcription text
+                            // as Twilio will return "(blank)" even if it captures nothing
+                            if (Boolean.parseBoolean(voiceComponent.get().getAttributes().get("transcribe")) &&
+                                    (recordingTranscription == null || recordingTranscription.isEmpty() == true)) {
+                                // We want a transcription, but we don't have it yet
+                                return getWaitTwimlResponse(10, invokeResponse).toXML();
+                            }
+                        }
+
                         PageComponentInputResponseRequest inputRequest = new PageComponentInputResponseRequest();
-                        inputRequest.setPageComponentId(voiceComponent.get().getId());
-                        inputRequest.setContentValue(cacheManager.getTranscription(stateId));
+                        inputRequest.setPageComponentId(voiceComponentResponse.getId());
+                        inputRequest.setObjectData(new ObjectCollection() {{
+                            add(new Object() {{
+                                setDeveloperName(Recording.NAME);
+                                setExternalId(recordingIdentifier);
+                                setProperties(new PropertyCollection() {{
+                                    add(new Property(Recording.PROPERTY_URL, recordingUri));
+                                    add(new Property(Recording.PROPERTY_TRANSCRIPTION, recordingTranscription));
+                                }});
+                            }});
+                        }});
 
                         inputs.add(inputRequest);
                     }
 
-                    // TODO: Delete the transcription from the cache
+                    cacheManager.deleteRecordingCallback(stateId, callSid);
                 } else {
-                    TwiMLResponse waitResponse = new TwiMLResponse();
-                    waitResponse.append(new Say("Please wait while we process your request"));
-                    waitResponse.append(twilioComponentService.createPauseComponent(5));
-                    waitResponse.append(twilioComponentService.createRedirectComponent("https://manywhoservices.ngrok.com/api/twilio/2/callback/twiml/voice/flow/state/" + stateId));
-
-                    return waitResponse.toXML();
+                    return getWaitTwimlResponse(10, invokeResponse).toXML();
                 }
             }
 
@@ -262,12 +274,7 @@ public class CallbackManager {
             cacheManager.saveFlowExecution(invokeResponse.getStateId(), callSid, new TenantInvokeResponseTuple(tuple.getTenantId(), nextStepInvoke));
 
             if (nextStepInvoke.getInvokeType().equals(InvokeType.Wait)) {
-                TwiMLResponse waitResponse = new TwiMLResponse();
-                waitResponse.append(new Say(nextStepInvoke.getWaitMessage()));
-                waitResponse.append(twilioComponentService.createPauseComponent(10));
-                waitResponse.append(twilioComponentService.createRedirectComponent("https://manywhoservices.ngrok.com/api/twilio/2/callback/twiml/voice/flow/state/" + stateId));
-
-                return waitResponse.toXML();
+                return getWaitTwimlResponse(10, nextStepInvoke).toXML();
             }
 
             MapElementInvokeResponse nextMapElementInvokeResponse = nextStepInvoke.getMapElementInvokeResponses().get(0);
@@ -276,6 +283,15 @@ public class CallbackManager {
         }
 
         return null;
+    }
+
+    private TwiMLResponse getWaitTwimlResponse(int pause, EngineInvokeResponse engineInvokeResponse) throws Exception {
+        TwiMLResponse waitResponse = new TwiMLResponse();
+        waitResponse.append(new Say(engineInvokeResponse.getWaitMessage()));
+        waitResponse.append(twilioComponentService.createPauseComponent(pause));
+        waitResponse.append(twilioComponentService.createRedirectComponent(BASE_CALLBACK_LOCATION + "/api/twilio/2/callback/twiml/voice/flow/state/" + engineInvokeResponse.getStateId()));
+
+        return waitResponse;
     }
 
     private EngineInvokeResponse tellFlowToWait(String tenantId, EngineInvokeResponse invokeResponse) throws Exception {
@@ -348,7 +364,7 @@ public class CallbackManager {
 //                                switch (container.getContainerType()) {
 //                                    case "Gather":
 //                                        Gather gather = new Gather();
-//                                        gather.setAction("https://manywhoservices.ngrok.com/api/twilio/2/callback/twiml/voice/flow/state/" + invokeResponse.getStateId());
+//                                        gather.setAction(BASE_CALLBACK_LOCATION + "/api/twilio/2/callback/twiml/voice/flow/state/" + invokeResponse.getStateId());
 //
 //                                        for (Verb verb : createTwimlForComponents(pageResponse, components)) {
 //                                            gather.append(verb);
@@ -383,7 +399,7 @@ public class CallbackManager {
                     .collect(Collectors.toList());
 
             Gather gather = new Gather();
-            gather.setAction("https://manywhoservices.ngrok.com/api/twilio/2/callback/twiml/voice/flow/state/" + stateId);
+            gather.setAction(BASE_CALLBACK_LOCATION + "/api/twilio/2/callback/twiml/voice/flow/state/" + stateId);
 
             // If there aren't already any TwiML components, then add a Say component to the Gather
             if (twiMLResponse.getChildren().isEmpty()) {
@@ -396,7 +412,7 @@ public class CallbackManager {
         return twiMLResponse;
     }
 
-    public void saveTranscription(String stateId, String transcriptionText) {
-        cacheManager.saveTranscription(stateId, transcriptionText);
+    public void saveRecordingCallback(String stateId, RecordingCallback recordingCallback) throws Exception {
+        cacheManager.saveRecordingCallback(stateId, recordingCallback.getCallSid(), recordingCallback);
     }
 }

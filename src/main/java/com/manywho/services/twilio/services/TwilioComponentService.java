@@ -3,6 +3,7 @@ package com.manywho.services.twilio.services;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentDataResponse;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentResponse;
 import com.manywho.sdk.entities.run.elements.ui.PageResponse;
+import com.manywho.services.twilio.managers.CallbackManager;
 import com.twilio.sdk.verbs.Gather;
 import com.twilio.sdk.verbs.Pause;
 import com.twilio.sdk.verbs.Play;
@@ -69,7 +70,7 @@ public class TwilioComponentService {
 
         String transcriptionCallback = component.getAttributes().get("transcribeCallback");
         if (Boolean.parseBoolean(transcribe) & StringUtils.isEmpty(transcriptionCallback)) {
-            record.setTranscribeCallback("https://manywhoservices.ngrok.com/api/twilio/2/callback/transcribe/" + stateId);
+            record.setTranscribeCallback(CallbackManager.BASE_CALLBACK_LOCATION + "/api/twilio/2/callback/transcribe/" + stateId);
         } else {
             record.setTranscribeCallback(transcriptionCallback);
         }

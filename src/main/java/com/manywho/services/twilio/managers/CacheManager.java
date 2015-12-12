@@ -2,6 +2,7 @@ package com.manywho.services.twilio.managers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
@@ -14,7 +15,7 @@ public class CacheManager {
     private static final String REDIS_KEY_MESSAGES = "service:twilio:requests:message:%s:%s";
     private static final String REDIS_KEY_TWIML_APP = "service:twilio:twiml:app:%s";
     private static final String REDIS_KEY_FLOWS = "service:twilio:flows:%s:%s";
-    private static final String REDIS_KEY_TRANSCRIPTIONS = "service:twilio:transcriptions:%s";
+    private static final String REDIS_KEY_RECORDINGS = "service:twilio:recordings:%s:%s";
 
     @Inject
     private JedisPool jedisPool;
@@ -99,6 +100,14 @@ public class CacheManager {
     }
 
     public void saveFlowExecution(String stateId, String callSid, TenantInvokeResponseTuple tuple) throws Exception {
+        if (callSid == null || callSid.isEmpty() == true) {
+            throw new Exception("The Call Sid cannot be null or blank.");
+        }
+
+        if (stateId == null || stateId.isEmpty() == true) {
+            throw new Exception("The State identifier cannot be null or blank.");
+        }
+
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(String.format(REDIS_KEY_FLOWS, stateId, callSid), objectMapper.writeValueAsString(tuple));
         }
@@ -110,21 +119,33 @@ public class CacheManager {
         }
     }
 
-    public boolean hasTranscription(String stateId) {
+    public boolean hasRecordingCallback(String stateId, String callSid) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.exists(String.format(REDIS_KEY_TRANSCRIPTIONS, stateId));
+            return jedis.exists(String.format(REDIS_KEY_RECORDINGS, stateId, callSid));
         }
     }
 
-    public void saveTranscription(String stateId, String transcriptionText) {
+    public void saveRecordingCallback(String stateId, String callSid, RecordingCallback recordingCallback) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.set(String.format(REDIS_KEY_TRANSCRIPTIONS, stateId), transcriptionText);
+            jedis.set(String.format(REDIS_KEY_RECORDINGS, stateId, callSid), objectMapper.writeValueAsString(recordingCallback));
         }
     }
 
-    public String getTranscription(String stateId) {
+    public RecordingCallback getRecordingCallback(String stateId, String callSid) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.get(String.format(REDIS_KEY_TRANSCRIPTIONS, stateId));
+            String json = jedis.get(String.format(REDIS_KEY_RECORDINGS, stateId, callSid));
+
+            if (StringUtils.isNotEmpty(json)) {
+                return objectMapper.readValue(json, RecordingCallback.class);
+            }
+        }
+
+        throw new Exception("Could not find a Recording for the call with SID: " + callSid);
+    }
+
+    public void deleteRecordingCallback(String stateId, String callSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.del(String.format(REDIS_KEY_RECORDINGS, stateId, callSid));
         }
     }
 }

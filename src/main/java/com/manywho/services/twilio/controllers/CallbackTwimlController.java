@@ -1,16 +1,9 @@
 package com.manywho.services.twilio.controllers;
 
-import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.managers.CallbackManager;
 
 import javax.inject.Inject;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 
 @Path("/callback/twiml")
 public class CallbackTwimlController {
@@ -43,24 +36,9 @@ public class CallbackTwimlController {
     public String voiceFlowStateCallback(
             @PathParam("stateId") String stateId,
             @FormParam("CallSid") String callSid,
-            @FormParam("Digits") String digits
+            @FormParam("Digits") String digits,
+            @FormParam("RecordingUrl") String recordingUrl
     ) throws Exception {
-        return callbackManager.continueFlowAsTwiml(stateId, callSid, digits);
-    }
-
-    @POST
-    @Path("/message")
-    @Consumes("application/x-www-form-urlencoded")
-    public void messageCallback(@BeanParam MessageCallback callback) throws Exception {
-        // If the callback is from a message reply, process it
-        if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("received")) {
-            callbackManager.processMessageReply(
-                    callback.getAccountSid(),
-                    callback.getMessageSid(),
-                    callback.getFrom(),
-                    callback.getTo(),
-                    callback.getBody()
-            );
-        }
+        return callbackManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl);
     }
 }

@@ -21,6 +21,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import java.util.HashMap;
 
 @Path("/messages")
 @Consumes("application/json")
@@ -61,20 +62,32 @@ public class MessageController extends AbstractController {
         Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
         SendSms smsRequest = this.parseInputs(serviceRequest, SendSms.class);
 
-        ObjectCollection replyObject = messageManager.sendSms(
-                serviceRequest,
-                configuration,
-                smsRequest.getMessage().getTo(),
-                smsRequest.getMessage().getFrom(),
-                smsRequest.getMessage().getBody()
-        );
+        ServiceResponse serviceResponse = new ServiceResponse();
+        serviceResponse.setToken(serviceRequest.getToken());
+        serviceResponse.setInvokeType(InvokeType.Wait);
 
-        return new ServiceResponse(
-                InvokeType.Wait,
-                new EngineValue("Reply", ContentType.Object, Sms.NAME, replyObject),
-                serviceRequest.getToken(),
-                "Sending an SMS"
-        );
+        ObjectCollection replyObject = null;
+
+        try {
+            replyObject = messageManager.sendSms(
+                    serviceRequest,
+                    configuration,
+                    smsRequest.getMessage().getTo(),
+                    smsRequest.getMessage().getFrom(),
+                    smsRequest.getMessage().getBody()
+            );
+        } catch (Exception e) {
+            serviceResponse.setWaitMessage(e.getMessage());
+            serviceResponse.setRootFaults(new HashMap<>());
+            serviceResponse.getRootFaults().put("SMS Error", e.getMessage());
+        }
+
+        EngineValueCollection engineValues = new EngineValueCollection();
+        engineValues.add(new EngineValue("Reply", ContentType.Object, Sms.NAME, replyObject));
+
+        serviceResponse.setOutputs(engineValues);
+
+        return serviceResponse;
     }
 
     @Path("/smssimple")
@@ -84,19 +97,29 @@ public class MessageController extends AbstractController {
         Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
         SendSmsSimple smsRequest = this.parseInputs(serviceRequest, SendSmsSimple.class);
 
-        messageManager.sendSms(
-                serviceRequest,
-                configuration,
-                smsRequest.getTo(),
-                smsRequest.getFrom(),
-                smsRequest.getBody()
-        );
+        ServiceResponse serviceResponse = new ServiceResponse();
+        serviceResponse.setToken(serviceRequest.getToken());
+        serviceResponse.setInvokeType(InvokeType.Wait);
+
+        try {
+            messageManager.sendSms(
+                    serviceRequest,
+                    configuration,
+                    smsRequest.getTo(),
+                    smsRequest.getFrom(),
+                    smsRequest.getBody()
+            );
+        } catch (Exception e) {
+            serviceResponse.setWaitMessage(e.getMessage());
+            serviceResponse.setRootFaults(new HashMap<>());
+            serviceResponse.getRootFaults().put("SMS Error", e.getMessage());
+        }
 
         EngineValueCollection engineValues = new EngineValueCollection();
-        engineValues.add(new EngineValue("From", ContentType.String, ""));
-        engineValues.add(new EngineValue("To", ContentType.String, ""));
-        engineValues.add(new EngineValue("Body", ContentType.String, ""));
+        engineValues.add(new EngineValue("Reply", ContentType.String, ""));
 
-        return new ServiceResponse(InvokeType.Wait, engineValues, serviceRequest.getToken(), "Sending an SMS");
+        serviceResponse.setOutputs(engineValues);
+
+        return serviceResponse;
     }
 }

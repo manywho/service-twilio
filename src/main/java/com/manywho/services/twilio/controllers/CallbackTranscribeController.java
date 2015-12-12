@@ -1,13 +1,10 @@
 package com.manywho.services.twilio.controllers;
 
+import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.managers.CallbackManager;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 
 @Path("/callback/transcribe")
 public class CallbackTranscribeController {
@@ -20,8 +17,8 @@ public class CallbackTranscribeController {
     @Consumes("application/x-www-form-urlencoded")
     public void voiceFlowCallback(
             @PathParam("stateId") String stateId,
-            @FormParam("TranscriptionText") String transcriptionText
+            @BeanParam RecordingCallback recordingCallback
     ) throws Exception {
-        callbackManager.saveTranscription(stateId, transcriptionText);
+        callbackManager.saveRecordingCallback(stateId, recordingCallback);
     }
 }
