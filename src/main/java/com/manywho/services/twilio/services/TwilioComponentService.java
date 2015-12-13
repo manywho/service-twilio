@@ -2,6 +2,7 @@ package com.manywho.services.twilio.services;
 
 import com.manywho.sdk.entities.run.elements.ui.PageComponentDataResponse;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentResponse;
+import com.manywho.sdk.entities.run.elements.ui.PageContainerResponse;
 import com.manywho.sdk.entities.run.elements.ui.PageResponse;
 import com.manywho.services.twilio.managers.CallbackManager;
 import com.twilio.sdk.verbs.Gather;
@@ -24,8 +25,6 @@ public class TwilioComponentService {
             PageComponentDataResponse componentData = componentDataResponse.get();
 
             switch (component.getComponentType()) {
-                case "Gather":
-                    return createGatherComponent(component);
                 case "Play":
                     return createPlayComponent(component, componentData);
                 case "PRESENTATION":
@@ -35,6 +34,16 @@ public class TwilioComponentService {
                 case "Say":
                     return createSayComponent(component, componentData);
             }
+        }
+
+        return null;
+    }
+
+    public Verb createTwimlForContainer(PageContainerResponse container) {
+
+        switch (container.getContainerType()) {
+            case "Gather":
+                return createGatherContainer(container);
         }
 
         return null;
@@ -89,18 +98,18 @@ public class TwilioComponentService {
         return new Redirect(url);
     }
 
-    static Gather createGatherComponent(PageComponentResponse component) {
+    static Gather createGatherContainer(PageContainerResponse container) {
         Gather gather = new Gather();
-        gather.setAction(component.getAttributes().get("action"));
-        gather.setFinishOnKey(component.getAttributes().get("finishOnKey"));
-        gather.setMethod(component.getAttributes().get("method"));
+        gather.setAction(container.getAttributes().get("action"));
+        gather.setFinishOnKey(container.getAttributes().get("finishOnKey"));
+        gather.setMethod(container.getAttributes().get("method"));
 
-        String numDigits = component.getAttributes().get("action");
+        String numDigits = container.getAttributes().get("action");
         if (StringUtils.isNotEmpty(numDigits)) {
             gather.setNumDigits(Integer.parseInt(numDigits));
         }
 
-        String timeout = component.getAttributes().get("action");
+        String timeout = container.getAttributes().get("action");
         if (StringUtils.isNotEmpty(timeout)) {
             gather.setTimeout(Integer.parseInt(timeout));
         }

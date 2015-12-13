@@ -19,7 +19,7 @@ import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
 import com.manywho.services.twilio.services.CallbackMessageService;
 import com.manywho.services.twilio.services.CallbackVoiceService;
 import com.manywho.services.twilio.services.TwilioComponentService;
-import com.manywho.services.twilio.types.*;
+import com.manywho.services.twilio.types.Recording;
 import com.twilio.sdk.verbs.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,21 +50,8 @@ public class CallbackManager {
 
     public void processMessage(String accountSid, String messageSid, String messageStatus, String errorCode) throws Exception {
         String errorMessage = null;
-        String waitMessage = null;
 
         LOGGER.debug("Received a message callback for the SID {} with the status {}", messageSid, messageStatus);
-
-        if (messageStatus.equalsIgnoreCase("queued")) {
-            waitMessage = "The message is currently queued to be sent";
-        }
-
-        if (messageStatus.equalsIgnoreCase("sending")) {
-            waitMessage = "The message is currently sending";
-        }
-
-        if (messageStatus.equalsIgnoreCase("delivered")) {
-            waitMessage = "The message has been delivered";
-        }
 
         if (messageStatus.equalsIgnoreCase("undelivered")) {
             errorMessage = "The message was not able to be delivered. Error code: " + errorCode;
@@ -318,8 +305,6 @@ public class CallbackManager {
         return twiMLResponse.toXML();
     }
 
-
-
     private EngineInvokeResponse startFlow(String tenantId, String flowId) throws Exception {
         EngineInitializationRequest initializationRequest = new EngineInitializationRequest();
         initializationRequest.setFlowId(new FlowId(flowId));
@@ -378,6 +363,18 @@ public class CallbackManager {
         return createTwimlResponseFromPage(invokeResponse.getStateId(), mapElementInvokeResponse);
     }
 
+    private boolean autoWrapInGather(PageResponse pageResponse) {
+
+        // If any of these component types exist, we should not wrap in a gather
+        List<String> inputComponentTypes = Arrays.asList("Record");
+
+        if (pageResponse.getPageComponentResponses().stream().anyMatch(component -> inputComponentTypes.contains(component.getComponentType()))) {
+            return false;
+        }
+
+        return true;
+    }
+
     private TwiMLResponse createTwimlResponseFromPage(String stateId, MapElementInvokeResponse mapElementInvokeResponse) throws TwiMLException {
         PageResponse pageResponse = mapElementInvokeResponse.getPageResponse();
 
@@ -387,13 +384,8 @@ public class CallbackManager {
                 .map(component -> twilioComponentService.createTwimlForComponent(pageResponse, component, stateId))
                 .collect(Collectors.toList());
 
-        // Add all the non-null TwiML components to the response
-        twimlComponents.stream()
-                .filter(Objects::nonNull)
-                .forEach(component -> twiMLResponse.getChildren().add(component));
-
-        // If there are 2 or more outcomes for the current map element, generate a Gather
-        if (mapElementInvokeResponse.hasOutcomeResponses()) {
+        // If there are outcomes and we should auto wrap in a gather, then we do that
+        if (mapElementInvokeResponse.hasOutcomeResponses() && autoWrapInGather(pageResponse) == true) {
             List<String> outcomeNames = mapElementInvokeResponse.getOutcomeResponses().stream()
                     .map(OutcomeAvailable::getDeveloperName)
                     .collect(Collectors.toList());
@@ -401,12 +393,26 @@ public class CallbackManager {
             Gather gather = new Gather();
             gather.setAction(BASE_CALLBACK_LOCATION + "/api/twilio/2/callback/twiml/voice/flow/state/" + stateId);
 
+            // Add all the non-null TwiML components to the response
+            twimlComponents.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(component -> gather.getChildren().add(component));
+
             // If there aren't already any TwiML components, then add a Say component to the Gather
             if (twiMLResponse.getChildren().isEmpty()) {
                 gather.append(new Say("Please choose a number from the following: " + StringUtils.join(outcomeNames, ", ")));
             }
 
             twiMLResponse.append(gather);
+
+            // Automatically append a pause and join in case they need to re-hear the message
+            twiMLResponse.append(twilioComponentService.createPauseComponent(10));
+            twiMLResponse.append(twilioComponentService.createRedirectComponent(BASE_CALLBACK_LOCATION + "/api/twilio/2/callback/twiml/voice/flow/state/" + stateId));
+        } else {
+            // Add all the non-null TwiML components to the response
+            twimlComponents.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(component -> twiMLResponse.getChildren().add(component));
         }
 
         return twiMLResponse;
@@ -415,4 +421,64 @@ public class CallbackManager {
     public void saveRecordingCallback(String stateId, RecordingCallback recordingCallback) throws Exception {
         cacheManager.saveRecordingCallback(stateId, recordingCallback.getCallSid(), recordingCallback);
     }
+
+    /*
+    private boolean hasMatchingContainerType(PageResponse pageResponse, String containerType) {
+        if (pageResponse.getPageContainerResponses().stream()
+                .filter(container -> container.getDeveloperName().equals("Twilio.Twiml.Response"))
+                .filter(container -> container.getPageContainerResponses() != null)
+                .anyMatch(container -> containerType.equalsIgnoreCase(container.getContainerType()))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private Verb getTwimlVerbForParentContainerType(PageResponse pageResponse, String containerType) throws Exception {
+        // Get all of the matching child containers for the provided type
+        List<PageContainerResponse> pageContainerResponses = pageResponse.getPageContainerResponses().stream()
+                .filter(container -> container.getDeveloperName().equals("Twilio.Twiml.Response"))
+                .filter(container -> container.getPageContainerResponses() != null)
+                .filter(container -> container.getContainerType().equalsIgnoreCase(containerType))
+                .collect(Collectors.toList());
+
+        if (pageContainerResponses != null &&
+                pageContainerResponses.size() > 1) {
+            throw new Exception("You cannot have more than one " + containerType + " in your Page.");
+        }
+
+        List<Verb> verbs = pageContainerResponses.stream()
+                .map(container -> twilioComponentService.createTwimlForContainer(container))
+                .collect(Collectors.toList());
+
+        if (verbs != null && verbs.size() > 0) {
+            return verbs.get(0);
+        }
+
+        return null;
+    }
+
+    private void appendTwimlVerbsForParentContainerType(String stateId, PageResponse pageResponse, String containerType, final Verb verb) {
+        pageResponse.getPageContainerResponses().stream()
+                .filter(container -> container.getDeveloperName().equals("Twilio.Twiml.Response"))
+                .filter(container -> container.getPageContainerResponses() != null)
+                .filter(container -> container.getContainerType().equalsIgnoreCase(containerType))
+                .forEach(parentContainer -> {
+                    parentContainer.getPageContainerResponses().stream()
+                            .forEach(Throwing.consumer(container -> {
+                                // Get the components for the parent container type
+                                // This function assumes there will only be one parent of each type per page
+                                List<Verb> verbs = pageResponse.getPageComponentResponses().stream()
+                                        .filter(component -> component.getPageContainerId().equals(container.getId()))
+                                        .map(component -> twilioComponentService.createTwimlForComponent(pageResponse, component, stateId))
+                                        .collect(Collectors.toList());
+
+                                // Append the child verb to the parent
+                                for (Verb childVerb : verbs) {
+                                    verb.append(childVerb);
+                                }
+                            }));
+                });
+    }
+*/
 }
