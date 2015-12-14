@@ -22,7 +22,6 @@ import com.manywho.services.twilio.services.TwilioComponentService;
 import com.manywho.services.twilio.types.Recording;
 import com.twilio.sdk.verbs.*;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 public class CallbackManager {
     private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
 
-    public static final String BASE_CALLBACK_LOCATION = "https://manywhoservices.ngrok.io";
+    public static final String BASE_CALLBACK_LOCATION = "https://services.manywho.com";
 
     @Inject
     private CacheManager cacheManager;
@@ -399,9 +398,9 @@ public class CallbackManager {
                     .forEach(component -> gather.getChildren().add(component));
 
             // If there aren't already any TwiML components, then add a Say component to the Gather
-            if (twiMLResponse.getChildren().isEmpty()) {
-                gather.append(new Say("Please choose a number from the following: " + StringUtils.join(outcomeNames, ", ")));
-            }
+            //if (twiMLResponse.getChildren().isEmpty()) {
+            //    gather.append(new Say("Please choose a number from the following: " + StringUtils.join(outcomeNames, ", ")));
+            //}
 
             twiMLResponse.append(gather);
 
