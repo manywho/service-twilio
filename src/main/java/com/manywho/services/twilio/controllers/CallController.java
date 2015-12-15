@@ -6,6 +6,7 @@ import com.manywho.sdk.enums.InvokeType;
 import com.manywho.sdk.services.annotations.AuthorizationRequired;
 import com.manywho.sdk.services.controllers.AbstractController;
 import com.manywho.services.twilio.actions.StartOutboundCall;
+import com.manywho.services.twilio.actions.StartOutboundCallSimple;
 import com.manywho.services.twilio.entities.Configuration;
 import com.manywho.services.twilio.managers.CallManager;
 
@@ -39,6 +40,26 @@ public class CallController extends AbstractController {
         );
 
         String waitMessage = "Making outbound call to: " + startOutboundCall.getCall().getTo();
+
+        return new ServiceResponse(InvokeType.Wait, serviceRequest.getToken(), waitMessage);
+    }
+
+    @POST
+    @Path("/outboundsimple")
+    @AuthorizationRequired
+    public ServiceResponse startOutboundCallSimple(ServiceRequest serviceRequest) throws Exception {
+        Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
+        StartOutboundCallSimple startOutboundCallSimple = this.parseInputs(serviceRequest, StartOutboundCallSimple.class);
+
+        callManager.startOutboundCall(
+                serviceRequest,
+                configuration,
+                startOutboundCallSimple.getFrom(),
+                startOutboundCallSimple.getTo(),
+                startOutboundCallSimple.getTimeout()
+        );
+
+        String waitMessage = "Making outbound call to: " + startOutboundCallSimple.getTo();
 
         return new ServiceResponse(InvokeType.Wait, serviceRequest.getToken(), waitMessage);
     }

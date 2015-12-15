@@ -15,7 +15,7 @@ public class Call {
     private String from;
 
     @TypeProperty(name = "Timeout", contentType = ContentType.Number, bound = false)
-    private int timeout;
+    private String timeout;
 
     public String getTo() {
         return to;
@@ -25,7 +25,7 @@ public class Call {
         return from;
     }
 
-    public int getTimeout() {
+    public String getTimeout() {
         return timeout;
     }
 }
