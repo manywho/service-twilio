@@ -48,7 +48,7 @@ public class MessageController extends AbstractController {
         );
 
         return new ServiceResponse(
-                InvokeType.Wait,
+                InvokeType.Forward,
                 new EngineValue("Reply", ContentType.Object, Mms.NAME, replyObject),
                 serviceRequest.getToken(),
                 "Sending an MMS"
@@ -64,7 +64,7 @@ public class MessageController extends AbstractController {
 
         ServiceResponse serviceResponse = new ServiceResponse();
         serviceResponse.setToken(serviceRequest.getToken());
-        serviceResponse.setInvokeType(InvokeType.Wait);
+        serviceResponse.setInvokeType(InvokeType.Forward);
 
         ObjectCollection replyObject = null;
 
@@ -99,7 +99,7 @@ public class MessageController extends AbstractController {
 
         ServiceResponse serviceResponse = new ServiceResponse();
         serviceResponse.setToken(serviceRequest.getToken());
-        serviceResponse.setInvokeType(InvokeType.Wait);
+        serviceResponse.setInvokeType(InvokeType.Forward);
 
         try {
             messageManager.sendSms(

@@ -63,6 +63,12 @@ public class CacheManager {
         }
     }
 
+    public boolean hasCallRequest(String callSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.exists(String.format(REDIS_KEY_CALLS, callSid));
+        }
+    }
+
     public void deleteMessageRequest(String accountSid, String id) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.del(String.format(REDIS_KEY_MESSAGES, accountSid, id));

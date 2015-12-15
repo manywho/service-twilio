@@ -18,6 +18,9 @@ public class StartOutboundCallSimple {
     @ActionInput(name = "Timeout", contentType = ContentType.Number)
     private String timeout;
 
+    @ActionInput(name = "Record", contentType = ContentType.Boolean)
+    private String record;
+
     public String getFrom() {
         return from;
     }
@@ -27,6 +30,10 @@ public class StartOutboundCallSimple {
     }
 
     public String getTimeout() {
+        return timeout;
+    }
+
+    public String getRecord() {
         return timeout;
     }
 }

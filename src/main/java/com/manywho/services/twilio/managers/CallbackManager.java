@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CallbackManager {
+public class CallbackManager extends RunService {
     private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
 
     public static final String BASE_CALLBACK_LOCATION = "https://services.manywho.com";
@@ -96,8 +96,10 @@ public class CallbackManager {
         }
     }
 
-    EngineInvokeResponse progressToNextStep(String tenantId, EngineInvokeResponse currentStepInvoke, OutcomeResponse outcomeToFollow, PageComponentInputResponseRequestCollection inputs) throws Exception {
+    private EngineInvokeResponse progressToNextStep(String tenantId, EngineInvokeResponse currentStepInvoke, OutcomeResponse outcomeToFollow, PageComponentInputResponseRequestCollection inputs, InvokeType invokeType) throws Exception {
         PageRequest pageRequest = new PageRequest();
+        EngineInvokeResponse engineInvokeResponse = null;
+
         if (inputs == null) {
             // Check if there are any components in the returned Page Response, as we need to send one in the next invoke
             Optional<PageComponentResponse> firstComponent = currentStepInvoke.getMapElementInvokeResponses().get(0).getPageResponse().getPageComponentResponses().stream().findFirst();
@@ -114,9 +116,14 @@ public class CallbackManager {
             pageRequest.setPageComponentInputResponses(inputs);
         }
 
+        // If we're doing a sync, we don't provide the outcome as that will confuse the engine
+        if (invokeType == InvokeType.Sync) {
+            outcomeToFollow.setId(null);
+        }
+
         EngineInvokeRequest invokeRequest = new EngineInvokeRequest();
         invokeRequest.setCurrentMapElementId(currentStepInvoke.getCurrentMapElementId());
-        invokeRequest.setInvokeType(InvokeType.Forward);
+        invokeRequest.setInvokeType(invokeType);
         invokeRequest.setMapElementInvokeRequest(new MapElementInvokeRequest() {{
             setPageRequest(pageRequest);
             setSelectedOutcomeId(outcomeToFollow.getId());
@@ -124,11 +131,25 @@ public class CallbackManager {
         invokeRequest.setStateId(currentStepInvoke.getStateId());
         invokeRequest.setStateToken(currentStepInvoke.getStateToken());
 
-        return new RunService().executeFlow(null, null, tenantId, invokeRequest);
+        engineInvokeResponse = new RunService().executeFlow(null, null, tenantId, invokeRequest);
+
+        if (invokeType == InvokeType.Sync &&
+                currentStepInvoke != null &&
+                engineInvokeResponse != null &&
+                currentStepInvoke.getCurrentMapElementId() != null &&
+                engineInvokeResponse.getCurrentMapElementId() != null &&
+                currentStepInvoke.getCurrentMapElementId().equalsIgnoreCase(engineInvokeResponse.getCurrentMapElementId()) == true) {
+            // For sync operations, the engine won't return the scaffolding, so we need to get it from the previous request as this is a sync
+            engineInvokeResponse.getMapElementInvokeResponses().get(0).getPageResponse().setPageComponentResponses(currentStepInvoke.getMapElementInvokeResponses().get(0).getPageResponse().getPageComponentResponses());
+            engineInvokeResponse.getMapElementInvokeResponses().get(0).getPageResponse().setPageContainerResponses(currentStepInvoke.getMapElementInvokeResponses().get(0).getPageResponse().getPageContainerResponses());
+        }
+
+        return engineInvokeResponse;
     }
 
     public String continueFlowAsTwiml(String stateId, String callSid, String digits, String recordingUrl) throws Exception {
         if (cacheManager.hasFlowExecution(stateId, callSid)) {
+            InvokeType invokeType = InvokeType.Forward;
             TenantInvokeResponseTuple tuple = cacheManager.getFlowExecution(stateId, callSid);
             EngineInvokeResponse invokeResponse = tuple.getInvokeResponse();
 
@@ -156,7 +177,7 @@ public class CallbackManager {
 
             // If there are no outcomes, then just speak the current step as normal
             if (CollectionUtils.isEmpty(outcomes)) {
-                return createTwimlResponseFromPage(stateId, mapElementInvokeResponse).toXML();
+                return createTwimlResponseFromPage(stateId, mapElementInvokeResponse, invokeResponse).toXML();
             }
 
             Optional<OutcomeResponse> outcomeForDigits = outcomes.stream()
@@ -188,6 +209,12 @@ public class CallbackManager {
                     inputRequest.setContentValue(digits);
 
                     inputs.add(inputRequest);
+                }
+
+                if (digits == null || digits.isEmpty() == true) {
+                    // If inputs exist and we don't have anything, we change the invoke type to join so we get the
+                    // full page back, not just the metadata
+                    invokeType = InvokeType.Sync;
                 }
             }
 
@@ -255,7 +282,7 @@ public class CallbackManager {
                 }
             }
 
-            EngineInvokeResponse nextStepInvoke = progressToNextStep(tuple.getTenantId(), invokeResponse, outcomeForDigits.get(), inputs);
+            EngineInvokeResponse nextStepInvoke = progressToNextStep(tuple.getTenantId(), invokeResponse, outcomeForDigits.get(), inputs, invokeType);
 
             cacheManager.saveFlowExecution(invokeResponse.getStateId(), callSid, new TenantInvokeResponseTuple(tuple.getTenantId(), nextStepInvoke));
 
@@ -265,7 +292,23 @@ public class CallbackManager {
 
             MapElementInvokeResponse nextMapElementInvokeResponse = nextStepInvoke.getMapElementInvokeResponses().get(0);
 
-            return createTwimlResponseFromPage(stateId, nextMapElementInvokeResponse).toXML();
+            return createTwimlResponseFromPage(stateId, nextMapElementInvokeResponse, invokeResponse).toXML();
+        } else if (cacheManager.hasCallRequest(callSid)) {
+            // Cache the call SID for future callbacks to ManyWho
+            ServiceRequest serviceRequest = cacheManager.getCallRequest(callSid);
+
+            // Join the flow as we won't have executed it yet in the context of this service
+            EngineInvokeResponse invokeResponse = joinFlow(stateId, serviceRequest.getTenantId());
+
+            cacheManager.saveFlowExecution(invokeResponse.getStateId(), callSid, new TenantInvokeResponseTuple(serviceRequest.getTenantId(), invokeResponse));
+
+            if (invokeResponse.getInvokeType().equals(InvokeType.Wait)) {
+                return getWaitTwimlResponse(10, invokeResponse).toXML();
+            }
+
+            MapElementInvokeResponse nextMapElementInvokeResponse = invokeResponse.getMapElementInvokeResponses().get(0);
+
+            return createTwimlResponseFromPage(stateId, nextMapElementInvokeResponse, invokeResponse).toXML();
         }
 
         return null;
@@ -359,7 +402,7 @@ public class CallbackManager {
 //                            }));
 //                });
 
-        return createTwimlResponseFromPage(invokeResponse.getStateId(), mapElementInvokeResponse);
+        return createTwimlResponseFromPage(invokeResponse.getStateId(), mapElementInvokeResponse, invokeResponse);
     }
 
     private boolean autoWrapInGather(PageResponse pageResponse) {
@@ -374,7 +417,7 @@ public class CallbackManager {
         return true;
     }
 
-    private TwiMLResponse createTwimlResponseFromPage(String stateId, MapElementInvokeResponse mapElementInvokeResponse) throws TwiMLException {
+    private TwiMLResponse createTwimlResponseFromPage(String stateId, MapElementInvokeResponse mapElementInvokeResponse, EngineInvokeResponse previousEngineInvokeResponse) throws TwiMLException {
         PageResponse pageResponse = mapElementInvokeResponse.getPageResponse();
 
         TwiMLResponse twiMLResponse = new TwiMLResponse();
@@ -419,6 +462,10 @@ public class CallbackManager {
 
     public void saveRecordingCallback(String stateId, RecordingCallback recordingCallback) throws Exception {
         cacheManager.saveRecordingCallback(stateId, recordingCallback.getCallSid(), recordingCallback);
+    }
+
+    private EngineInvokeResponse joinFlow(String stateId, String tenantId) throws Exception {
+        return this.executeGet(null, tenantId, "https://flow.manywho.com/api/run/1/state/" + stateId, EngineInvokeResponse.class);
     }
 
     /*

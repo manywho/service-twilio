@@ -36,12 +36,13 @@ public class CallController extends AbstractController {
                 configuration,
                 startOutboundCall.getCall().getFrom(),
                 startOutboundCall.getCall().getTo(),
-                startOutboundCall.getCall().getTimeout()
+                startOutboundCall.getCall().getTimeout(),
+                startOutboundCall.getCall().getRecord()
         );
 
         String waitMessage = "Making outbound call to: " + startOutboundCall.getCall().getTo();
 
-        return new ServiceResponse(InvokeType.Wait, serviceRequest.getToken(), waitMessage);
+        return new ServiceResponse(InvokeType.Forward, serviceRequest.getToken(), waitMessage);
     }
 
     @POST
@@ -56,11 +57,12 @@ public class CallController extends AbstractController {
                 configuration,
                 startOutboundCallSimple.getFrom(),
                 startOutboundCallSimple.getTo(),
-                startOutboundCallSimple.getTimeout()
+                startOutboundCallSimple.getTimeout(),
+                startOutboundCallSimple.getRecord()
         );
 
         String waitMessage = "Making outbound call to: " + startOutboundCallSimple.getTo();
 
-        return new ServiceResponse(InvokeType.Wait, serviceRequest.getToken(), waitMessage);
+        return new ServiceResponse(InvokeType.Forward, serviceRequest.getToken(), waitMessage);
     }
 }
