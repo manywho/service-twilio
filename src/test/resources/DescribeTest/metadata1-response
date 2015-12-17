@@ -61,6 +61,13 @@
                     "contentType": "ContentNumber",
                     "typeElementDeveloperName": null,
                     "contentFormat": null
+                }, {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Record",
+                    "contentType": "ContentBoolean",
+                    "typeElementDeveloperName": null
                 }
             ]
         },
@@ -158,6 +165,29 @@
                     "contentFormat": null
                 }
             ]
+        }, {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The Recording object structure",
+            "bindings": null,
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "Recording",
+            "properties": [{
+                "contentFormat": null,
+                "typeElementId": null,
+                "id": null,
+                "developerName": "Transcription",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null
+            }, {
+                "contentFormat": null,
+                "typeElementId": null,
+                "id": null,
+                "developerName": "Url",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null
+            }]
         }
     ]},
     "culture": {
@@ -274,6 +304,43 @@
             }],
             "serviceOutputs": [],
             "developerName": "Start Outbound Call"
+        },
+        {
+            "uriPart": "calls/outboundsimple",
+            "developerSummary": "Start an outbound phone call without using an Object",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "developerName": "Start Outbound Call (Simple)",
+            "serviceOutputs": [],
+            "serviceInputs": [{
+                "contentValue": null,
+                "developerName": "From",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "required": true,
+                "ordinal": 0
+            }, {
+                "contentValue": null,
+                "developerName": "Record",
+                "contentType": "ContentBoolean",
+                "typeElementDeveloperName": null,
+                "required": true,
+                "ordinal": 0
+            }, {
+                "contentValue": null,
+                "developerName": "Timeout",
+                "contentType": "ContentNumber",
+                "typeElementDeveloperName": null,
+                "required": true,
+                "ordinal": 0
+            }, {
+                "contentValue": null,
+                "developerName": "To",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "required": true,
+                "ordinal": 0
+            }]
         }
     ]
 }
