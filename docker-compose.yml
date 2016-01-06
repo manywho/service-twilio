@@ -1,0 +1,7 @@
+service:
+  image: manywho/service-twilio:$IMAGE_TAG
+  environment:
+    REDIS_URL: $REDIS_URL
+    REDIS_PORT: $REDIS_PORT
+  labels:
+    io.rancher.scheduler.global: 'true'
