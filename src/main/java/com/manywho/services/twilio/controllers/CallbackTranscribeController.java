@@ -1,16 +1,20 @@
 package com.manywho.services.twilio.controllers;
 
 import com.manywho.services.twilio.entities.RecordingCallback;
-import com.manywho.services.twilio.managers.CallbackManager;
+import com.manywho.services.twilio.managers.CallbackTranscribeManager;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 @Path("/callback/transcribe")
 public class CallbackTranscribeController {
 
     @Inject
-    private CallbackManager callbackManager;
+    private CallbackTranscribeManager callbackTranscribeManager;
 
     @POST
     @Path("/{stateId}")
@@ -19,6 +23,6 @@ public class CallbackTranscribeController {
             @PathParam("stateId") String stateId,
             @BeanParam RecordingCallback recordingCallback
     ) throws Exception {
-        callbackManager.saveRecordingCallback(stateId, recordingCallback);
+        callbackTranscribeManager.saveRecordingCallback(stateId, recordingCallback);
     }
 }

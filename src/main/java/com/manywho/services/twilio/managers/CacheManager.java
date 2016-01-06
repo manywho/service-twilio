@@ -1,6 +1,8 @@
 package com.manywho.services.twilio.managers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.manywho.sdk.client.RunClient;
+import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
@@ -8,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 public class CacheManager {
@@ -22,6 +25,9 @@ public class CacheManager {
 
     @Inject
     private ObjectMapper objectMapper;
+
+    @Inject
+    private RunClient runClient;
 
     public void deleteCallRequest(String sid) {
         String key = String.format(REDIS_KEY_CALLS, sid);
@@ -69,12 +75,6 @@ public class CacheManager {
         }
     }
 
-    public void deleteMessageRequest(String accountSid, String id) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.del(String.format(REDIS_KEY_MESSAGES, accountSid, id));
-        }
-    }
-
     public ServiceRequest getMessageRequest(String accountSid, String id) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
             String json = jedis.get(String.format(REDIS_KEY_MESSAGES, accountSid, id));
@@ -93,29 +93,23 @@ public class CacheManager {
         }
     }
 
-    public TenantInvokeResponseTuple getFlowExecution(String stateId, String callSid) throws Exception {
+    public FlowState getFlowExecution(String stateId, String callSid) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
             String json = jedis.get(String.format(REDIS_KEY_FLOWS, stateId, callSid));
 
             if (StringUtils.isNotEmpty(json)) {
-                return objectMapper.readValue(json, TenantInvokeResponseTuple.class);
+                TenantInvokeResponseTuple tuple = objectMapper.readValue(json, TenantInvokeResponseTuple.class);
+
+                return new FlowState(runClient, tuple.getTenantId(), tuple.getInvokeResponse());
             }
         }
 
         throw new Exception("Could not find a stored flow execution for the call with SID: " + callSid);
     }
 
-    public void saveFlowExecution(String stateId, String callSid, TenantInvokeResponseTuple tuple) throws Exception {
-        if (callSid == null || callSid.isEmpty() == true) {
-            throw new Exception("The Call Sid cannot be null or blank.");
-        }
-
-        if (stateId == null || stateId.isEmpty() == true) {
-            throw new Exception("The State identifier cannot be null or blank.");
-        }
-
+    public void saveFlowExecution(@Nonnull String stateId, @Nonnull String callSid, @Nonnull FlowState flowState) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.set(String.format(REDIS_KEY_FLOWS, stateId, callSid), objectMapper.writeValueAsString(tuple));
+            jedis.set(String.format(REDIS_KEY_FLOWS, stateId, callSid), objectMapper.writeValueAsString(new TenantInvokeResponseTuple(flowState.getTenantId(), flowState.getInvokeResponse())));
         }
     }
 

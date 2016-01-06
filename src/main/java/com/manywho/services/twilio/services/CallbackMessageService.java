@@ -5,63 +5,51 @@ import com.manywho.sdk.entities.run.EngineValue;
 import com.manywho.sdk.entities.run.EngineValueCollection;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
-import com.manywho.sdk.entities.run.elements.type.Object;
-import com.manywho.sdk.entities.run.elements.type.ObjectCollection;
-import com.manywho.sdk.entities.run.elements.type.Property;
-import com.manywho.sdk.entities.run.elements.type.PropertyCollection;
+import com.manywho.sdk.entities.run.elements.type.MObject;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.services.twilio.types.Sms;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 
 public class CallbackMessageService {
 
     @Inject
     private RunService runService;
 
-    public InvokeType sendMessageResponse(ServiceRequest serviceRequest, InvokeType invokeType, String waitMessageText, String errorMessageText) throws Exception {
-        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), new ServiceResponse() {{
-            setInvokeType(invokeType);
+    @Inject
+    private ObjectMapperService objectMapperService;
 
-            if (errorMessageText != null) {
-                setRootFaults(new HashMap<String, String>() {{
-                    put("error", errorMessageText);
-                }});
-            }
+    public InvokeType sendMessageResponse(ServiceRequest serviceRequest, String waitMessageText, String errorMessageText) throws Exception {
+        ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, serviceRequest.getToken());
+        serviceResponse.setTenantId(serviceRequest.getTenantId());
 
-            setTenantId(serviceRequest.getTenantId());
-            setToken(serviceRequest.getToken());
+        if (errorMessageText != null) {
+            serviceResponse.addRootFault("error", errorMessageText);
+        }
 
-            if (waitMessageText != null) {
-                setWaitMessage(waitMessageText);
-            }
-        }});
+        if (waitMessageText != null) {
+            serviceResponse.setWaitMessage(waitMessageText);
+        }
+
+        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
     }
 
-    public InvokeType sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String body) throws Exception {
+    public void sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String body) throws Exception {
         EngineValueCollection replyOutput = new EngineValueCollection();
 
         // If the action was SendSmsSimple, just add a "Reply" string as the output, otherwise use an Sms object
         if (serviceRequest.getUri().endsWith("simple")) {
             replyOutput.add(new EngineValue("Reply", ContentType.String, body));
         } else {
-            replyOutput.add(new EngineValue("Reply", ContentType.Object, Sms.NAME, new ObjectCollection() {{
-                add(new Object() {{
-                    setDeveloperName(Sms.NAME);
-                    setExternalId(messageSid);
-                    setProperties(new PropertyCollection() {{
-                        add(new Property("From", from));
-                        add(new Property("Body", body));
-                    }});
-                }});
-            }}));
+            MObject smsObject = objectMapperService.convertSmsToObject(new Sms(messageSid, null, from, body));
+
+            replyOutput.add(new EngineValue("Reply", ContentType.Object, Sms.NAME, smsObject));
         }
 
         ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, replyOutput, serviceRequest.getToken());
         serviceResponse.setTenantId(serviceRequest.getTenantId());
 
-        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
+        runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
     }
 }

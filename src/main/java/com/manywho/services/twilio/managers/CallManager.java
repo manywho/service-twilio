@@ -15,8 +15,7 @@ public class CallManager {
     @Inject
     private CallService callService;
 
-    public String startOutboundCall(ServiceRequest serviceRequest, Configuration configuration, String from, String to, String timeout, String recordCall) throws Exception {
-        int timeoutInt = Integer.parseInt(timeout);
+    public void startOutboundCall(ServiceRequest serviceRequest, Configuration configuration, String from, String to, String timeout, String recordCall) throws Exception {
         boolean recordCallBool = Boolean.parseBoolean(recordCall);
 
         // Begin the outbound call. Twilio will callback to the service to request some TwiML for the call
@@ -26,13 +25,11 @@ public class CallManager {
                 configuration.getAuthToken(),
                 from,
                 to,
-                timeoutInt,
+                timeout,
                 recordCallBool
         );
 
         // Cache the call SID for future callbacks to ManyWho
         cacheManager.saveCallRequest(call.getSid(), serviceRequest);
-
-        return call.getSid();
     }
 }

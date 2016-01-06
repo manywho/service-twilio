@@ -35,8 +35,8 @@
                 },
                 {
                     "typeElementPropertyId": null,
-                    "contentValue": "",
-                    "objectData": null,
+                    "contentValue": null,
+                    "objectData": [],
                     "contentFormat": null,
                     "developerName": "Media",
                     "contentType": null
@@ -52,7 +52,7 @@
         "contentType": "ContentObject"
     }],
     "mode": null,
-    "invokeType": "WAIT",
+    "invokeType": "FORWARD",
     "waitMessage": "Sending an MMS",
     "rootFaults": null,
     "culture": null,

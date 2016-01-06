@@ -17,7 +17,7 @@ public class Call {
     @TypeProperty(name = "Timeout", contentType = ContentType.Number, bound = false)
     private String timeout;
 
-    @TypeProperty(name = "Record", contentType = ContentType.Boolean, bound = false)
+    @TypeProperty(name = "Record?", contentType = ContentType.Boolean, bound = false)
     private String record;
 
     public String getTo() {

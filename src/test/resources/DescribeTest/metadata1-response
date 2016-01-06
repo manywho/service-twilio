@@ -65,7 +65,7 @@
                     "contentFormat": null,
                     "typeElementId": null,
                     "id": null,
-                    "developerName": "Record",
+                    "developerName": "Record?",
                     "contentType": "ContentBoolean",
                     "typeElementDeveloperName": null
                 }
@@ -321,7 +321,7 @@
                 "ordinal": 0
             }, {
                 "contentValue": null,
-                "developerName": "Record",
+                "developerName": "Record?",
                 "contentType": "ContentBoolean",
                 "typeElementDeveloperName": null,
                 "required": true,

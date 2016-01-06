@@ -1,6 +1,6 @@
 package com.manywho.services.twilio.controllers;
 
-import com.manywho.services.twilio.managers.CallbackManager;
+import com.manywho.services.twilio.managers.CallbackTwimlManager;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -9,7 +9,7 @@ import javax.ws.rs.*;
 public class CallbackTwimlController {
 
     @Inject
-    private CallbackManager callbackManager;
+    private CallbackTwimlManager callbackTwimlManager;
 
     @POST
     @Path("/voice/flow/{tenantId}/{flowId}")
@@ -19,11 +19,10 @@ public class CallbackTwimlController {
             @PathParam("tenantId") String tenantId,
             @PathParam("flowId") String flowId,
             @FormParam("CallSid") String callSid,
-            @FormParam("Direction") String direction,
-            @FormParam("AnsweredBy") String answeredBy
+            @FormParam("Direction") String direction
     ) throws Exception {
         if (direction.equals("inbound")) {
-            return callbackManager.startFlowAsTwiml(tenantId, flowId, callSid);
+            return callbackTwimlManager.startFlowAsTwiml(tenantId, flowId, callSid).toXML();
         }
 
         return null;
@@ -39,6 +38,6 @@ public class CallbackTwimlController {
             @FormParam("Digits") String digits,
             @FormParam("RecordingUrl") String recordingUrl
     ) throws Exception {
-        return callbackManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl);
+        return callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl).toXML();
     }
 }

@@ -2,11 +2,11 @@ package com.manywho.services.twilio.controllers;
 
 import com.manywho.sdk.entities.describe.DescribeServiceResponse;
 import com.manywho.sdk.entities.describe.DescribeValue;
-import com.manywho.sdk.entities.describe.DescribeValueCollection;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.sdk.entities.translate.Culture;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.services.describe.DescribeServiceBuilder;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,10 +22,8 @@ public class DescribeController {
         return new DescribeServiceBuilder()
                 .setProvidesLogic(true)
                 .setCulture(new Culture("EN", "US"))
-                .setConfigurationValues(new DescribeValueCollection() {{
-                    add(new DescribeValue("Account SID", ContentType.String, true));
-                    add(new DescribeValue("Auth Token", ContentType.Password, true));
-                }})
+                .addConfigurationValue(new DescribeValue("Account SID", ContentType.String, true))
+                .addConfigurationValue(new DescribeValue("Auth Token", ContentType.Password, true))
                 .createDescribeService()
                 .createResponse();
     }

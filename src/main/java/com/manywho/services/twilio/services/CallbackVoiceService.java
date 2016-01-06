@@ -15,13 +15,10 @@ public class CallbackVoiceService {
     private RunService runService;
 
     public InvokeType sendCallResponse(ServiceRequest serviceRequest, String answeredBy) throws Exception {
-        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), new ServiceResponse() {{
-            setInvokeType(InvokeType.Forward);
-            setOutputs(new EngineValueCollection() {{
-                add(new EngineValue("Result", ContentType.String, answeredBy));
-            }});
-            setTenantId(serviceRequest.getTenantId());
-            setToken(serviceRequest.getToken());
-        }});
+        ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, serviceRequest.getToken());
+        serviceResponse.setOutputs(new EngineValueCollection(new EngineValue("Result", ContentType.String, answeredBy)));
+        serviceResponse.setTenantId(serviceRequest.getTenantId());
+
+        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
     }
 }

@@ -3,8 +3,8 @@
     "tenantId": null,
     "culture": null,
     "annotations": null,
-    "invokeType": "WAIT",
-    "waitMessage": "Sending an SMS",
+    "invokeType": "FORWARD",
+    "waitMessage": null,
     "outputs": [
         {
             "valueElementId": null,
