@@ -1,7 +1,5 @@
 package com.manywho.services.twilio;
 
-import com.manywho.sdk.services.config.RedisConfiguration;
-import com.manywho.services.twilio.configuration.Redis;
 import com.manywho.services.twilio.configuration.TwilioConfiguration;
 import com.manywho.services.twilio.facades.TwilioClientFacade;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
@@ -14,7 +12,6 @@ import javax.inject.Singleton;
 public class ApplicationBinder extends AbstractBinder {
     @Override
     protected void configure() {
-        bind(Redis.class).to(RedisConfiguration.class).in(Singleton.class);
         bind(TwilioConfiguration.class).to(TwilioConfiguration.class).in(Singleton.class);
         bind(TwilioRestClientFactory.class).to(TwilioRestClientFactory.class).in(Singleton.class);
         bind(CacheManager.class).to(CacheManager.class);
