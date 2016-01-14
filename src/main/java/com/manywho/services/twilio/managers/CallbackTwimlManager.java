@@ -25,10 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.manywho.sdk.client.utils.PageComponentUtils.doInputComponentsExist;
@@ -250,6 +247,12 @@ public class CallbackTwimlManager {
         if (flowState.hasOutcomes() && !doesComponentWithTypeExist(flowState.getPageComponents(), "Record")) {
             Gather gather = new Gather();
             gather.setAction(createTwimlVoiceStateUrl(stateId));
+
+            Optional<Outcome> maxDevName = flowState.getOutcomes().stream().max(Comparator.comparing(outcome -> outcome.getName().length()));
+
+            if(maxDevName.isPresent()) {
+                gather.setNumDigits(maxDevName.get().getName().length());
+            }
 
             // Add all the TwiML components to the Gather
             twimlComponents.stream()

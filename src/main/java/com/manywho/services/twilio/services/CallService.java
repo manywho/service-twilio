@@ -28,7 +28,7 @@ public class CallService {
         callParameters.put("Timeout", timeout);
         callParameters.put("IfMachine", "Continue");
         callParameters.put("Record", Boolean.toString(recordCall));
-        callParameters.put("StatusCallback", "https://" + uriInfo.getBaseUri().getHost() + "/callback/status/voice");
+        callParameters.put("StatusCallback", "https://" + uriInfo.getBaseUri().getHost() + "/api/twilio/2/callback/status/voice");
         callParameters.put("Url", "https://" + uriInfo.getBaseUri().getHost() + "/api/twilio/2/callback/twiml/voice/flow/state/" + stateId);
 
         return account.getCallFactory().create(callParameters);
