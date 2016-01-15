@@ -248,10 +248,10 @@ public class CallbackTwimlManager {
             Gather gather = new Gather();
             gather.setAction(createTwimlVoiceStateUrl(stateId));
 
-            Optional<Outcome> maxDevName = flowState.getOutcomes().stream().max(Comparator.comparing(outcome -> outcome.getName().length()));
+            Optional<Outcome> longestNamedOutcome = flowState.getOutcomes().stream().max(Comparator.comparing(outcome -> outcome.getName().length()));
 
-            if(maxDevName.isPresent()) {
-                gather.setNumDigits(maxDevName.get().getName().length());
+            if(longestNamedOutcome.isPresent()) {
+                gather.setNumDigits(longestNamedOutcome.get().getName().length());
             }
 
             // Add all the TwiML components to the Gather
