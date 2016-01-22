@@ -25,7 +25,7 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         messageParameters.put("From", "440123456789");
         messageParameters.put("To", "00440123456788");
         messageParameters.put("Body", "hello message");
-        messageParameters.put("ApplicationSid", "mockAppSid");
+        messageParameters.put("StatusCallback", "http://localhost:9998/callback/status/message");
 
         Sms sms = mock(Sms.class);
         when(sms.getAccountSid()).thenReturn("mockAppSid");

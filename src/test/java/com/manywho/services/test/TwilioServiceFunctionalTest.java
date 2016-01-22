@@ -24,7 +24,6 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
     protected TwilioRestClient mockTwilioRestClient;
     protected SmsFactory mockSmsFactory;
     protected Account mockAccount;
-    protected TwilioConfiguration mockTwilioConfiguration;
     protected TwilioRestClientFactory mockTwilioClientFactory;
     protected MessageFactory mockMessageFactory;
 
@@ -38,7 +37,6 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
         mockMessageFactory = mock(MessageFactory.class);
         mockTwilioRestClient = mock(TwilioRestClient.class);
         mockTwilioClientFactory = mock(TwilioRestClientFactory.class);
-        mockTwilioConfiguration = mock(TwilioConfiguration.class);
 
         when(mockAccount.getSmsFactory()).thenReturn(mockSmsFactory);
         when(mockAccount.getMessageFactory()).thenReturn(mockMessageFactory);
@@ -47,7 +45,6 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
         return new com.manywho.services.twilio.Application().register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bindFactory(new MockFactory<TwilioConfiguration>(mockTwilioConfiguration)).to(TwilioConfiguration.class).in(Singleton.class).ranked(1);
                 bindFactory(new MockFactory<MockJedisPool>(mockJedisPool)).to(JedisPool.class).ranked(1);
                 bindFactory(new MockFactory<TwilioRestClientFactory>(mockTwilioClientFactory)).to(TwilioRestClientFactory.class).ranked(1);
             }

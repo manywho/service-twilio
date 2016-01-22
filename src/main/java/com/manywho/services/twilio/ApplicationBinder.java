@@ -29,7 +29,6 @@ public class ApplicationBinder extends AbstractBinder {
         bind(ObjectMapperService.class).to(ObjectMapperService.class);
         bind(RunClient.class).to(RunClient.class);
         bind(TwilioComponentService.class).to(TwilioComponentService.class);
-        bind(TwimlApplicationManager.class).to(TwimlApplicationManager.class);
         bind(TwilioClientFacade.class).to(TwilioClientFacade.class);
     }
 }

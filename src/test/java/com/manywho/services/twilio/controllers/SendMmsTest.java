@@ -34,11 +34,10 @@ public class SendMmsTest extends TwilioServiceFunctionalTest {
         when(mms.getMedia()).thenReturn(mediaList);
 
         final List<NameValuePair> messageParameters = new ArrayList<>();
-
         messageParameters.add(new BasicNameValuePair("To", "00440123456788"));
         messageParameters.add(new BasicNameValuePair("From", "440123456789"));
         messageParameters.add(new BasicNameValuePair("Body", "hello message"));
-        messageParameters.add(new BasicNameValuePair("ApplicationSid", "mockAppSid"));
+        messageParameters.add(new BasicNameValuePair("StatusCallback", "http://localhost:9998/callback/status/message"));
         messageParameters.add(new BasicNameValuePair("MediaUrl", "https://demo.twilio.com/owl.png"));
 
         when(mockMessageFactory.create(messageParameters)).thenReturn(mms);
