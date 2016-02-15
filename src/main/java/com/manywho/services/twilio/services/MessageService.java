@@ -2,9 +2,9 @@ package com.manywho.services.twilio.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.services.twilio.configuration.TwilioConfiguration;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
 import com.manywho.services.twilio.managers.CacheManager;
-import com.manywho.services.twilio.managers.TwimlApplicationManager;
 import com.manywho.services.twilio.types.Media;
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.resource.instance.Message;
@@ -36,7 +36,7 @@ public class MessageService {
     private ObjectMapper objectMapper;
 
     @Inject
-    private TwimlApplicationManager twimlApplication;
+    private TwilioConfiguration twilioConfiguration;
 
     @Inject
     private TwilioRestClientFactory twilioClientFactory;
@@ -48,7 +48,7 @@ public class MessageService {
         messageParameters.put("To", to);
         messageParameters.put("From", from);
         messageParameters.put("Body", body);
-        messageParameters.put("ApplicationSid", twimlApplication.getApplicationSid(accountSid, authToken, from));
+        messageParameters.put("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("SmsStatusCallback"));
 
         LOGGER.debug("Sending an SMS to {}", to);
 
@@ -62,7 +62,7 @@ public class MessageService {
         messageParameters.add(new BasicNameValuePair("To", to));
         messageParameters.add(new BasicNameValuePair("From", from));
         messageParameters.add(new BasicNameValuePair("Body", body));
-        messageParameters.add(new BasicNameValuePair("ApplicationSid", twimlApplication.getApplicationSid(accountSid, authToken, from)));
+        messageParameters.add(new BasicNameValuePair("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("SmsStatusCallback")));
 
         for (Media media : medias) {
             messageParameters.add(new BasicNameValuePair("MediaUrl", media.getUrl()));

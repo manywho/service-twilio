@@ -12,11 +12,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class OutboundTest extends TwilioServiceFunctionalTest {
-    @Test
-    @Ignore
-    public void testOutbound() throws Exception {
-        // a new twilio client is created whit the credentials passed throw the api
-    }
 
     @Test
     public void testCheckAuthentication() throws IOException, URISyntaxException {
