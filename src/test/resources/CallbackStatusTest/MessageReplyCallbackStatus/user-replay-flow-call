@@ -1,0 +1,52 @@
+{
+    "token": "mock-token",
+    "tenantId": "mock-tenant-id",
+    "culture": null,
+    "annotations": null,
+    "invokeType": "FORWARD",
+    "waitMessage": null,
+    "outputs": [{
+        "valueElementId": null,
+        "typeElementId": null,
+        "typeElementPropertyId": null,
+        "developerName": "Reply",
+        "typeElementDeveloperName": "SMS",
+        "typeElementPropertyDeveloperName": null,
+        "contentValue": null,
+        "contentType": "ContentObject",
+        "objectData": [{
+            "internalId": null,
+            "externalId": "SMd931e01d8ce64158b8c962c6a1b24e5c",
+            "developerName": "SMS",
+            "typeElementId": null,
+            "order": 0,
+            "properties": [{
+                "typeElementPropertyId": null,
+                "developerName": "To",
+                "contentType": null,
+                "contentValue": null,
+                "contentFormat": null,
+                "objectData": null
+            }, {
+                "typeElementPropertyId": null,
+                "developerName": "From",
+                "contentType": null,
+                "contentValue": "+440123456789",
+                "contentFormat": null,
+                "objectData": null
+            }, {
+                "typeElementPropertyId": null,
+                "developerName": "Body",
+                "contentType": null,
+                "contentValue": "Hi",
+                "contentFormat": null,
+                "objectData": null
+            }],
+            "isSelected": false
+        }]
+    }],
+    "selectedOutcomeId": null,
+    "rootFaults": null,
+    "valueFaults": null,
+    "mode": null
+}

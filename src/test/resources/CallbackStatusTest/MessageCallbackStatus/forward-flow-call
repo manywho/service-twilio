@@ -1,0 +1,13 @@
+{
+    "token": "mock-token",
+    "tenantId": "mock-tenant-id",
+    "culture": null,
+    "annotations": null,
+    "invokeType": "FORWARD",
+    "waitMessage": null,
+    "outputs": null,
+    "selectedOutcomeId": null,
+    "rootFaults": null,
+    "valueFaults": null,
+    "mode": null
+}

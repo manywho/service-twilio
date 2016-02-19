@@ -1,0 +1,174 @@
+{
+    "culture" : {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "stateId" : "5f942f66-7840-4e4d-8209-09647fc67261",
+    "parentStateId" : null,
+    "stateToken": "3a55fa5d-4cb0-4ba5-8079-6283c8d53dbf",
+    "alertEmail": "test@manywho.com",
+    "waitMessage" : null,
+    "notAuthorizedMessage" : null,
+    "currentMapElementId": "92f2ccf0-9dd5-4005-b9cb-16d738103d22",
+    "currentStreamId": null,
+    "invokeType": "FORWARD",
+    "annotations": null,
+    "mapElementInvokeResponses": [
+        {
+            "mapElementId": "92f2ccf0-9dd5-4005-b9cb-16d738103d22",
+            "developerName": "recording page",
+            "pageResponse": {
+                "label": "",
+                "pageContainerResponses": [
+                    {
+                        "id": "a66164c8-5321-405b-9432-8b5d0bde13dc",
+                        "containerType": "Twilio.Twiml.Response",
+                        "developerName": "Twilio.Twiml.Response",
+                        "label": "",
+                        "pageContainerResponses": null,
+                        "order": 0,
+                        "attributes": null
+                    }
+                ],
+                "pageComponentResponses": [
+                    {
+                        "pageContainerDeveloperName": "Twilio.Twiml.Response",
+                        "pageContainerId": "a66164c8-5321-405b-9432-8b5d0bde13dc",
+                        "id": "7f1276b4-4eef-4c3d-9577-2aa011e7ca7b",
+                        "developerName": "recording",
+                        "componentType": "Say",
+                        "contentType": null,
+                        "label": "",
+                        "columns": null,
+                        "size": 0,
+                        "maxSize": 0,
+                        "height": 0,
+                        "width": 0,
+                        "hintValue": "",
+                        "helpInfo": "",
+                        "order": 0,
+                        "multiSelect": false,
+                        "searchable": false,
+                        "hasEvents": false,
+                        "attributes": {
+                            "voice": "alice",
+                            "loop": "",
+                            "language": "en"
+                        }
+                    },
+                    {
+                        "pageContainerDeveloperName": "Twilio.Twiml.Response",
+                        "pageContainerId": "a66164c8-5321-405b-9432-8b5d0bde13dc",
+                        "id": "9c1f2eb7-7e4b-4a56-afd1-d74e51b516bc",
+                        "developerName": "recording",
+                        "componentType": "Record",
+                        "contentType": null,
+                        "label": "",
+                        "columns": null,
+                        "size": 0,
+                        "maxSize": 0,
+                        "height": 0,
+                        "width": 0,
+                        "hintValue": "",
+                        "helpInfo": "",
+                        "order": 1,
+                        "multiSelect": false,
+                        "searchable": false,
+                        "hasEvents": false,
+                        "attributes": {
+                            "transcribe": "true",
+                            "playBeep": "true",
+                            "trim": "trim-silence",
+                            "method": "POST",
+                            "action": "",
+                            "timeout": "",
+                            "maxLength": "",
+                            "finishOnKey": "",
+                            "transcribeCallback": ""
+                        },
+                    }
+                ],
+                "pageComponentDataResponses": [
+                    {
+                        "pageComponentId": "7f1276b4-4eef-4c3d-9577-2aa011e7ca7b",
+                        "enabled": true,
+                        "editable": false,
+                        "required": false,
+                        "visible": true,
+                        "objectData": null,
+                        "objectDataRequest": null,
+                        "fileDataRequest": null,
+                        "contentValue": null,
+                        "content": "Please leave your message.",
+                        "imageUri": null,
+                        "valid": true,
+                        "validationMessage": null,
+                        "tags": null
+                    },
+                    {
+                        "pageComponentId": "9c1f2eb7-7e4b-4a56-afd1-d74e51b516bc",
+                        "enabled": true,
+                        "editable": false,
+                        "required": false,
+                        "visible": true,
+                        "objectData": null,
+                        "objectDataRequest": null,
+                        "fileDataRequest": null,
+                        "contentValue": null,
+                        "content": null,
+                        "imageUri": null,
+                        "valid": true,
+                        "validationMessage": null,
+                        "tags": null
+                    }
+                ],
+                "pageContainerDataResponses": [
+                    {
+                        "pageContainerId": "a66164c8-5321-405b-9432-8b5d0bde13dc",
+                        "enabled": true,
+                        "editable": true,
+                        "visible": true,
+                        "tags": null
+                    }
+                ],
+                "tags": null,
+                "attributes": null,
+                "order": 0
+            },
+            "outcomeResponses" : [
+                {
+                    "pageActionBindingType": "SAVE",
+                    "pageActionType": "",
+                    "bulkAction": false,
+                    "pageObjectBindingId": null,
+                    "out": false,
+                    "id": "64384b05-1d4f-47b0-abd2-372c0500adf9",
+                    "developerName": "end",
+                    "label": "end",
+                    "order": 0
+                }
+            ],
+            "rootFaults": null
+        }
+    ],
+    "voteResponse": null,
+    "stateLog": null,
+    "preCommitStateValues": null,
+    "stateValues": null,
+    "outputs": null,
+    "statusCode": "200",
+    "runFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?flow-id=643f3a0d-973f-4d97-a3cb-f2a28edca148",
+    "joinFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?join=5f942f66-7840-4e4d-8209-09647fc67261",
+    "authorizationContext": {
+        "directoryName": null,
+        "directoryId": null,
+        "loginUrl": null,
+        "authenticationType":  "USERNAME_PASSWORD"
+    },
+    "navigationElementReferences": null
+}

@@ -1,0 +1,32 @@
+{
+    "culture": null,
+    "objectData": [
+        {
+            "internalId": null,
+            "externalId": "CA1234",
+            "developerName": "Call Recording",
+            "typeElementId": null,
+            "order": 0,
+            "properties": [
+                {
+                    "typeElementPropertyId": null,
+                    "developerName": "ID",
+                    "contentType": null,
+                    "contentValue": "CA1234",
+                    "contentFormat": null,
+                    "objectData": null
+                },
+                {
+                    "typeElementPropertyId": null,
+                    "developerName": "Recording Url",
+                    "contentType": null,
+                    "contentValue": "https://api.twilio.com/2010-04-01/Accounts/AC1234/Recordings/RE1234",
+                    "contentFormat": null,
+                    "objectData": null
+                }
+            ],
+            "isSelected": false
+        }
+    ],
+    "hasMoreResults": false
+}

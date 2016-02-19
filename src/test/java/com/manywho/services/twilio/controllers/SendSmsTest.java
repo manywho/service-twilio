@@ -39,7 +39,7 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
 
         // save fake application sid in cache
-        mockJedis.set("service:twilio:twiml:app:mockAppSid", "mockAppSid");
+        mockJedis.set("service:twilio:callbackTwiml:app:mockAppSid", "mockAppSid");
 
         Response responseMsg = target("/messages/sms")
                 .request()
@@ -57,11 +57,6 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         //check that the message have been sent to twilio
         verify(mockSmsFactory, times(1)).create(messageParameters);
 
-        //check the message is saved in redis
-        assertEquals(
-                getJsonFormatFileContent("SendSmsTest/sms1-ok-request"),
-                getJsonFormat(mockJedis.get("service:twilio:requests:message:mockAppSid:1"))
-        );
         assertEquals(
                 getJsonFormatFileContent("SendSmsTest/sms1-ok-request"),
                 getJsonFormat(mockJedis.get("service:twilio:requests:message:mockAppSid:44012345678900440123456788"))

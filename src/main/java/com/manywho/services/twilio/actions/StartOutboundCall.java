@@ -3,6 +3,7 @@ package com.manywho.services.twilio.actions;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.services.annotations.Action;
 import com.manywho.sdk.services.annotations.ActionInput;
+import com.manywho.sdk.services.annotations.ActionOutput;
 import com.manywho.services.twilio.types.Call;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class StartOutboundCall {
     @NotNull(message = "A Call object must be provided when a outbound call is created")
     @ActionInput(name = "Call", contentType = ContentType.Object)
+    @ActionOutput(name = "Call Sid", contentType = ContentType.String)
     private Call call;
 
     public Call getCall() {

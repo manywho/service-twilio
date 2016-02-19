@@ -1,0 +1,99 @@
+{
+    "stateId": null,
+    "token": null,
+    "typeElementBindingId": null,
+    "authorization": {
+        "users": null,
+        "groups": null,
+        "runningAuthenticationId": null,
+        "globalAuthenticationType": "PUBLIC"
+    },
+    "configurationValues": [
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Account SID",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "AC1234",
+            "contentType": null,
+            "objectData": null
+        },
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Auth Token",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "fake-token",
+            "contentType": null,
+            "objectData": null
+        }
+    ],
+    "command": null,
+    "culture": {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "listFilter": {
+        "id": "CA1234",
+        "comparisonType": "",
+        "filterByProvidedObjects": false,
+        "where": null,
+        "orderByPropertyDeveloperName": null,
+        "orderByDirectionType": "",
+        "limit": 0,
+        "offset": 0,
+        "search": null,
+        "searchCriteria": null
+    },
+    "objectDataType": {
+        "typeElementId": "7e76d95f-a209-4657-ba95-8324c0ac2964",
+        "developerName": "Call Recording",
+        "properties": [
+            {
+                "developerName": "ID",
+                "list": null
+            },
+            {
+                "developerName": "Recording Sid",
+                "list": null
+            }
+        ]
+    },
+    "objectData": [
+        {
+            "internalId": "80d60ada-4110-40b3-8a94-f2cdd59d8fd8",
+            "externalId": null,
+            "developerName": "Call Recording",
+            "typeElementId": "7e76d95f-a209-4657-ba95-8324c0ac2964",
+            "order": 0,
+            "properties": [
+                {
+                    "typeElementPropertyId": "6a70c1f4-7311-46bf-bdee-4327fdad8130",
+                    "developerName": "ID",
+                    "contentValue": "",
+                    "contentType": "ContentString",
+                    "contentFormat": "",
+                    "objectData": null
+                },
+                {
+                    "typeElementPropertyId": "955e6576-1e69-4b75-9632-63e5d0ca3f86",
+                    "developerName": "Recording Sid",
+                    "contentValue": "",
+                    "contentType": "ContentString",
+                    "contentFormat": "",
+                    "objectData": null
+                }
+            ],
+            "isSelected": false
+        }
+    ]
+}

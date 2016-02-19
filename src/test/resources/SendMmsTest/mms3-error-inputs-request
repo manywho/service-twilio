@@ -4,8 +4,8 @@
     "uri": "https://fdac76b2.ngrok.io/messages/sms",
     "inputs": [],
     "outcomes": null,
-    "token": "260c1542-648d-4bfd-8f06-350e10299c71",
-    "tenantId": "67204d5c-6022-474d-8f80-0d576b43d02d",
+    "token": "mock-token",
+    "tenantId": "mock-tenant-id",
     "stateId": "b6ad80af-d085-4f51-80b3-4571200e5b4f",
     "callbackUri": "https://flow.manywho.com/api/run/1/response",
     "culture": {

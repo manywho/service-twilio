@@ -3,6 +3,7 @@ package com.manywho.services.twilio.actions;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.services.annotations.Action;
 import com.manywho.sdk.services.annotations.ActionInput;
+import com.manywho.sdk.services.annotations.ActionOutput;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Action(name = "Start Outbound Call (Simple)", summary = "Start an outbound phone call without using an Object", uriPart = "calls/outboundsimple")
@@ -21,6 +22,9 @@ public class StartOutboundCallSimple {
     @ActionInput(name = "Record?", contentType = ContentType.Boolean)
     private String record;
 
+    @ActionOutput(name = "Call Sid", contentType = ContentType.String)
+    private String callSid;
+
     public String getFrom() {
         return from;
     }
@@ -34,6 +38,6 @@ public class StartOutboundCallSimple {
     }
 
     public String getRecord() {
-        return timeout;
+        return record;
     }
 }

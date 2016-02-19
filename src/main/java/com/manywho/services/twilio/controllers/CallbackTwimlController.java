@@ -5,7 +5,7 @@ import com.manywho.services.twilio.managers.CallbackTwimlManager;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 
-@Path("/callback/twiml")
+@Path("/callback/callbackTwiml")
 public class CallbackTwimlController {
 
     @Inject
@@ -38,6 +38,10 @@ public class CallbackTwimlController {
             @FormParam("Digits") String digits,
             @FormParam("RecordingUrl") String recordingUrl
     ) throws Exception {
-        return callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl).toXML();
+
+        return String.format("%s%s",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl).toXML()
+        );
     }
 }

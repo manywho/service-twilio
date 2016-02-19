@@ -58,8 +58,8 @@
             "order": 0
         }
     ],
-    "token": "e3420e62-872e-4c14-a1ac-5e9ac54fa6d2",
-    "tenantId": "22b13460-14b3-4833-9d63-e50540cc57cd",
+    "token": "mock-token",
+    "tenantId": "mock-tenant-id",
     "stateId": "b365d767-8560-4850-80be-fece29a34479",
     "callbackUri": "https://flow.manywho.com/api/run/1/response",
     "culture": {

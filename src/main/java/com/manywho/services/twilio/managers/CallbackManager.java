@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 public class CallbackManager {
     private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
+    private static final String TWILIO_RECORD_URI = "https://api.twilio.com/2010-04-01/Accounts/%s/Recordings/%s";
 
     @Inject
     private CacheManager cacheManager;
@@ -63,5 +64,17 @@ public class CallbackManager {
             // Delete the stored request as the state is completed
             cacheManager.deleteCallRequest(callSid);
         }
+    }
+
+    public void saveCallRecordingSid(String callSid, String recordSid) {
+        cacheManager.saveCallRecordingSid(callSid, recordSid);
+    }
+
+    public String getCallRecordingUrl(String accountSid, String callSid) {
+        return String.format(
+                TWILIO_RECORD_URI,
+                accountSid,
+                cacheManager.getCallRecordingSid(callSid)
+        );
     }
 }

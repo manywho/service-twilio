@@ -1,7 +1,10 @@
 package com.manywho.services.twilio.controllers;
 
+import com.manywho.sdk.entities.run.EngineValue;
+import com.manywho.sdk.entities.run.EngineValueCollection;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
+import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.sdk.services.annotations.AuthorizationRequired;
 import com.manywho.sdk.services.controllers.AbstractController;
@@ -31,7 +34,7 @@ public class CallController extends AbstractController {
         Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
         StartOutboundCall startOutboundCall = this.parseInputs(serviceRequest, StartOutboundCall.class);
 
-        callManager.startOutboundCall(
+        String callSid = callManager.startOutboundCall(
                 serviceRequest,
                 configuration,
                 startOutboundCall.getCall().getFrom(),
@@ -42,7 +45,16 @@ public class CallController extends AbstractController {
 
         String waitMessage = "Making outbound call to: " + startOutboundCall.getCall().getTo();
 
-        return new ServiceResponse(InvokeType.Forward, serviceRequest.getToken(), waitMessage);
+        ServiceResponse serviceResponse = new ServiceResponse();
+        EngineValueCollection engineValues = new EngineValueCollection();
+        engineValues.add(new EngineValue("Call Sid", ContentType.String, callSid));
+
+        serviceResponse.setOutputs(engineValues);
+        serviceResponse.setToken(serviceRequest.getToken());
+        serviceResponse.setInvokeType(InvokeType.Forward);
+        serviceResponse.setWaitMessage(waitMessage);
+
+        return serviceResponse;
     }
 
     @POST
@@ -52,7 +64,7 @@ public class CallController extends AbstractController {
         Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
         StartOutboundCallSimple startOutboundCallSimple = this.parseInputs(serviceRequest, StartOutboundCallSimple.class);
 
-        callManager.startOutboundCall(
+        String callSid = callManager.startOutboundCall(
                 serviceRequest,
                 configuration,
                 startOutboundCallSimple.getFrom(),
@@ -63,6 +75,15 @@ public class CallController extends AbstractController {
 
         String waitMessage = "Making outbound call to: " + startOutboundCallSimple.getTo();
 
-        return new ServiceResponse(InvokeType.Forward, serviceRequest.getToken(), waitMessage);
+        ServiceResponse serviceResponse = new ServiceResponse();
+        EngineValueCollection engineValues = new EngineValueCollection();
+        engineValues.add(new EngineValue("Call Sid", ContentType.String, callSid));
+
+        serviceResponse.setOutputs(engineValues);
+        serviceResponse.setToken(serviceRequest.getToken());
+        serviceResponse.setInvokeType(InvokeType.Forward);
+        serviceResponse.setWaitMessage(waitMessage);
+
+        return serviceResponse;
     }
 }

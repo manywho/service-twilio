@@ -1,5 +1,4 @@
 {
-    "providesAutoBinding": false,
     "providesLogic": true,
     "providesSocial": false,
     "providesListening": false,
@@ -28,6 +27,7 @@
     "providesDatabase": false,
     "providesFiles": false,
     "providesIdentity": false,
+    "providesAutoBinding": false,
     "install": {"typeElements": [
         {
             "serviceElementId": null,
@@ -39,34 +39,82 @@
             "developerName": "Call",
             "properties": [
                 {
-                    "typeElementId": null,
-                    "id": null,
-                    "developerName": "To",
-                    "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
-                },
-                {
+                    "contentFormat": null,
                     "typeElementId": null,
                     "id": null,
                     "developerName": "From",
                     "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
+                    "typeElementDeveloperName": null
                 },
                 {
-                    "typeElementId": null,
-                    "id": null,
-                    "developerName": "Timeout",
-                    "contentType": "ContentNumber",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
-                }, {
                     "contentFormat": null,
                     "typeElementId": null,
                     "id": null,
                     "developerName": "Record?",
                     "contentType": "ContentBoolean",
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Timeout",
+                    "contentType": "ContentNumber",
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
+                }
+            ]
+        },
+        {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The Call Recording object structure",
+            "bindings": [{
+                "databaseTableName": "Call Recording",
+                "serviceElementId": null,
+                "developerSummary": "Call Recording",
+                "propertyBindings": [
+                    {
+                        "typeElementPropertyId": null,
+                        "databaseFieldName": "ID",
+                        "typeElementPropertyDeveloperName": "ID",
+                        "databaseContentType": null
+                    },
+                    {
+                        "typeElementPropertyId": null,
+                        "databaseFieldName": "Recording Url",
+                        "typeElementPropertyDeveloperName": "Recording Url",
+                        "databaseContentType": null
+                    }
+                ],
+                "id": null,
+                "developerName": "Call Recording"
+            }],
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "Call Recording",
+            "properties": [
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "ID",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Recording Url",
+                    "contentType": "ContentString",
                     "typeElementDeveloperName": null
                 }
             ]
@@ -81,36 +129,36 @@
             "developerName": "MMS",
             "properties": [
                 {
-                    "typeElementId": null,
-                    "id": null,
-                    "developerName": "To",
-                    "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
-                },
-                {
-                    "typeElementId": null,
-                    "id": null,
-                    "developerName": "From",
-                    "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
-                },
-                {
+                    "contentFormat": null,
                     "typeElementId": null,
                     "id": null,
                     "developerName": "Body",
                     "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
+                    "typeElementDeveloperName": null
                 },
                 {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
                     "typeElementId": null,
                     "id": null,
                     "developerName": "Media",
                     "contentType": "ContentList",
-                    "typeElementDeveloperName": "Media",
-                    "contentFormat": null
+                    "typeElementDeveloperName": "Media"
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
                 }
             ]
         },
@@ -123,13 +171,40 @@
             "elementType": "TYPE",
             "developerName": "Media",
             "properties": [{
+                "contentFormat": null,
                 "typeElementId": null,
                 "id": null,
                 "developerName": "URL",
                 "contentType": "ContentString",
-                "typeElementDeveloperName": null,
-                "contentFormat": null
+                "typeElementDeveloperName": null
             }]
+        },
+        {
+            "serviceElementId": null,
+            "updateByName": false,
+            "developerSummary": "The Recording object structure",
+            "bindings": null,
+            "id": null,
+            "elementType": "TYPE",
+            "developerName": "Recording",
+            "properties": [
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Transcription",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "Url",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
+                }
+            ]
         },
         {
             "serviceElementId": null,
@@ -141,53 +216,30 @@
             "developerName": "SMS",
             "properties": [
                 {
-                    "typeElementId": null,
-                    "id": null,
-                    "developerName": "To",
-                    "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
-                },
-                {
-                    "typeElementId": null,
-                    "id": null,
-                    "developerName": "From",
-                    "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
-                },
-                {
+                    "contentFormat": null,
                     "typeElementId": null,
                     "id": null,
                     "developerName": "Body",
                     "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "contentFormat": null
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
+                },
+                {
+                    "contentFormat": null,
+                    "typeElementId": null,
+                    "id": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null
                 }
             ]
-        }, {
-            "serviceElementId": null,
-            "updateByName": false,
-            "developerSummary": "The Recording object structure",
-            "bindings": null,
-            "id": null,
-            "elementType": "TYPE",
-            "developerName": "Recording",
-            "properties": [{
-                "contentFormat": null,
-                "typeElementId": null,
-                "id": null,
-                "developerName": "Transcription",
-                "contentType": "ContentString",
-                "typeElementDeveloperName": null
-            }, {
-                "contentFormat": null,
-                "typeElementId": null,
-                "id": null,
-                "developerName": "Url",
-                "contentType": "ContentString",
-                "typeElementDeveloperName": null
-            }]
         }
     ]},
     "culture": {
@@ -207,14 +259,7 @@
             "developerSummary": "Send an MMS message to a phone number",
             "serviceActionOutcomes": null,
             "viewMessageAction": false,
-            "serviceInputs": [{
-                "contentValue": null,
-                "developerName": "Message",
-                "contentType": "ContentObject",
-                "typeElementDeveloperName": "MMS",
-                "required": true,
-                "ordinal": 0
-            }],
+            "developerName": "Send MMS",
             "serviceOutputs": [{
                 "contentValue": null,
                 "developerName": "Reply",
@@ -223,21 +268,21 @@
                 "required": false,
                 "ordinal": 0
             }],
-            "developerName": "Send MMS"
+            "serviceInputs": [{
+                "contentValue": null,
+                "developerName": "Message",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "MMS",
+                "required": true,
+                "ordinal": 0
+            }]
         },
         {
             "uriPart": "messages/sms",
             "developerSummary": "Send an SMS message to a phone number",
             "serviceActionOutcomes": null,
             "viewMessageAction": false,
-            "serviceInputs": [{
-                "contentValue": null,
-                "developerName": "Message",
-                "contentType": "ContentObject",
-                "typeElementDeveloperName": "SMS",
-                "required": true,
-                "ordinal": 0
-            }],
+            "developerName": "Send SMS",
             "serviceOutputs": [{
                 "contentValue": null,
                 "developerName": "Reply",
@@ -246,14 +291,38 @@
                 "required": false,
                 "ordinal": 0
             }],
-            "developerName": "Send SMS"
+            "serviceInputs": [{
+                "contentValue": null,
+                "developerName": "Message",
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "SMS",
+                "required": true,
+                "ordinal": 0
+            }]
         },
         {
             "uriPart": "messages/smssimple",
             "developerSummary": "Send an SMS message to a phone number without using an Object",
             "serviceActionOutcomes": null,
             "viewMessageAction": false,
+            "developerName": "Send SMS (Simple)",
+            "serviceOutputs": [{
+                "contentValue": null,
+                "developerName": "Reply",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "required": false,
+                "ordinal": 0
+            }],
             "serviceInputs": [
+                {
+                    "contentValue": null,
+                    "developerName": "Body",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
                 {
                     "contentValue": null,
                     "developerName": "From",
@@ -269,31 +338,23 @@
                     "typeElementDeveloperName": null,
                     "required": true,
                     "ordinal": 0
-                },
-                {
-                    "contentValue": null,
-                    "developerName": "Body",
-                    "contentType": "ContentString",
-                    "typeElementDeveloperName": null,
-                    "required": true,
-                    "ordinal": 0
                 }
-            ],
-            "serviceOutputs": [{
-                "contentValue": null,
-                "developerName": "Reply",
-                "contentType": "ContentString",
-                "typeElementDeveloperName": null,
-                "required": false,
-                "ordinal": 0
-            }],
-            "developerName": "Send SMS (Simple)"
+            ]
         },
         {
             "uriPart": "calls/outbound",
             "developerSummary": "Start an outbound phone call",
             "serviceActionOutcomes": null,
             "viewMessageAction": false,
+            "developerName": "Start Outbound Call",
+            "serviceOutputs": [{
+                "contentValue": null,
+                "developerName": "Call Sid",
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "required": true,
+                "ordinal": 0
+            }],
             "serviceInputs": [{
                 "contentValue": null,
                 "developerName": "Call",
@@ -301,9 +362,7 @@
                 "typeElementDeveloperName": "Call",
                 "required": true,
                 "ordinal": 0
-            }],
-            "serviceOutputs": [],
-            "developerName": "Start Outbound Call"
+            }]
         },
         {
             "uriPart": "calls/outboundsimple",
@@ -311,36 +370,48 @@
             "serviceActionOutcomes": null,
             "viewMessageAction": false,
             "developerName": "Start Outbound Call (Simple)",
-            "serviceOutputs": [],
-            "serviceInputs": [{
+            "serviceOutputs": [{
                 "contentValue": null,
-                "developerName": "From",
+                "developerName": "Call Sid",
                 "contentType": "ContentString",
                 "typeElementDeveloperName": null,
                 "required": true,
                 "ordinal": 0
-            }, {
-                "contentValue": null,
-                "developerName": "Record?",
-                "contentType": "ContentBoolean",
-                "typeElementDeveloperName": null,
-                "required": true,
-                "ordinal": 0
-            }, {
-                "contentValue": null,
-                "developerName": "Timeout",
-                "contentType": "ContentNumber",
-                "typeElementDeveloperName": null,
-                "required": true,
-                "ordinal": 0
-            }, {
-                "contentValue": null,
-                "developerName": "To",
-                "contentType": "ContentString",
-                "typeElementDeveloperName": null,
-                "required": true,
-                "ordinal": 0
-            }]
+            }],
+            "serviceInputs": [
+                {
+                    "contentValue": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Record?",
+                    "contentType": "ContentBoolean",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Timeout",
+                    "contentType": "ContentNumber",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                }
+            ]
         }
     ]
 }

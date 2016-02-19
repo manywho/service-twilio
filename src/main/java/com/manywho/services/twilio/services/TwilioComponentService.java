@@ -50,6 +50,8 @@ public class TwilioComponentService {
         }
 
         record.setMethod(component.getAttributes().get("method"));
+
+        //todo Fix in frontEnd
         record.setFinishOnKey(component.getAttributes().get("finishOnKey"));
 
         String playBeep = component.getAttributes().get("playBeep");

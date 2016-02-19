@@ -18,11 +18,11 @@ public class TwilioConfiguration {
     public HashMap<String, String> getManyWhoTwiMLAppConfiguration() {
         HashMap<String,String> urlParms = new HashMap<>();
         urlParms.put("FriendlyName", "ManyWho");
-        urlParms.put("SmsUrl", uriInfo.getBaseUri().toString() + "callback/twiml/message");
-        urlParms.put("SmsFallbackUrl", uriInfo.getBaseUri().toString() + "callback/twiml/message" );
+        urlParms.put("SmsUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message");
+        urlParms.put("SmsFallbackUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message" );
         urlParms.put("SmsStatusCallback", uriInfo.getBaseUri().toString() + "callback/status/message");
-        urlParms.put("VoiceUrl", uriInfo.getBaseUri().toString() + "callback/twiml/voice");
-        urlParms.put("VoiceFallbackUrl", uriInfo.getBaseUri().toString() + "callback/twiml/voice");
+        urlParms.put("VoiceUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice");
+        urlParms.put("VoiceFallbackUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice");
         urlParms.put("StatusCallback", uriInfo.getBaseUri().toString() + "callback/status/voice");
 
 

@@ -25,10 +25,12 @@ public class ApplicationBinder extends AbstractBinder {
         bind(CallbackVoiceService.class).to(CallbackVoiceService.class);
         bind(FlowService.class).to(FlowService.class);
         bind(MessageManager.class).to(MessageManager.class);
+        bind(MessageManager.class).to(MessageManager.class);
         bind(MessageService.class).to(MessageService.class);
         bind(ObjectMapperService.class).to(ObjectMapperService.class);
         bind(RunClient.class).to(RunClient.class);
         bind(TwilioComponentService.class).to(TwilioComponentService.class);
         bind(TwilioClientFacade.class).to(TwilioClientFacade.class);
+        bind(DataManager.class).to(DataManager.class);
     }
 }

@@ -14,11 +14,12 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 public class CacheManager {
-    private final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
-    private static final String REDIS_KEY_MESSAGES = "service:twilio:requests:message:%s:%s";
-    private static final String REDIS_KEY_TWIML_APP = "service:twilio:twiml:app:%s";
-    private static final String REDIS_KEY_FLOWS = "service:twilio:flows:%s:%s";
-    private static final String REDIS_KEY_RECORDINGS = "service:twilio:recordings:%s:%s";
+    public final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
+    public static final String REDIS_KEY_MESSAGES = "service:twilio:requests:message:%s:%s";
+    public static final String REDIS_KEY_FLOWS = "service:twilio:flows:%s:%s";
+    public static final String REDIS_KEY_RECORDINGS = "service:twilio:recordings:%s:%s";
+    public static final String REDIS_KEY_CALL_RECORDINGS = "service:twilio:recordings:call:%s";
+    public static final String REDIS_KEY_TWIML_HANGUP_CALL = "service:twilio:callbackTwiml:hangup:call:%s";
 
     @Inject
     private JedisPool jedisPool;
@@ -34,18 +35,6 @@ public class CacheManager {
 
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.del(key);
-        }
-    }
-
-    public String getTwimlApplication(String accountSid) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.get(String.format(REDIS_KEY_TWIML_APP, accountSid));
-        }
-    }
-
-    public void setTwimlApplication(String accountSid, String applicationSid) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.set(String.format(REDIS_KEY_TWIML_APP, accountSid), applicationSid);
         }
     }
 
@@ -148,4 +137,29 @@ public class CacheManager {
             jedis.del(String.format(REDIS_KEY_RECORDINGS, stateId, callSid));
         }
     }
+
+    public void saveCallRecordingSid (String callSid, String recordSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.set(String.format(REDIS_KEY_CALL_RECORDINGS, callSid), recordSid);
+        }
+    }
+
+    public String getCallRecordingSid (String callSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.get(String.format(REDIS_KEY_CALL_RECORDINGS, callSid));
+        }
+    }
+
+    public void saveCallHungupByTwiml (String callSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.set(String.format(REDIS_KEY_TWIML_HANGUP_CALL, callSid), callSid);
+        }
+    }
+
+    public boolean isCallHungupByTwiml(String callSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.exists(String.format(REDIS_KEY_TWIML_HANGUP_CALL, callSid, callSid));
+        }
+    }
+
 }

@@ -37,7 +37,7 @@ public class SendSmsSimpleTest extends TwilioServiceFunctionalTest {
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
 
         // save fake application sid in cache
-        mockJedis.set("service:twilio:twiml:app:mockAppSid", "mockAppSid");
+        mockJedis.set("service:twilio:callbackTwiml:app:mockAppSid", "mockAppSid");
 
         Response responseMsg = target("/messages/smssimple")
                 .request()

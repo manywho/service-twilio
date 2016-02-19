@@ -26,10 +26,10 @@ public class CallService {
         callParameters.put("To", to);
         callParameters.put("From", from);
         callParameters.put("Timeout", timeout);
-        callParameters.put("IfMachine", "Continue");
+        callParameters.put("IfMachine", "Hangup");
         callParameters.put("Record", Boolean.toString(recordCall));
-        callParameters.put("StatusCallback", "https://" + uriInfo.getBaseUri().getHost() + "/api/twilio/2/callback/status/voice");
-        callParameters.put("Url", "https://" + uriInfo.getBaseUri().getHost() + "/api/twilio/2/callback/twiml/voice/flow/state/" + stateId);
+        callParameters.put("StatusCallback", uriInfo.getBaseUri().toString() + "callback/status/voice");
+        callParameters.put("Url", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice/flow/state/" + stateId);
 
         return account.getCallFactory().create(callParameters);
     }

@@ -15,6 +15,9 @@ public class RecordingCallback {
     @FormParam("CallSid")
     private String callSid;
 
+    @FormParam("TranscriptionStatus")
+    private String transcriptionStatus;
+
     public String getTranscription() {
         return transcription;
     }
@@ -29,5 +32,9 @@ public class RecordingCallback {
 
     public String getCallSid() {
         return callSid;
+    }
+
+    public String getTranscriptionStatus() {
+        return transcriptionStatus;
     }
 }

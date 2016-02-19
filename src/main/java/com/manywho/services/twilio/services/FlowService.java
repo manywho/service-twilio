@@ -2,9 +2,15 @@ package com.manywho.services.twilio.services;
 
 import com.manywho.sdk.client.RunClient;
 import com.manywho.sdk.client.entities.FlowState;
+import com.manywho.sdk.client.entities.Outcome;
 import com.manywho.sdk.client.options.FlowInitializationOptions;
 import com.manywho.sdk.entities.draw.flow.FlowId;
+import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequest;
+import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequestCollection;
+import com.manywho.sdk.entities.run.elements.ui.PageRequest;
 import com.manywho.sdk.enums.FlowMode;
+import com.manywho.sdk.enums.InvokeType;
+import com.manywho.services.twilio.managers.CacheManager;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -12,10 +18,12 @@ import java.net.URISyntaxException;
 
 public class FlowService {
     final private RunClient runClient;
+    final private CacheManager cacheManager;
 
     @Inject
-    public FlowService(RunClient runClient) {
+    public FlowService(RunClient runClient, CacheManager cacheManager) {
         this.runClient = runClient;
+        this.cacheManager = cacheManager;
     }
 
     public FlowState startFlow(String tenantId, String flowId) throws Exception {
@@ -27,5 +35,31 @@ public class FlowService {
 
     public FlowState joinFlow(String tenantId, String stateId) throws IOException, URISyntaxException {
         return runClient.joinFlow(tenantId, stateId, null);
+    }
+
+    public FlowState progressToNextStep(FlowState flowState, Outcome outcome,
+                                        PageComponentInputResponseRequestCollection inputs, InvokeType invokeType) throws Exception {
+
+        PageRequest pageRequest = new PageRequest();
+
+        if (inputs == null) {
+            // Check if there are any components in the returned Page Response, as we need to send one in the next invoke
+            if (!flowState.hasPageComponents()) {
+                throw new Exception("There are no components in the current step");
+            }
+
+            pageRequest.addPageComponentInputResponse(new PageComponentInputResponseRequest(flowState.getPageComponents().get(0).getId()));
+        } else {
+            pageRequest.setPageComponentInputResponses(inputs);
+        }
+
+        // If we want to do a SYNC, then perform the SYNC. Otherwise we progress the flow with the selected outcome and inputs
+        if (invokeType == InvokeType.Sync) {
+            flowState.sync();
+        } else {
+            flowState.selectOutcome(outcome, pageRequest);
+        }
+
+        return flowState;
     }
 }

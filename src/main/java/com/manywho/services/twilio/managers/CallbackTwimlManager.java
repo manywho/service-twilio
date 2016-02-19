@@ -1,10 +1,12 @@
 package com.manywho.services.twilio.managers;
 
+import com.manywho.sdk.RunService;
 import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.client.entities.Outcome;
 import com.manywho.sdk.client.entities.PageComponent;
 import com.manywho.sdk.entities.run.EngineInvokeResponse;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
 import com.manywho.sdk.entities.run.elements.type.ObjectCollection;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequest;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequestCollection;
@@ -15,11 +17,7 @@ import com.manywho.services.twilio.services.FlowService;
 import com.manywho.services.twilio.services.ObjectMapperService;
 import com.manywho.services.twilio.services.TwilioComponentService;
 import com.manywho.services.twilio.types.Recording;
-import com.twilio.sdk.verbs.Gather;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
-import com.twilio.sdk.verbs.Verb;
+import com.twilio.sdk.verbs.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -37,6 +35,9 @@ public class CallbackTwimlManager {
 
     @Context
     private UriInfo uriInfo;
+
+    @Inject
+    private RunService runService;
 
     final private TwilioComponentService twilioComponentService;
     final private CacheManager cacheManager;
@@ -102,12 +103,12 @@ public class CallbackTwimlManager {
 
         // If the flow still has a WAIT status, then return some TwiML to say that we're still waiting
         if (flowState.getInvokeType().equals(InvokeType.Wait)) {
-            return createTwimlResponseFromWait(10, flowState.getInvokeResponse());
+            return createTwimlResponseFromWait(10, flowState.getInvokeResponse(), flowState.getInvokeResponse().getWaitMessage());
         }
 
         // If there are no outcomes, then just speak the current step as normal
         if (!flowState.hasOutcomes()) {
-            return createTwimlResponseFromPage(stateId, flowState);
+            return createTwimlResponseFromPage(stateId, flowState, callSid);
         }
 
         Optional<Outcome> outcomeForDigits = flowState.getOutcomes().stream()
@@ -141,7 +142,7 @@ public class CallbackTwimlManager {
 
                 if (voiceComponent.isPresent()) {
                     Recording recording = new Recording();
-
+                    Boolean transcriptionReady = false;
                     if (StringUtils.isNotEmpty(recordingUrl)) {
                         // As this is not a recording callback, we don't have an identifier
                         recording.setId(UUID.randomUUID().toString());
@@ -152,15 +153,20 @@ public class CallbackTwimlManager {
                         recording.setId(recordingCallback.getSid());
                         recording.setTranscription(recordingCallback.getTranscription());
                         recording.setUrl(recordingCallback.getRecordingUrl());
+
+                        if(Objects.equals(recordingCallback.getTranscriptionStatus(), "completed") ||
+                                Objects.equals(recordingCallback.getTranscriptionStatus(), "failed") ||
+                                !StringUtils.isEmpty(recordingCallback.getRecordingUrl())) {
+                            transcriptionReady = true;
+                        }
                     }
 
                     if (voiceComponent.get().getAttributes().containsKey("transcribe")) {
                         // Check to see if the user wants transcription - if they do, we need to wait for any transcription text
                         // as Twilio will return "(blank)" even if it captures nothing
-                        if (Boolean.parseBoolean(voiceComponent.get().getAttributes().get("transcribe")) &&
-                                StringUtils.isEmpty(recording.getTranscription())) {
+                        if (Boolean.parseBoolean(voiceComponent.get().getAttributes().get("transcribe")) && !transcriptionReady) {
                             // We want a transcription, but we don't have it yet
-                            return createTwimlResponseFromWait(10, flowState.getInvokeResponse());
+                            return createTwimlResponseFromWaitingForTranscription(10, flowState.getInvokeResponse(), "Waiting for transcription");
                         }
                     }
 
@@ -175,17 +181,17 @@ public class CallbackTwimlManager {
 
                 cacheManager.deleteRecordingCallback(stateId, callSid);
             } else {
-                return createTwimlResponseFromWait(10, flowState.getInvokeResponse());
+                return createTwimlResponseFromWait(10, flowState.getInvokeResponse(), "");
             }
         }
 
         FlowState nextStepState = progressToNextStep(callSid, flowState, outcomeForDigits.get(), inputs, InvokeType.Forward);
 
         if (nextStepState.getInvokeType().equals(InvokeType.Wait)) {
-            return createTwimlResponseFromWait(10, nextStepState.getInvokeResponse());
+            return createTwimlResponseFromWait(10, nextStepState.getInvokeResponse(), nextStepState.getInvokeResponse().getWaitMessage());
         }
 
-        return createTwimlResponseFromPage(stateId, nextStepState);
+        return createTwimlResponseFromPage(stateId, nextStepState, callSid);
     }
 
     private TwiMLResponse createTwimlForCallRequest(String callSid, String stateId) throws Exception {
@@ -198,20 +204,37 @@ public class CallbackTwimlManager {
         cacheManager.saveFlowExecution(flowState.getStateId(), callSid, flowState);
 
         if (flowState.getInvokeType().equals(InvokeType.Wait)) {
-            return createTwimlResponseFromWait(10, flowState.getInvokeResponse());
+            return createTwimlResponseFromWait(10, flowState.getInvokeResponse(), flowState.getInvokeResponse().getWaitMessage());
         }
 
-        return createTwimlResponseFromPage(stateId, flowState);
+        return createTwimlResponseFromPage(stateId, flowState, callSid);
     }
 
     private String createTwimlVoiceStateUrl(String stateId) {
-        return "https://" + uriInfo.getBaseUri().getHost() + uriInfo.getBaseUri().getPath() + "callback/twiml/voice/flow/state/" + stateId;
+        return "https://" + uriInfo.getBaseUri().getHost() + uriInfo.getBaseUri().getPath() + "callback/callbackTwiml/voice/flow/state/" + stateId;
     }
 
-    private TwiMLResponse createTwimlResponseFromWait(int pause, EngineInvokeResponse engineInvokeResponse) throws Exception {
+    private TwiMLResponse createTwimlResponseFromWait(int pause, EngineInvokeResponse engineInvokeResponse, String message) throws Exception {
         TwiMLResponse waitResponse = new TwiMLResponse();
-        waitResponse.append(new Say(engineInvokeResponse.getWaitMessage()));
+
+        if(!StringUtils.isEmpty(message)) {
+            waitResponse.append(new Say(message));
+        }
+
         waitResponse.append(twilioComponentService.createPauseComponent(pause));
+        waitResponse.append(twilioComponentService.createRedirectComponent(createTwimlVoiceStateUrl(engineInvokeResponse.getStateId())));
+
+        return waitResponse;
+    }
+
+    private TwiMLResponse createTwimlResponseFromWaitingForTranscription(int pause, EngineInvokeResponse engineInvokeResponse, String message) throws Exception {
+        TwiMLResponse waitResponse = new TwiMLResponse();
+
+        if(!StringUtils.isEmpty(message)) {
+            waitResponse.append(new Say(message));
+        }
+
+        //waitResponse.append(twilioComponentService.createPauseComponent(pause));
         waitResponse.append(twilioComponentService.createRedirectComponent(createTwimlVoiceStateUrl(engineInvokeResponse.getStateId())));
 
         return waitResponse;
@@ -232,10 +255,10 @@ public class CallbackTwimlManager {
             throw new Exception("There are no components in the current step");
         }
 
-        return createTwimlResponseFromPage(flowState.getStateId(), flowState);
+        return createTwimlResponseFromPage(flowState.getStateId(), flowState, callSid);
     }
 
-    private TwiMLResponse createTwimlResponseFromPage(String stateId, FlowState flowState) throws TwiMLException {
+    private TwiMLResponse createTwimlResponseFromPage(String stateId, FlowState flowState, String callSid) throws TwiMLException {
         TwiMLResponse twiMLResponse = new TwiMLResponse();
 
         // Create TwiML components from all the PageComponents
@@ -248,11 +271,15 @@ public class CallbackTwimlManager {
             Gather gather = new Gather();
             gather.setAction(createTwimlVoiceStateUrl(stateId));
 
-            Optional<Outcome> longestNamedOutcome = flowState.getOutcomes().stream().max(Comparator.comparing(outcome -> outcome.getName().length()));
+
+            Optional<Outcome> longestNamedOutcome = flowState.getOutcomes().stream().
+                    filter(outcome -> StringUtils.isNumeric(outcome.getName()) )
+                    .max(Comparator.comparing(outcome -> outcome.getName().length()));
 
             if(longestNamedOutcome.isPresent()) {
                 gather.setNumDigits(longestNamedOutcome.get().getName().length());
             }
+
 
             // Add all the TwiML components to the Gather
             twimlComponents.stream()
@@ -260,9 +287,15 @@ public class CallbackTwimlManager {
 
             twiMLResponse.append(gather);
 
-            // Automatically append a pause and join in case they need to re-hear the message
-            twiMLResponse.append(twilioComponentService.createPauseComponent(10));
-            twiMLResponse.append(twilioComponentService.createRedirectComponent(createTwimlVoiceStateUrl(stateId)));
+            if (doesComponentWithTypeExist(flowState.getPageComponents(), "Hangup")) {
+                twiMLResponse.append(new Hangup());
+                cacheManager.saveCallHungupByTwiml(callSid);
+            } else {
+
+                // Automatically append a pause and join in case they need to re-hear the message
+                twiMLResponse.append(twilioComponentService.createPauseComponent(10));
+                twiMLResponse.append(twilioComponentService.createRedirectComponent(createTwimlVoiceStateUrl(stateId)));
+            }
         } else {
             // Add all the non-null TwiML components to the response
             twimlComponents.stream()

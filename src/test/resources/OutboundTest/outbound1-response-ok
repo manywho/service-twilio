@@ -1,11 +1,23 @@
 {
-    "token": "e3420e62-872e-4c14-a1ac-5e9ac54fa6d2",
+    "token": "mock-token",
     "tenantId": null,
     "culture": null,
     "annotations": null,
-    "invokeType": "WAIT",
-    "waitMessage": "Making outbound call to: 441234567899",
-    "outputs": null,
+    "invokeType": "FORWARD",
+    "waitMessage": "Making outbound call to: +441234567899",
+    "outputs": [
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Call Sid",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "1234",
+            "contentType": "ContentString",
+            "objectData": null
+        }
+    ],
     "selectedOutcomeId": null,
     "rootFaults": null,
     "valueFaults": null,

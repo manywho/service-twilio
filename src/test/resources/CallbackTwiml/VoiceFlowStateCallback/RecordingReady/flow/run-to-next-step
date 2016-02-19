@@ -1,0 +1,111 @@
+{
+    "culture" : {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "stateId" : "5f942f66-7840-4e4d-8209-09647fc67261",
+    "parentStateId" : null,
+    "stateToken": "3a55fa5d-4cb0-4ba5-8079-6283c8d53dbf",
+    "alertEmail": "test@manywho.com",
+    "waitMessage" : null,
+    "notAuthorizedMessage" : null,
+    "currentMapElementId": "92f2ccf0-9dd5-4005-b9cb-16d738103d22",
+    "currentStreamId": null,
+    "invokeType": "FORWARD",
+    "annotations": null,
+    "mapElementInvokeResponses": [
+        {
+            "mapElementId": "92f2ccf0-9dd5-4005-b9cb-16d738103d22",
+            "developerName": "done",
+            "pageResponse": {
+                "label": "done",
+                "pageContainerResponses": [
+                    {
+                        "id": "ba9cd068-f08b-410b-8fcf-c87ecf604742",
+                        "containerType": "VERTICAL_FLOW",
+                        "developerName": "Step",
+                        "label": "",
+                        "pageContainerResponses": null,
+                        "order": 0,
+                        "attributes": null
+                    }
+                ],
+                "pageComponentResponses": [
+                    {
+                        "pageContainerDeveloperName": "Step",
+                        "pageContainerId": "ba9cd068-f08b-410b-8fcf-c87ecf604742",
+                        "id": "f6defcea-fbc2-42d8-aa84-e8c6546d4724",
+                        "developerName": "Step Content",
+                        "componentType": "PRESENTATION",
+                        "contentType": null,
+                        "label": "",
+                        "columns": null,
+                        "size": 0,
+                        "maxSize": 0,
+                        "height": 0,
+                        "width": 0,
+                        "hintValue": "",
+                        "helpInfo": "",
+                        "order": 0,
+                        "multiSelect": false,
+                        "searchable": false,
+                        "hasEvents": false,
+                        "attributes": null
+                    }
+                ],
+                "pageComponentDataResponses": [
+                    {
+                        "pageComponentId": "f6defcea-fbc2-42d8-aa84-e8c6546d4724",
+                        "enabled": true,
+                        "editable": true,
+                        "required": false,
+                        "visible": true,
+                        "objectData": null,
+                        "objectDataRequest": null,
+                        "fileDataRequest": null,
+                        "contentValue": null,
+                        "content": "<p>done</p>",
+                        "imageUri": null,
+                        "valid": true,
+                        "validationMessage": null,
+                        "tags": null
+                    }
+                ],
+                "pageContainerDataResponses": [
+                    {
+                        "pageContainerId": "ba9cd068-f08b-410b-8fcf-c87ecf604742",
+                        "enabled": true,
+                        "editable": true,
+                        "visible": true,
+                        "tags": null
+                    }
+                ],
+                "tags": null,
+                "attributes": null,
+                "order": 0
+            },
+            "outcomeResponses" : null,
+            "rootFaults": null
+        }
+    ],
+    "voteResponse": null,
+    "stateLog": null,
+    "preCommitStateValues": null,
+    "stateValues": null,
+    "outputs": null,
+    "statusCode": "200",
+    "runFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?flow-id=643f3a0d-973f-4d97-a3cb-f2a28edca148",
+    "joinFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?join=5f942f66-7840-4e4d-8209-09647fc67261",
+    "authorizationContext": {
+        "directoryName": null,
+        "directoryId": null,
+        "loginUrl": null,
+        "authenticationType":  "USERNAME_PASSWORD"
+    },
+    "navigationElementReferences": null
+}
