@@ -1,12 +1,10 @@
 package com.manywho.services.twilio.managers;
 
-import com.manywho.sdk.RunService;
 import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.client.entities.Outcome;
 import com.manywho.sdk.client.entities.PageComponent;
 import com.manywho.sdk.entities.run.EngineInvokeResponse;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
-import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
 import com.manywho.sdk.entities.run.elements.type.ObjectCollection;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequest;
 import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequestCollection;
@@ -19,37 +17,30 @@ import com.manywho.services.twilio.services.TwilioComponentService;
 import com.manywho.services.twilio.types.Recording;
 import com.twilio.sdk.verbs.*;
 import org.apache.commons.lang3.StringUtils;
-
 import javax.inject.Inject;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static com.manywho.sdk.client.utils.PageComponentUtils.doInputComponentsExist;
 import static com.manywho.sdk.client.utils.PageComponentUtils.doesComponentWithTypeExist;
 import static com.manywho.sdk.client.utils.PageComponentUtils.getFirstComponentWithType;
 
 public class CallbackTwimlManager {
     final private static List<String> inputComponentTypes = Collections.singletonList("Record");
-
-    @Context
     private UriInfo uriInfo;
-
-    @Inject
-    private RunService runService;
-
     final private TwilioComponentService twilioComponentService;
     final private CacheManager cacheManager;
     final private FlowService flowService;
     final private ObjectMapperService objectMapperService;
 
     @Inject
-    public CallbackTwimlManager(TwilioComponentService twilioComponentService, CacheManager cacheManager, FlowService flowService, ObjectMapperService objectMapperService) {
+    public CallbackTwimlManager(TwilioComponentService twilioComponentService, CacheManager cacheManager,
+                                FlowService flowService, ObjectMapperService objectMapperService, UriInfo uriInfo) {
         this.twilioComponentService = twilioComponentService;
         this.cacheManager = cacheManager;
         this.flowService = flowService;
         this.objectMapperService = objectMapperService;
+        this.uriInfo = uriInfo;
     }
 
     private FlowState progressToNextStep(String callSid, FlowState flowState, Outcome outcome, PageComponentInputResponseRequestCollection inputs, InvokeType invokeType) throws Exception {
@@ -279,7 +270,6 @@ public class CallbackTwimlManager {
             if(longestNamedOutcome.isPresent()) {
                 gather.setNumDigits(longestNamedOutcome.get().getName().length());
             }
-
 
             // Add all the TwiML components to the Gather
             twimlComponents.stream()
