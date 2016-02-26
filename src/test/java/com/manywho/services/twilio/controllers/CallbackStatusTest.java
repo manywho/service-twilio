@@ -5,7 +5,7 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import static org.junit.Assert.assertEquals;
-import com.manywho.services.test.FlowClientTester;
+import com.manywho.services.test.HttpClientForTest;
 import com.manywho.services.test.FlowResponseMock;
 import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.manywho.services.twilio.managers.CacheManager;
@@ -29,7 +29,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         form.param("SmsStatus", "sent");
         form.param("To", "+441234567899");
 
-        FlowClientTester httpClientMock = new FlowClientTester();
+        HttpClientForTest httpClientMock = new HttpClientForTest();
         Unirest.setHttpClient(httpClientMock);
 
         // I will do to calls to the flow to know the status
@@ -115,7 +115,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
                 getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis")
         );
 
-        FlowClientTester httpClientMock = new FlowClientTester();
+        HttpClientForTest httpClientMock = new HttpClientForTest();
         Unirest.setHttpClient(httpClientMock);
 
         // I will do to calls to the flow to know the status
@@ -138,7 +138,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         assertEquals("", responseMsg.readEntity(String.class));
     }
 
-    private void checkHeaders(FlowClientTester httpClientMock, Integer index) {
+    private void checkHeaders(HttpClientForTest httpClientMock, Integer index) {
         // headers used to call the flow
         assertEquals(null, httpClientMock.getExpectedRequestHeader(index, "Authorization").getValue());
         assertEquals("mock-tenant-id", httpClientMock.getExpectedRequestHeader(index, "ManyWhoTenant").getValue());
