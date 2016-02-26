@@ -25,6 +25,8 @@ public class TwilioConfiguration {
         urlParms.put("VoiceFallbackUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice");
         urlParms.put("StatusCallback", uriInfo.getBaseUri().toString() + "callback/status/voice");
 
+        urlParms.put("CallbackTwimlVoiceFlowState", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice/flow/state/");
+        urlParms.put("CallbackTranscription",  uriInfo.getBaseUri().toString() + "callback/transcribe/");
 
         return urlParms;
     }

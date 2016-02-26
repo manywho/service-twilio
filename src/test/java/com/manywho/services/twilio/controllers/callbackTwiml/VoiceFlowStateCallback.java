@@ -77,7 +77,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         mockJedis.set(
                 redisKey,
-                getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/VoiceFlowStateWaitingForStep/cache/executed-flow")
+                getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForTranscription/cache/executed-flow")
         );
 
         Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/123456")
@@ -90,7 +90,49 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
         // the order in this xml is important
         assertXMLEqual(
                 "The XML response is not the expected.",
-                getFileContent("CallbackTwiml/VoiceFlowStateCallback/VoiceFlowStateWaitingForStep/response"),
+                getFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForTranscription/response"),
+                responseMsg.readEntity(String.class)
+        );
+    }
+
+    @Test
+    public void testVoiceFlowCallbackWaitingForStep() throws Exception {
+        final Form form = new Form();
+        form.param("CallSid", "CA12345");
+
+        Entity entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+
+        FlowResponseMock httpResponse = new FlowResponseMock(
+                FlowResponseMock.getFullListHeaders(), "HTTP", 1, 1, 200, "ok","Content-Type: application/json; charset=utf-8",
+                getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForStep/flow/sync-response")
+        );
+
+        mockHttpClient.addResponse(httpResponse);
+
+
+        MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
+        headers.add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+        headers.add("Referer", "http://localhost/api/twilio/2/callback/callbackTwiml/voice/flow/state/12345678");
+        headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
+
+        String redisKey =  String.format(CacheManager.REDIS_KEY_FLOWS, "123456", "CA12345");
+
+        mockJedis.set(
+                redisKey,
+                getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForStep/cache/executed-flow")
+        );
+
+        Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/123456")
+                .request()
+                .headers(headers)
+                .post(entity);
+
+        assertEquals(200, responseMsg.getStatus());
+
+        // the order in this xml is important
+        assertXMLEqual(
+                "The XML response is not the expected.",
+                getFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForStep/response"),
                 responseMsg.readEntity(String.class)
         );
     }

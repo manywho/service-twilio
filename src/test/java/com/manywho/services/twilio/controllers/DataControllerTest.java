@@ -4,11 +4,9 @@ import com.manywho.sdk.utils.AuthorizationUtils;
 import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.manywho.services.twilio.managers.CacheManager;
 import org.junit.Test;
-
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
 import static org.junit.Assert.assertEquals;
 
 public class DataControllerTest extends TwilioServiceFunctionalTest {

@@ -1,9 +1,12 @@
-package com.manywho.services.twilio.services;
+package com.manywho.services.twilio.services.twiml;
 
 import com.manywho.sdk.client.entities.PageComponent;
-import com.manywho.sdk.entities.run.elements.ui.PageContainerResponse;
-import com.manywho.services.twilio.entities.verbs.Dummy;
-import com.twilio.sdk.verbs.Gather;
+import com.manywho.sdk.entities.run.elements.type.ObjectCollection;
+import com.manywho.sdk.entities.run.elements.ui.PageComponentInputResponseRequest;
+import com.manywho.services.twilio.configuration.TwilioConfiguration;
+import com.manywho.services.twilio.entities.RecordingCallback;
+import com.manywho.services.twilio.entities.verbs.Unsupported;
+import com.manywho.services.twilio.services.ObjectMapperService;
 import com.twilio.sdk.verbs.Pause;
 import com.twilio.sdk.verbs.Play;
 import com.twilio.sdk.verbs.Record;
@@ -13,12 +16,20 @@ import com.twilio.sdk.verbs.Verb;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import javax.inject.Inject;
 
 public class TwilioComponentService {
-    @Context
-    private UriInfo uriInfo;
+    final private TwilioConfiguration twilioConfiguration;
+    final private ObjectMapperService objectMapperService;
+    final private TranscriptionService transcriptionService;
+
+    @Inject
+    public TwilioComponentService(TwilioConfiguration twilioConfiguration, ObjectMapperService objectMapperService,
+                                  TranscriptionService transcriptionService) {
+        this.twilioConfiguration = twilioConfiguration;
+        this.objectMapperService = objectMapperService;
+        this.transcriptionService = transcriptionService;
+    }
 
     public Verb createTwimlForComponent(PageComponent component, String stateId) {
         switch (component.getType()) {
@@ -31,12 +42,12 @@ public class TwilioComponentService {
             case "Say":
                 return createSayComponent(component);
             default:
-                return createDummyComponent();
+                return createUnsupportedComponent();
         }
     }
 
-    private Dummy createDummyComponent() {
-        return new Dummy();
+    private Unsupported createUnsupportedComponent() {
+        return new Unsupported();
     }
 
     private Record createRecordComponent(PageComponent component, String stateId) {
@@ -71,7 +82,7 @@ public class TwilioComponentService {
 
         String transcriptionCallback = component.getAttributes().get("transcribeCallback");
         if (Boolean.parseBoolean(transcribe) && StringUtils.isEmpty(transcriptionCallback)) {
-            record.setTranscribeCallback("https://" + uriInfo.getBaseUri().getHost() + "/api/twilio/2/callback/transcribe/" + stateId);
+            record.setTranscribeCallback(twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("CallbackTranscription") + stateId);
         } else {
             record.setTranscribeCallback(transcriptionCallback);
         }
@@ -120,5 +131,26 @@ public class TwilioComponentService {
         say.setLoop(Integer.parseInt(loop));
 
         return say;
+    }
+
+    public Boolean isTranscriptionSelected(PageComponent pageComponent) {
+        return pageComponent.getAttributes().containsKey("transcribe") &&
+        Boolean.parseBoolean(pageComponent.getAttributes().get("transcribe"));
+    }
+
+    public PageComponentInputResponseRequest getInputResponseRequestRecording(PageComponent pageComponent,
+                                                                              String recordingUrl, RecordingCallback recordingCallback) {
+
+        PageComponentInputResponseRequest inputResponseRequest = new PageComponentInputResponseRequest();
+        inputResponseRequest.setPageComponentId(pageComponent.getId());
+        inputResponseRequest.setObjectData(
+                new ObjectCollection(
+                        objectMapperService.convertRecordingToObject(
+                            transcriptionService.getRecording(recordingUrl, recordingCallback)
+                        )
+                )
+        );
+
+        return inputResponseRequest;
     }
 }

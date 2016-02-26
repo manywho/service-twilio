@@ -1,0 +1,7 @@
+{
+    "transcription":"Hello World!",
+    "recordingUrl":"https://api.twilio.com/2010-04-01/Accounts/AC1234/Recordings/RE1234",
+    "sid":null,
+    "callSid":"12345",
+    "transcriptionStatus":"completed"
+}

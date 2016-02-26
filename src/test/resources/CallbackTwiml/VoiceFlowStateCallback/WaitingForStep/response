@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say>Waiting for a reply to the SMS</Say>
+    <Pause length="10"></Pause>
+    <Redirect>http://localhost:9998/callback/callbackTwiml/voice/flow/state/123456</Redirect>
+</Response>

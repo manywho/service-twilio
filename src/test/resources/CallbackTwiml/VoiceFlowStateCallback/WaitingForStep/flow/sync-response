@@ -1,0 +1,43 @@
+{
+    "culture": {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "stateId": "123456",
+    "parentStateId": null,
+    "stateToken": "cfb2062b-24ef-480f-b438-538b8659d775",
+    "alertEmail": "test@manywho.com",
+    "waitMessage": "Waiting for a reply to the SMS",
+    "notAuthorizedMessage": null,
+    "currentMapElementId": "378cc1a4-11d3-4c59-b9d8-e6e3da3e34a5",
+    "currentStreamId": null,
+    "invokeType": "WAIT",
+    "annotations": null,
+    "mapElementInvokeResponses": [{
+        "mapElementId": "378cc1a4-11d3-4c59-b9d8-e6e3da3e34a5",
+        "developerName": "send sms with reply",
+        "pageResponse": null,
+        "outcomeResponses": null,
+        "rootFaults": null
+    }],
+    "voteResponse": null,
+    "stateLog": null,
+    "preCommitStateValues": null,
+    "stateValues": null,
+    "outputs": null,
+    "statusCode": "200",
+    "runFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?flow-id=5a5388c8-7892-4730-9308-02a4c6b279f2",
+    "joinFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?join=9cecef23-308a-441c-b327-06dd482dfc6e",
+    "authorizationContext": {
+        "directoryName": null,
+        "directoryId": null,
+        "loginUrl": null,
+        "authenticationType": "USERNAME_PASSWORD"
+    },
+    "navigationElementReferences": null
+}

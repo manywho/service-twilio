@@ -1,7 +1,6 @@
 package com.manywho.services.twilio.entities;
 
 import javax.ws.rs.FormParam;
-
 public class RecordingCallback {
     @FormParam("TranscriptionText")
     private String transcription;
@@ -15,7 +14,7 @@ public class RecordingCallback {
     @FormParam("CallSid")
     private String callSid;
 
-    @FormParam("TranscriptionStatus")
+    @FormParam("TranscriptionService")
     private String transcriptionStatus;
 
     public String getTranscription() {
