@@ -40,7 +40,7 @@ public class MessageManager {
 
     public ObjectCollection sendSms(ServiceRequest serviceRequest, Configuration configuration, String to, String from, String body) throws Exception {
          // Send the SMS through Twilio
-        final Sms sms = messageService.sendSms(configuration.getAccountSid(), configuration.getAuthToken(), to, from, body);
+        final Message sms = messageService.sendSms(configuration.getAccountSid(), configuration.getAuthToken(), to, from, body);
 
         // Store the message request in Redis for later
         messageService.storeMessageRequest(sms.getAccountSid(), sms.getSid(), sms.getFrom(), sms.getTo(), serviceRequest);
