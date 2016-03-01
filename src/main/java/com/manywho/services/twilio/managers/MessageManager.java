@@ -8,7 +8,6 @@ import com.manywho.services.twilio.services.ObjectMapperService;
 import com.manywho.services.twilio.types.Media;
 import com.manywho.services.twilio.types.Mms;
 import com.twilio.sdk.resource.instance.Message;
-import com.twilio.sdk.resource.instance.Sms;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
