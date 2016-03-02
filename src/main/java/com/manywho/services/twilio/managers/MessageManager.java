@@ -8,7 +8,6 @@ import com.manywho.services.twilio.services.ObjectMapperService;
 import com.manywho.services.twilio.types.Media;
 import com.manywho.services.twilio.types.Mms;
 import com.twilio.sdk.resource.instance.Message;
-import com.twilio.sdk.resource.instance.Sms;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class MessageManager {
 
     public ObjectCollection sendSms(ServiceRequest serviceRequest, Configuration configuration, String to, String from, String body) throws Exception {
          // Send the SMS through Twilio
-        final Sms sms = messageService.sendSms(configuration.getAccountSid(), configuration.getAuthToken(), to, from, body);
+        final Message sms = messageService.sendSms(configuration.getAccountSid(), configuration.getAuthToken(), to, from, body);
 
         // Store the message request in Redis for later
         messageService.storeMessageRequest(sms.getAccountSid(), sms.getSid(), sms.getFrom(), sms.getTo(), serviceRequest);

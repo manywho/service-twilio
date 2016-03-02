@@ -3,16 +3,22 @@ package com.manywho.services.twilio.controllers;
 import com.fiftyonred.mock_jedis.MockJedis;
 import com.manywho.sdk.utils.AuthorizationUtils;
 import com.manywho.services.test.TwilioServiceFunctionalTest;
+import com.twilio.sdk.resource.instance.Message;
 import com.twilio.sdk.resource.instance.Sms;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
 
 public class SendSmsTest extends TwilioServiceFunctionalTest {
@@ -21,19 +27,18 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         when(mockTwilioClientFactory.createTwilioRestClient("mockAppSid","mockAuthToken"))
                 .thenReturn(mockTwilioRestClient);
 
-        final Map<String, String> messageParameters = new HashMap<>();
-        messageParameters.put("From", "440123456789");
-        messageParameters.put("To", "00440123456788");
-        messageParameters.put("Body", "hello message");
-        messageParameters.put("StatusCallback", "http://localhost:9998/callback/status/message");
+        final List<NameValuePair> messageParameters = new ArrayList<>();
+        messageParameters.add(new BasicNameValuePair("To", "00440123456788"));
+        messageParameters.add(new BasicNameValuePair("From", "440123456789"));
+        messageParameters.add(new BasicNameValuePair("Body", "hello message"));
+        messageParameters.add(new BasicNameValuePair("StatusCallback", "http://localhost:9998/callback/status/message"));
 
-        Sms sms = mock(Sms.class);
+        Message sms = mock(Message.class);
         when(sms.getAccountSid()).thenReturn("mockAppSid");
         when(sms.getSid()).thenReturn("1");
         when(sms.getFrom()).thenReturn("440123456789");
         when(sms.getTo()).thenReturn("00440123456788");
-
-        when(mockSmsFactory.create(messageParameters)).thenReturn(sms);
+        when(mockMessageFactory.create(messageParameters)).thenReturn(sms);
 
         MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
@@ -55,7 +60,7 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         );
 
         //check that the message have been sent to twilio
-        verify(mockSmsFactory, times(1)).create(messageParameters);
+        verify(mockMessageFactory, times(1)).create(messageParameters);
 
         assertEquals(
                 getJsonFormatFileContent("SendSmsTest/sms1-ok-request"),

@@ -6,9 +6,9 @@ import com.manywho.services.twilio.configuration.TwilioConfiguration;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.types.Media;
+import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.resource.instance.Message;
-import com.twilio.sdk.resource.instance.Sms;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
@@ -18,9 +18,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MessageService {
 
@@ -41,21 +39,15 @@ public class MessageService {
     @Inject
     private TwilioRestClientFactory twilioClientFactory;
 
-    public Sms sendSms(String accountSid, String authToken, String to, String from, String body) throws Exception {
-        final Account account = twilioClientFactory.createTwilioRestClient(accountSid, authToken).getAccount();
-
-        final Map<String, String> messageParameters = new HashMap<>();
-        messageParameters.put("To", to);
-        messageParameters.put("From", from);
-        messageParameters.put("Body", body);
-        messageParameters.put("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("SmsStatusCallback"));
-
-        LOGGER.debug("Sending an SMS to {}", to);
-
-        return account.getSmsFactory().create(messageParameters);
+    public Message sendMms(String accountSid, String authToken, String to, String from, String body, List<Media> medias) throws Exception {
+        return sendMessage(accountSid, authToken, to, from, body, medias);
     }
 
-    public Message sendMms(String accountSid, String authToken, String to, String from, String body, List<Media> medias) throws Exception {
+    public Message sendSms(String accountSid, String authToken, String to, String from, String body) throws Exception {
+        return sendMessage(accountSid, authToken, to, from, body, new ArrayList<>());
+    }
+
+    private Message sendMessage(String accountSid, String authToken, String to, String from, String body, List<Media> medias) throws TwilioRestException {
         final Account account = twilioClientFactory.createTwilioRestClient(accountSid, authToken).getAccount();
 
         final List<NameValuePair> messageParameters = new ArrayList<>();

@@ -46,7 +46,6 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
 {
     protected MockJedis mockJedis;
     protected TwilioRestClient mockTwilioRestClient;
-    protected SmsFactory mockSmsFactory;
     protected Account mockAccount;
     protected TwilioRestClientFactory mockTwilioClientFactory;
     protected MessageFactory mockMessageFactory;
@@ -61,7 +60,6 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
         MockJedisPool mockJedisPool = new MockJedisPool(new GenericObjectPoolConfig(), "localhost");
         mockJedis = (MockJedis) mockJedisPool.getResource();
         mockAccount = mock(Account.class);
-        mockSmsFactory = mock(SmsFactory.class);
         mockMessageFactory = mock(MessageFactory.class);
         mockTwilioRestClient = mock(TwilioRestClient.class);
         mockTwilioClientFactory = mock(TwilioRestClientFactory.class);
@@ -70,7 +68,6 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
 
         runClient = new RunClient(mockHttpClient);
 
-        when(mockAccount.getSmsFactory()).thenReturn(mockSmsFactory);
         when(mockAccount.getMessageFactory()).thenReturn(mockMessageFactory);
         when(mockAccount.getCallFactory()).thenReturn(mockCallFactory);
         when(mockTwilioRestClient.getAccount()).thenReturn(mockAccount);
