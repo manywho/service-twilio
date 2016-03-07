@@ -14,7 +14,7 @@ public class RecordingCallback {
     @FormParam("CallSid")
     private String callSid;
 
-    @FormParam("TranscriptionService")
+    @FormParam("TranscriptionStatus")
     private String transcriptionStatus;
 
     public String getTranscription() {

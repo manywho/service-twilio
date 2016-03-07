@@ -15,19 +15,40 @@ public class TwilioConfiguration {
     @Context
     private UriInfo uriInfo;
 
-    public HashMap<String, String> getManyWhoTwiMLAppConfiguration() {
-        HashMap<String,String> urlParms = new HashMap<>();
-        urlParms.put("FriendlyName", "ManyWho");
-        urlParms.put("SmsUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message");
-        urlParms.put("SmsFallbackUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message" );
-        urlParms.put("SmsStatusCallback", uriInfo.getBaseUri().toString() + "callback/status/message");
-        urlParms.put("VoiceUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice");
-        urlParms.put("VoiceFallbackUrl", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice");
-        urlParms.put("StatusCallback", uriInfo.getBaseUri().toString() + "callback/status/voice");
-
-        urlParms.put("CallbackTwimlVoiceFlowState", uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice/flow/state/");
-        urlParms.put("CallbackTranscription",  uriInfo.getBaseUri().toString() + "callback/transcribe/");
-
-        return urlParms;
+    public String getFriendlyName() {
+        return "ManyWho";
     }
+
+    public String getSmsUrl() {
+        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message";
+    }
+
+    public String getSmsFallbackUrl() {
+        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message" ;
+    }
+
+    public String getSmsStatusCallback() {
+        return uriInfo.getBaseUri().toString() + "callback/status/message";
+    }
+
+    public String getVoiceUrl() {
+        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice";
+    }
+
+    public String getVoiceFallbackUrl() {
+        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice";
+    }
+
+    public String getStatusCallback() {
+        return uriInfo.getBaseUri().toString() + "callback/status/voice";
+    }
+
+    public String getCallbackTwimlVoiceFlowState(){
+        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice/flow/state/";
+    }
+
+    public String getCallbackTranscription() {
+        return uriInfo.getBaseUri().toString() + "callback/transcribe/";
+    }
+
 }

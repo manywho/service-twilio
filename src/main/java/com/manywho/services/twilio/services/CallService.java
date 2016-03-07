@@ -27,8 +27,8 @@ public class CallService {
         callParameters.put("Timeout", timeout);
         callParameters.put("IfMachine", "Hangup");
         callParameters.put("Record", Boolean.toString(recordCall));
-        callParameters.put("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("StatusCallback"));
-        callParameters.put("Url", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("CallbackTwimlVoiceFlowState") + stateId);
+        callParameters.put("StatusCallback", twilioConfiguration.getStatusCallback());
+        callParameters.put("Url", twilioConfiguration.getCallbackTwimlVoiceFlowState() + stateId);
 
         return account.getCallFactory().create(callParameters);
     }

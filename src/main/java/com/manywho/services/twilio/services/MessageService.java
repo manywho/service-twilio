@@ -43,7 +43,7 @@ public class MessageService {
         messageParameters.put("To", to);
         messageParameters.put("From", from);
         messageParameters.put("Body", body);
-        messageParameters.put("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("SmsStatusCallback"));
+        messageParameters.put("StatusCallback", twilioConfiguration.getSmsStatusCallback());
 
         LOGGER.debug("Sending an SMS to {}", to);
 
@@ -57,7 +57,7 @@ public class MessageService {
         messageParameters.add(new BasicNameValuePair("To", to));
         messageParameters.add(new BasicNameValuePair("From", from));
         messageParameters.add(new BasicNameValuePair("Body", body));
-        messageParameters.add(new BasicNameValuePair("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("SmsStatusCallback")));
+        messageParameters.add(new BasicNameValuePair("StatusCallback", twilioConfiguration.getSmsStatusCallback()));
 
         for (Media media : medias) {
             messageParameters.add(new BasicNameValuePair("MediaUrl", media.getUrl()));

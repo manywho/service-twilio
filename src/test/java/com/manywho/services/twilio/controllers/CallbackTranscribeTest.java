@@ -18,7 +18,7 @@ public class CallbackTranscribeTest extends TwilioServiceFunctionalTest{
         form.param("TranscriptionText", "Hello World!");
         form.param("RecordingUrl", "https://api.twilio.com/2010-04-01/Accounts/AC1234/Recordings/RE1234");
         form.param("CallSid", "12345");
-        form.param("TranscriptionService", "completed");
+        form.param("TranscriptionStatus", "completed");
 
         Entity entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
 

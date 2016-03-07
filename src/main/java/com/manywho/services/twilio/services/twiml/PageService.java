@@ -34,7 +34,7 @@ public class PageService {
         // If there are outcomes and we should auto wrap in a gather, then we do that
         if (flowState.hasOutcomes() && !doesComponentWithTypeExist(flowState.getPageComponents(), "Record")) {
             Gather gather = new Gather();
-            gather.setAction(this.twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("CallbackTwimlVoiceFlowState") + stateId);
+            gather.setAction(this.twilioConfiguration.getCallbackTwimlVoiceFlowState() + stateId);
 
 
             Optional<Outcome> longestNamedOutcome = flowState.getOutcomes().stream().
@@ -58,7 +58,7 @@ public class PageService {
                 // Automatically append a pause and join in case they need to re-hear the message
                 twiMLResponse.append(twilioComponentService.createPauseComponent(10));
                 twiMLResponse.append(twilioComponentService.createRedirectComponent(
-                        this.twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("CallbackTwimlVoiceFlowState") + stateId)
+                        this.twilioConfiguration.getCallbackTwimlVoiceFlowState() + stateId)
                 );
             }
         } else {

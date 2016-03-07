@@ -41,7 +41,7 @@ public class TwimlResponseService {
         }
 
         waitResponse.append(twilioComponentService.createRedirectComponent(
-                twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("CallbackTwimlVoiceFlowState") + engineInvokeResponse.getStateId()
+                twilioConfiguration.getCallbackTwimlVoiceFlowState() + engineInvokeResponse.getStateId()
         ));
 
         return waitResponse;

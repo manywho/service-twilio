@@ -10,12 +10,21 @@ public class TranscriptionService {
 
 
     public Boolean isTranscriptionProcessed(RecordingCallback recordingCallback) {
-        return recordingCallback !=null &&
-                (
-                        Objects.equals(recordingCallback.getTranscriptionStatus(), "completed") ||
-                        Objects.equals(recordingCallback.getTranscriptionStatus(), "failed") ||
-                        !StringUtils.isEmpty(recordingCallback.getRecordingUrl())
-                );
+        if (recordingCallback !=null) {
+            if (Objects.equals(recordingCallback.getTranscriptionStatus(), "completed")) {
+                return true;
+            }
+
+            if (Objects.equals(recordingCallback.getTranscriptionStatus(), "failed")) {
+                return true;
+            }
+
+            if(!StringUtils.isEmpty(recordingCallback.getRecordingUrl())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Recording getRecording(String recordingUrl, RecordingCallback recordingCallback) {

@@ -82,7 +82,7 @@ public class TwilioComponentService {
 
         String transcriptionCallback = component.getAttributes().get("transcribeCallback");
         if (Boolean.parseBoolean(transcribe) && StringUtils.isEmpty(transcriptionCallback)) {
-            record.setTranscribeCallback(twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("CallbackTranscription") + stateId);
+            record.setTranscribeCallback(twilioConfiguration.getCallbackTranscription() + stateId);
         } else {
             record.setTranscribeCallback(transcriptionCallback);
         }
