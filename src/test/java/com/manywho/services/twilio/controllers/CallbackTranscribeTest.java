@@ -34,7 +34,7 @@ public class CallbackTranscribeTest extends TwilioServiceFunctionalTest{
 
         assertJsonSame(
                 mockJedis.get(String.format(CacheManager.REDIS_KEY_RECORDINGS, "123456789", "12345")),
-                getJsonFormatFileContent("CallbackTranscribeTest/cache/transcription-to-save")
+                getJsonFormatFileContent("CallbackTranscribeTest/cache/transcription-to-save.json")
         );
     }
 }

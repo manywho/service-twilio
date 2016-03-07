@@ -21,7 +21,7 @@ public class DataControllerTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/data")
                 .request()
                 .headers(headers)
-                .post(getObjectDataRequestFromFile("DataLoadTest/request"));
+                .post(getObjectDataRequestFromFile("DataLoadTest/request.json"));
 
         assertEquals(200, responseMsg.getStatus());
         assertEquals("[application/json]", responseMsg.getHeaders().get("Content-Type").toString());

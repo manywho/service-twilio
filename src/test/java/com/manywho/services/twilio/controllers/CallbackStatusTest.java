@@ -48,7 +48,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
 
         mockJedis.set(
                 redisKey,
-                getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis")
+                getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis.json")
         );
 
         // this call is coming from Twilio
@@ -58,12 +58,12 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
                 .post(entity);
 
         assertJsonSame(
-                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/forward-flow-call"),
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/forward-flow-call.json"),
                 httpClientMock.getExpectedRequestBody(0)
         );
 
         assertJsonSame(
-                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/wait-message-flow-call"),
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/wait-message-flow-call.json"),
                 httpClientMock.getExpectedRequestBody(1)
         );
 
@@ -112,7 +112,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
 
         mockJedis.set(
                 redisKey,
-                getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis")
+                getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis.json")
         );
 
         HttpClientForTest httpClientMock = new HttpClientForTest();
@@ -128,7 +128,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
                 .post(entity);
 
         assertJsonSame(
-                getJsonFormatFileContent("CallbackStatusTest/MessageReplyCallbackStatus/user-replay-flow-call"),
+                getJsonFormatFileContent("CallbackStatusTest/MessageReplyCallbackStatus/user-replay-flow-call.json"),
                 httpClientMock.getExpectedRequestBody(0)
         );
 

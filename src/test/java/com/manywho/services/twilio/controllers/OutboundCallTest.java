@@ -44,15 +44,15 @@ public class OutboundCallTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/calls/outboundsimple")
                 .request()
                 .headers(headers)
-                .post(getServerRequestFromFile("OutboundCallTest/outbound1-request-ok"));
+                .post(getServerRequestFromFile("OutboundCallTest/outbound1-request-ok.json"));
 
         assertJsonSame(
-                getJsonFormatFileContent("OutboundCallTest/outbound1-response-ok"),
+                getJsonFormatFileContent("OutboundCallTest/outbound1-response-ok.json"),
                 getJsonFormatResponse(responseMsg)
         );
 
         assertJsonSame(
-                getJsonFormatFileContent("OutboundCallTest/outbound1-request-ok"),
+                getJsonFormatFileContent("OutboundCallTest/outbound1-request-ok.json"),
                 mockJedis.get(String.format(CacheManager.REDIS_KEY_CALLS, "1234"))
         );
     }
@@ -61,7 +61,7 @@ public class OutboundCallTest extends TwilioServiceFunctionalTest {
     public void testCheckAuthentication() throws IOException, URISyntaxException {
         Response responseMsg = target("/calls/outbound")
                 .request()
-                .post(getServerRequestFromFile("OutboundCallTest/outbound1-request-ok"));
+                .post(getServerRequestFromFile("OutboundCallTest/outbound1-request-ok.json"));
 
         assertEquals(401, responseMsg.getStatus());
     }
@@ -74,11 +74,11 @@ public class OutboundCallTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/calls/outbound")
                 .request()
                 .headers(headers)
-                .post(getServerRequestFromFile("OutboundCallTest/outbound2-error-config-request"));
+                .post(getServerRequestFromFile("OutboundCallTest/outbound2-error-config-request.json"));
 
         assertEquals(400, responseMsg.getStatus());
         assertJsonSame(
-                getJsonFormatFileContent("OutboundCallTest/outbound2-error-config-response"),
+                getJsonFormatFileContent("OutboundCallTest/outbound2-error-config-response.json"),
                 getJsonFormatResponse(responseMsg)
         );
     }
@@ -91,11 +91,11 @@ public class OutboundCallTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/calls/outbound")
                 .request()
                 .headers(headers)
-                .post(getServerRequestFromFile("OutboundCallTest/outbound3-error-inputs-request"));
+                .post(getServerRequestFromFile("OutboundCallTest/outbound3-error-inputs-request.json"));
 
         assertEquals(400, responseMsg.getStatus());
         assertJsonSame(
-                getJsonFormatFileContent("OutboundCallTest/outbound3-error-inputs-response"),
+                getJsonFormatFileContent("OutboundCallTest/outbound3-error-inputs-response.json"),
                 getJsonFormatResponse(responseMsg)
         );
     }
