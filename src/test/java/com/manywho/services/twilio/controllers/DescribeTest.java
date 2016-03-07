@@ -9,11 +9,11 @@ public class DescribeTest extends TwilioServiceFunctionalTest {
     @Test
     public void testDescribeServiceResponse() throws Exception {
         Response responseMsg = target("/metadata").request()
-                .post(getServerRequestFromFile("DescribeTest/metadata1-request"));
+                .post(getServerRequestFromFile("DescribeTest/metadata1-request.json"));
 
         //check the response is right
         assertJsonSame(
-                getJsonFormatFileContent("DescribeTest/metadata1-response"),
+                getJsonFormatFileContent("DescribeTest/metadata1-response.json"),
                 getJsonFormatResponse(responseMsg)
         );
     }

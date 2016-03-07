@@ -18,12 +18,10 @@ import java.net.URISyntaxException;
 
 public class FlowService {
     final private RunClient runClient;
-    final private CacheManager cacheManager;
 
     @Inject
-    public FlowService(RunClient runClient, CacheManager cacheManager) {
+    public FlowService(RunClient runClient) {
         this.runClient = runClient;
-        this.cacheManager = cacheManager;
     }
 
     public FlowState startFlow(String tenantId, String flowId) throws Exception {
@@ -62,4 +60,13 @@ public class FlowService {
 
         return flowState;
     }
+
+    public void syncIfStatusWait(FlowState flowState) throws IOException, URISyntaxException {
+        // If the flow currently has a WAIT status, then SYNC to see if the status has changed
+        if (flowState.getInvokeType().equals(InvokeType.Wait)) {
+            flowState.sync();
+        }
+    }
+
+
 }

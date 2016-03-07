@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 @TypeElement(name = Recording.NAME)
 public class Recording {
     public final static String NAME = "Recording";
-
     public final static String PROPERTY_TRANSCRIPTION = "Transcription";
     public final static String PROPERTY_URL = "Url";
 

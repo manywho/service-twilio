@@ -28,6 +28,15 @@ public class CallbackTwimlController {
         return null;
     }
 
+    /**
+     *
+     * This entry point will return a twiml (xml) when is called by twilio,
+     * When we are waiting for some information, the response will have a child <Pause length="x"/> and this entry point
+     * will be called in x seconds by twilio again, then we can update the xml with the new information (if the information
+     * is not ready we will return again a pause child).
+     *
+     * When the call finish this entry point is not called any more.
+     */
     @POST
     @Path("/voice/flow/state/{stateId}")
     @Consumes("application/x-www-form-urlencoded")

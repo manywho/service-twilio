@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Say language="en" voice="alice" loop="1">Please leave your message.</Say>
-    <Record action="" method="POST" finishOnKey="" playBeep="true" transcribe="true" transcribeCallback="https://localhost/api/twilio/2/callback/transcribe/12345678"></Record>
-</Response>

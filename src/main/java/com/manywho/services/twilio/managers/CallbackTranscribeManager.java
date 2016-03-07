@@ -1,7 +1,6 @@
 package com.manywho.services.twilio.managers;
 
 import com.manywho.services.twilio.entities.RecordingCallback;
-
 import javax.inject.Inject;
 
 public class CallbackTranscribeManager {

@@ -1,6 +1,5 @@
 package com.manywho.services.twilio.controllers;
 
-import com.fiftyonred.mock_jedis.MockJedis;
 import com.manywho.sdk.utils.AuthorizationUtils;
 import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.twilio.sdk.resource.instance.Message;
@@ -49,22 +48,22 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/messages/sms")
                 .request()
                 .headers(headers)
-                .post(getServerRequestFromFile("SendSmsTest/sms1-ok-request"));
+                .post(getServerRequestFromFile("SendSmsTest/sms1-ok-request.json"));
 
         assertEquals(200, responseMsg.getStatus());
         assertEquals("[application/json]", responseMsg.getHeaders().get("Content-Type").toString());
         //check the response is right
         assertJsonSame(
-                getJsonFormatFileContent("SendSmsTest/sms1-ok-response"),
+                getJsonFormatFileContent("SendSmsTest/sms1-ok-response.json"),
                 getJsonFormatResponse(responseMsg)
         );
 
         //check that the message have been sent to twilio
         verify(mockMessageFactory, times(1)).create(messageParameters);
 
-        assertEquals(
-                getJsonFormatFileContent("SendSmsTest/sms1-ok-request"),
-                getJsonFormat(mockJedis.get("service:twilio:requests:message:mockAppSid:44012345678900440123456788"))
+        assertJsonSame(
+                getJsonFormatFileContent("SendSmsTest/sms1-ok-request.json"),
+                mockJedis.get("service:twilio:requests:message:mockAppSid:44012345678900440123456788")
         );
     }
 
@@ -72,7 +71,7 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
     public void testCheckAuthentication() throws IOException, URISyntaxException {
         Response responseMsg = target("/messages/sms")
                 .request()
-                .post(getServerRequestFromFile("SendSmsTest/sms1-ok-request"));
+                .post(getServerRequestFromFile("SendSmsTest/sms1-ok-request.json"));
 
         assertEquals(401, responseMsg.getStatus());
     }
@@ -85,11 +84,11 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/messages/sms")
                 .request()
                 .headers(headers)
-                .post(getServerRequestFromFile("SendSmsTest/sms2-error-config-request"));
+                .post(getServerRequestFromFile("SendSmsTest/sms2-error-config-request.json"));
 
         assertEquals(400, responseMsg.getStatus());
         assertJsonSame(
-                getJsonFormatFileContent("SendSmsTest/sms2-error-config-response"),
+                getJsonFormatFileContent("SendSmsTest/sms2-error-config-response.json"),
                 getJsonFormatResponse(responseMsg)
         );
     }
@@ -102,11 +101,11 @@ public class SendSmsTest extends TwilioServiceFunctionalTest {
         Response responseMsg = target("/messages/sms")
                 .request()
                 .headers(headers)
-                .post(getServerRequestFromFile("SendSmsTest/sms3-error-inputs-request"));
+                .post(getServerRequestFromFile("SendSmsTest/sms3-error-inputs-request.json"));
 
         assertEquals(400, responseMsg.getStatus());
         assertJsonSame(
-                getJsonFormatFileContent("SendSmsTest/sms3-error-inputs-response"),
+                getJsonFormatFileContent("SendSmsTest/sms3-error-inputs-response.json"),
                 getJsonFormatResponse(responseMsg)
         );
     }

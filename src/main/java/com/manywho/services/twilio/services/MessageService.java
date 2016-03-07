@@ -15,17 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 import javax.inject.Inject;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageService {
 
     private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
-
-    @Context
-    private UriInfo uriInfo;
 
     @Inject
     private CacheManager cacheManager;
@@ -54,13 +49,13 @@ public class MessageService {
         messageParameters.add(new BasicNameValuePair("To", to));
         messageParameters.add(new BasicNameValuePair("From", from));
         messageParameters.add(new BasicNameValuePair("Body", body));
-        messageParameters.add(new BasicNameValuePair("StatusCallback", twilioConfiguration.getManyWhoTwiMLAppConfiguration().get("SmsStatusCallback")));
+        messageParameters.add(new BasicNameValuePair("StatusCallback", twilioConfiguration.getSmsStatusCallback()));
 
         for (Media media : medias) {
             messageParameters.add(new BasicNameValuePair("MediaUrl", media.getUrl()));
         }
 
-        LOGGER.debug("Sending an MMS to {} with {} media items", to, medias.size());
+        LOGGER.debug("Sending a message to {} with {} media items", to, medias.size());
 
         return account.getMessageFactory().create(messageParameters);
     }

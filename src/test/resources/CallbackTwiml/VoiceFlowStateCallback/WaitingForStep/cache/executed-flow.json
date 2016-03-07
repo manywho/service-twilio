@@ -1,0 +1,46 @@
+{
+    "tenantId": "mock-tenant-id",
+    "invokeResponse": {
+        "culture": {
+            "id": null,
+            "developerName": null,
+            "developerSummary": null,
+            "brand": null,
+            "language": "EN",
+            "country": "USA",
+            "variant": null
+        },
+        "stateId": "123456",
+        "parentStateId": null,
+        "stateToken": "1e5db8a0-b8c8-4045-a0b6-10104e683e92",
+        "alertEmail": "test@manywho.com",
+        "waitMessage": "Waiting for step: send sms with reply",
+        "notAuthorizedMessage": null,
+        "currentMapElementId": "378cc1a4-11d3-4c59-b9d8-e6e3da3e34a5",
+        "currentStreamId": null,
+        "invokeType": "WAIT",
+        "annotations": null,
+        "mapElementInvokeResponses": [{
+            "mapElementId": "378cc1a4-11d3-4c59-b9d8-e6e3da3e34a5",
+            "developerName": "send sms with reply",
+            "pageResponse": null,
+            "outcomeResponses": null,
+            "rootFaults": null
+        }],
+        "voteResponse": null,
+        "stateLog": null,
+        "preCommitStateValues": null,
+        "stateValues": null,
+        "outputs": null,
+        "statusCode": "200",
+        "runFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?flow-id=5a5388c8-7892-4730-9308-02a4c6b279f2",
+        "joinFlowUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?join=ac6a2a60-d26e-4a93-b895-d9d7cdf36b9e",
+        "authorizationContext": {
+            "directoryName": null,
+            "directoryId": null,
+            "loginUrl": null,
+            "authenticationType": "USERNAME_PASSWORD"
+        },
+        "navigationElementReferences": null
+    }
+}
