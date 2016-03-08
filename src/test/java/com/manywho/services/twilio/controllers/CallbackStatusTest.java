@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class CallbackStatusTest extends TwilioServiceFunctionalTest {
     @Test
-    public void testMessageCallbackStatus() throws URISyntaxException, IOException, JSONException {
+    public void testMessageCallbackStatusSent() throws URISyntaxException, IOException, JSONException {
 
         MultivaluedMap<String,Object> headers = defaultHeadersFromTwilio();
 
@@ -72,6 +72,36 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         checkHeaders(httpClientMock, 1);
 
         assertEquals(2, httpClientMock.getResponsesHistory().size());
+        assertEquals(204, responseMsg.getStatus());
+        assertEquals("", responseMsg.readEntity(String.class));
+    }
+
+    @Test
+    public void testMessageCallbackStatusDelivered() throws URISyntaxException, IOException, JSONException {
+
+        MultivaluedMap<String,Object> headers = defaultHeadersFromTwilio();
+
+        final Form form = new Form();
+        form.param("AccountSid", "mockAppSid");
+        form.param("ApiVersion", "2010-04-01");
+        form.param("From", "+440123456789");
+        form.param("MessageSid", "SMd931e01d8ce64158b8c962c6a1b24e5c");
+        form.param("MessageStatus", "delivered");
+        form.param("SmsSid", "SMd931e01d8ce64158b8c962c6a1b24e5c");
+        form.param("SmsStatus", "delivered");
+        form.param("To", "+441234567899");
+
+        HttpClientForTest httpClientMock = new HttpClientForTest();
+        Unirest.setHttpClient(httpClientMock);
+
+        Entity entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+
+        // this call is coming from Twilio, and we don't process it because is not consistent for all the carriers
+        Response responseMsg = target("/callback/status/message")
+                .request()
+                .headers(headers)
+                .post(entity);
+
         assertEquals(204, responseMsg.getStatus());
         assertEquals("", responseMsg.readEntity(String.class));
     }
