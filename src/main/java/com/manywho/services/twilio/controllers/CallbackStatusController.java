@@ -91,6 +91,11 @@ public class CallbackStatusController {
                     callback.getTo(),
                     callback.getBody()
             );
+        } else if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("delivered")) {
+            // we ignore the 'delivered' status (because some carrier don't sent this information), we will process the
+            // message in status 'sent' because all the carrier sent this status.
+
+            return;
         } else {
             // Otherwise, send back the status
             callbackManager.processMessage(
