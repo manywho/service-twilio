@@ -9,7 +9,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.*;
 import static org.junit.Assert.assertEquals;
 
-public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
+public class VoiceFlowStateCallbackTest extends TwilioServiceFunctionalTest {
 
     @Test
     public void testVoiceFlowCallback() throws Exception {
@@ -128,7 +128,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
                 .post(entity);
 
         assertEquals(200, responseMsg.getStatus());
-
+        assertEquals(1, mockHttpClient.getResponsesHistory().size());
         // the order in this xml is important
         assertXMLEqual(
                 "The XML response is not the expected.",
@@ -161,12 +161,13 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/RecordingReady/cache/recording-call.json")
         );
 
-        FlowResponseMock httpResponse = new FlowResponseMock(
+        FlowResponseMock httpResponseGoToNextStep = new FlowResponseMock(
                 FlowResponseMock.getFullListHeaders(), "HTTP", 1, 1, 200, "ok","Content-Type: application/json; charset=utf-8",
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/RecordingReady/flow/run-to-next-step.json")
         );
 
-        mockHttpClient.addResponse(httpResponse);
+        // set output
+        mockHttpClient.addResponse(httpResponseGoToNextStep);
 
         Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/123456")
                 .request()
@@ -179,7 +180,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
         );
 
         assertEquals(200, responseMsg.getStatus());
-
+        assertEquals(1, mockHttpClient.getResponsesHistory().size());
         // the order in this xml is important
         assertXMLEqual(
                 "The XML response is not the expected.",
@@ -212,17 +213,20 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/TranscriptionFail/cache/recording-call.json")
         );
 
-        FlowResponseMock httpResponse = new FlowResponseMock(
+        FlowResponseMock httpResponseGoNextStep = new FlowResponseMock(
                 FlowResponseMock.getFullListHeaders(), "HTTP", 1, 1, 200, "ok","Content-Type: application/json; charset=utf-8",
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/TranscriptionFail/flow/run-to-next-step.json")
         );
 
-        mockHttpClient.addResponse(httpResponse);
+        // set output
+        mockHttpClient.addResponse(httpResponseGoNextStep);
 
         Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/123456")
                 .request()
                 .headers(headers)
                 .post(entity);
+
+        assertEquals(1, mockHttpClient.getResponsesHistory().size());
 
         assertJsonSame(
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/TranscriptionFail/cache/saved-flow-execution.json"),
