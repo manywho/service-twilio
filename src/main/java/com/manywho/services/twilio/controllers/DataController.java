@@ -33,7 +33,7 @@ public class DataController extends AbstractDataController {
                 return new ObjectDataResponse(dataManager.loadRecordingForCall(objectDataRequest));
             default:
                 // Assume the type represents Metadata
-                throw new Exception("This data isn't currently supported in the Box Service");
+                throw new Exception("This data isn't currently supported in the Twilio Service");
         }
     }
 
