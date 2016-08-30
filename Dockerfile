@@ -1,9 +1,5 @@
-FROM java:8
+FROM maven:onbuild-alpine
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "twilio-2.0-SNAPSHOT.jar"]
-
-WORKDIR /app
-
-ADD . ./
+CMD ["java", "-Xmx600m", "-jar", "/usr/src/app/target/twilio-2.0-SNAPSHOT.jar"]
