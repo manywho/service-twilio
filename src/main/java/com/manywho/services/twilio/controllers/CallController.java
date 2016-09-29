@@ -12,6 +12,7 @@ import com.manywho.services.twilio.actions.StartOutboundCall;
 import com.manywho.services.twilio.actions.StartOutboundCallSimple;
 import com.manywho.services.twilio.entities.Configuration;
 import com.manywho.services.twilio.managers.CallManager;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -64,12 +65,18 @@ public class CallController extends AbstractController {
         Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
         StartOutboundCallSimple startOutboundCallSimple = this.parseInputs(serviceRequest, StartOutboundCallSimple.class);
 
+        String timeout = startOutboundCallSimple.getTimeout();
+        //todo remove this property in twilio version 3
+        if(StringUtils.isEmpty(timeout)) {
+            timeout = "60";
+        }
+
         String callSid = callManager.startOutboundCall(
                 serviceRequest,
                 configuration,
                 startOutboundCallSimple.getFrom(),
                 startOutboundCallSimple.getTo(),
-                startOutboundCallSimple.getTimeout(),
+                timeout,
                 startOutboundCallSimple.getRecord()
         );
 
