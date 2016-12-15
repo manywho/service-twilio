@@ -1,9 +1,11 @@
 package com.manywho.services.twilio.controllers;
 
 import com.manywho.services.twilio.managers.CallbackTwimlManager;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import java.net.URLDecoder;
 
 @Path("/callback/callbackTwiml")
 public class CallbackTwimlController {
@@ -52,5 +54,14 @@ public class CallbackTwimlController {
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
                 callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl).toXML()
         );
+    }
+
+    @GET
+    @Path("/echotwiml")
+    public String echoTwiml(@QueryParam("twiml") String twiml) {
+        if (!StringUtils.isEmpty(twiml)) {
+            return twiml;
+        }
+        return null;
     }
 }

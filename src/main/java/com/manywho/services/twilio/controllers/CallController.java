@@ -10,15 +10,14 @@ import com.manywho.sdk.services.annotations.AuthorizationRequired;
 import com.manywho.sdk.services.controllers.AbstractController;
 import com.manywho.services.twilio.actions.StartOutboundCall;
 import com.manywho.services.twilio.actions.StartOutboundCallSimple;
+import com.manywho.services.twilio.actions.VoiceSimple;
 import com.manywho.services.twilio.entities.Configuration;
 import com.manywho.services.twilio.managers.CallManager;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import java.net.URLDecoder;
 
 @Path("/calls")
 @Consumes("application/json")
@@ -90,6 +89,40 @@ public class CallController extends AbstractController {
         serviceResponse.setToken(serviceRequest.getToken());
         serviceResponse.setInvokeType(InvokeType.Forward);
         serviceResponse.setWaitMessage(waitMessage);
+
+        return serviceResponse;
+    }
+
+    @POST
+    @Path("/voicesimple")
+    @AuthorizationRequired
+    public ServiceResponse voiceSimple(ServiceRequest serviceRequest) throws Exception {
+        Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
+        VoiceSimple voiceSimple = this.parseInputs(serviceRequest, VoiceSimple.class);
+
+        String voice = voiceSimple.getVoice();
+        if(StringUtils.isEmpty(voice)) {
+            voice = "man";
+        }
+
+        String language = voiceSimple.getLanguage();
+        if(StringUtils.isEmpty(language)) {
+            language = "en";
+        }
+
+        callManager.voiceMessage(
+            serviceRequest,
+            configuration,
+            voiceSimple.getFrom(),
+            voiceSimple.getTo(),
+            voiceSimple.getMessage(),
+            voice,
+            language
+        );
+
+        ServiceResponse serviceResponse = new ServiceResponse();
+        serviceResponse.setToken(serviceRequest.getToken());
+        serviceResponse.setInvokeType(InvokeType.Forward);
 
         return serviceResponse;
     }

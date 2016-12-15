@@ -1,0 +1,77 @@
+{
+    "joinPlayerUri": "https://flow.manywho.com/22b13460-14b3-4833-9d63-e50540cc57cd/play/default?join=b365d767-8560-4850-80be-fece29a34479",
+    "playerUri": "https://flow.manywho.com/22b13460-14b3-4833-9d63-e50540cc57cd/play/default?flow-id=971159f4-bdd3-47fa-b576-e08019edf573",
+    "uri": "https://exeter-mw1.ngrok.io/api/twilio/2/calls/voicesimple",
+    "inputs": [
+        {
+            "valueElementId": "4d57b9bc-741f-43c4-acc1-c3e9a6b36404",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Call",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": null,
+            "contentType": "ContentObject",
+            "objectData": [
+                {
+                    "internalId": "56d1556c-4936-484d-94cb-a8fd0c1b5422",
+                    "externalId": "56d1556c-4936-484d-94cb-a8fd0c1b5422",
+                    "developerName": "Call",
+                    "typeElementId": "74c3fe8e-e022-45c1-b386-83e8c2372b4e",
+                    "order": 0,
+                    "properties": [
+                        {
+                            "typeElementPropertyId": "5ac5f48d-0393-4d0a-948d-51e89a18b398",
+                            "developerName": "To",
+                            "contentValue": "441234567899",
+                            "contentType": "ContentString",
+                            "contentFormat": null,
+                            "objectData": null
+                        },
+                        {
+                            "typeElementPropertyId": "ee3789d7-ab9a-49c8-8d6a-cfbeb3f31447",
+                            "developerName": "From",
+                            "contentValue": "440123456789",
+                            "contentType": "ContentString",
+                            "contentFormat": null,
+                            "objectData": null
+                        }
+                    ],
+                    "isSelected": false
+                }
+            ]
+        }
+    ],
+    "outcomes": [
+        {
+            "id": "ac0e2c69-60ba-43f5-b1a5-7e2668b850b6",
+            "developerName": "Home",
+            "label": "Home",
+            "order": 0
+        }
+    ],
+    "token": "mock-token",
+    "tenantId": "mock-tenant-id",
+    "stateId": "b365d767-8560-4850-80be-fece29a34479",
+    "callbackUri": "https://flow.manywho.com/api/run/1/response",
+    "culture": {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "configurationValues": [],
+    "authorization": {
+        "serviceElementId": "55a1cdee-6e3d-47e8-923b-17e0f5c0e209",
+        "globalAuthenticationType": "PUBLIC",
+        "streamBehaviourType": "NONE",
+        "groups": null,
+        "users": null,
+        "locations": null
+    },
+    "annotations": null,
+    "attributes": null
+}
