@@ -412,6 +412,56 @@
                     "ordinal": 0
                 }
             ]
+        },
+        {
+            "uriPart": "calls/voicesimple",
+            "developerSummary": "Call a number and use text to speech to vocalize a message",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "developerName": "Voice (Simple)",
+            "serviceOutputs": [],
+            "serviceInputs": [
+                {
+                    "contentValue": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Message",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Voice",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Language",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                }
+            ]
         }
     ]
 }

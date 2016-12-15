@@ -20,10 +20,10 @@ public class VoiceSimple {
     @ActionInput(name = "Message", contentType = ContentType.String)
     private String message;
 
-    @ActionInput(name = "Language", contentType = ContentType.String)
+    @ActionInput(name = "Language", contentType = ContentType.String, required = false)
     private String language;
 
-    @ActionInput(name = "Voice", contentType = ContentType.String)
+    @ActionInput(name = "Voice", contentType = ContentType.String, required = false)
     private String voice;
 
     public String getFrom() {
