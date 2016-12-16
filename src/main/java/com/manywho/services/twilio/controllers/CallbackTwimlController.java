@@ -1,6 +1,7 @@
 package com.manywho.services.twilio.controllers;
 
 import com.manywho.services.twilio.managers.CallbackTwimlManager;
+import com.manywho.services.twilio.services.twiml.TwilioComponentService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -22,7 +23,7 @@ public class CallbackTwimlController {
             @FormParam("Direction") String direction
     ) throws Exception {
         if (direction.equals("inbound")) {
-            return callbackTwimlManager.startFlowAsTwiml(tenantId, flowId, callSid).toXML();
+            return callbackTwimlManager.startFlowAsTwiml(tenantId, flowId, callSid, TwilioComponentService.CallbackType.PHONE_CALL_CALLBACK).toXML();
         }
 
         return null;
@@ -50,7 +51,45 @@ public class CallbackTwimlController {
 
         return String.format("%s%s",
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-                callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl).toXML()
+                callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl, TwilioComponentService.CallbackType.PHONE_CALL_CALLBACK).toXML()
         );
+    }
+
+    @POST
+    @Path("/sms/flow/state/{stateId}")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/xml")
+    public String smsFlowStateCallback(
+            @PathParam("stateId") String stateId,
+            @FormParam("CallSid") String callSid,
+            @FormParam("Digits") String digits,
+            @FormParam("RecordingUrl") String recordingUrl
+    ) throws Exception {
+
+        return String.format("%s%s",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                callbackTwimlManager.continueFlowAsTwiml(stateId, callSid, digits, recordingUrl, TwilioComponentService.CallbackType.SMS_CALLBACK).toXML()
+        );
+    }
+
+    @POST
+    @Path("/sms/flow/{tenantId}/{flowId}")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/xml")
+    public String smsFlowCallback(
+            @PathParam("tenantId") String tenantId,
+            @PathParam("flowId") String flowId,
+            @FormParam("From") String from,
+            @FormParam("To") String to,
+            @FormParam("Body") String body,
+            @FormParam("MessageSid") String messageSid,
+            @FormParam("SmsSid") String smsSid,
+            @FormParam("FromCountry") String fromCountry,
+            @FormParam("ToCountry") String toCountry,
+            @FormParam("Direction") String direction
+    ) throws Exception {
+        return String.format("%s%s",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                callbackTwimlManager.startFlowAsTwiml(tenantId, flowId, messageSid, TwilioComponentService.CallbackType.SMS_CALLBACK).toXML());
     }
 }

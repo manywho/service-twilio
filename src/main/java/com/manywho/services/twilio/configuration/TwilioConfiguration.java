@@ -47,6 +47,10 @@ public class TwilioConfiguration {
         return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice/flow/state/";
     }
 
+    public String getCallbackTwimlSmsFlowState(){
+        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/sms/flow/state/";
+    }
+
     public String getCallbackTranscription() {
         return uriInfo.getBaseUri().toString() + "callback/transcribe/";
     }

@@ -3,6 +3,7 @@ package com.manywho.services.twilio.managers;
 import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.services.twilio.services.FlowService;
+import com.manywho.services.twilio.services.twiml.TwilioComponentService;
 import com.manywho.services.twilio.services.twiml.TwimlResponseService;
 import com.manywho.services.twilio.services.twiml.read.TwimlFromCallRequest;
 import com.manywho.services.twilio.services.twiml.read.TwimlFromFlow;
@@ -31,7 +32,7 @@ public class CallbackTwimlManager {
         this.twimlResponseService = twimlResponseService;
     }
 
-    public TwiMLResponse continueFlowAsTwiml(String stateId, String callSid, String digits, String recordingUrl) throws Exception {
+    public TwiMLResponse continueFlowAsTwiml(String stateId, String callSid, String digits, String recordingUrl, TwilioComponentService.CallbackType callbackType) throws Exception {
         TwiMLResponse response;
 
         if (cacheManager.hasFlowExecution(stateId, callSid)) {
@@ -39,7 +40,7 @@ public class CallbackTwimlManager {
             FlowState flowState = cacheManager.getFlowExecution(stateId, callSid);
             flowService.syncIfStatusWait(flowState);
 
-            response = twimlFromFlow.createTwimlFromFlow(callSid, stateId, digits, recordingUrl, flowState);
+            response = twimlFromFlow.createTwimlFromFlow(callSid, stateId, digits, recordingUrl, flowState, callbackType);
             saveInCacheIfHungUpVerbExist(response, callSid);
 
             return response;
@@ -47,7 +48,7 @@ public class CallbackTwimlManager {
             // If we have a call request stored, create TwiML based on that
             // Fetch the cached ServiceRequest for the given Call SID
             ServiceRequest serviceRequest = cacheManager.getCallRequest(callSid);
-            response = twimlFromCallRequest.createTwimlFromCallRequest(callSid, stateId, serviceRequest);
+            response = twimlFromCallRequest.createTwimlFromCallRequest(callSid, stateId, serviceRequest, callbackType);
             saveInCacheIfHungUpVerbExist(response, callSid);
 
             return response;
@@ -56,11 +57,11 @@ public class CallbackTwimlManager {
         throw new Exception("Unable to continue the flow as no stored requests are found for the SID " + callSid);
     }
 
-    public TwiMLResponse startFlowAsTwiml(String tenantId, String flowId, String callSid) throws Exception {
+    public TwiMLResponse startFlowAsTwiml(String tenantId, String flowId, String callSid, TwilioComponentService.CallbackType callbackType) throws Exception {
         // Generate the TwiML for the call
         FlowState flowState = flowService.startFlow(tenantId, flowId);
 
-        return twimlFromInvoke.generateTwimlForInvoke(callSid, flowState);
+        return twimlFromInvoke.generateTwimlForInvoke(callSid, flowState, callbackType);
     }
 
     private void saveInCacheIfHungUpVerbExist(TwiMLResponse response, String callSid) throws TwiMLException {

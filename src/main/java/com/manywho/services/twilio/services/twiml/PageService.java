@@ -23,12 +23,12 @@ public class PageService {
         this.twilioConfiguration = twilioConfiguration;
     }
 
-    public TwiMLResponse createTwimlResponseFromPage(String stateId, FlowState flowState) throws TwiMLException {
+    public TwiMLResponse createTwimlResponseFromPage(String stateId, FlowState flowState, TwilioComponentService.CallbackType callbackType) throws TwiMLException {
         TwiMLResponse twiMLResponse = new TwiMLResponse();
 
         // Create TwiML components from all the PageComponents
         List<Verb> twimlComponents = flowState.getPageComponents().stream()
-                .map(component -> twilioComponentService.createTwimlForComponent(component, stateId))
+                .map(component -> twilioComponentService.createTwimlForComponent(component, stateId, callbackType))
                 .collect(Collectors.toList());
 
         // If there are outcomes and we should auto wrap in a gather, then we do that
@@ -57,9 +57,13 @@ public class PageService {
 
                 // Automatically append a pause and join in case they need to re-hear the message
                 twiMLResponse.append(twilioComponentService.createPauseComponent(10));
-                twiMLResponse.append(twilioComponentService.createRedirectComponent(
-                        this.twilioConfiguration.getCallbackTwimlVoiceFlowState() + stateId)
-                );
+                if (callbackType == TwilioComponentService.CallbackType.PHONE_CALL_CALLBACK) {
+                    twiMLResponse.append(twilioComponentService.createRedirectComponent(
+                            this.twilioConfiguration.getCallbackTwimlVoiceFlowState() + stateId));
+                } else{
+                    twiMLResponse.append(twilioComponentService.createRedirectComponent(
+                            this.twilioConfiguration.getCallbackTwimlSmsFlowState() + stateId));
+                }
             }
         } else {
             // Add all the non-null TwiML components to the response

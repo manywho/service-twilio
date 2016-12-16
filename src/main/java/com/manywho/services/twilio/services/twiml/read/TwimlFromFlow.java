@@ -11,6 +11,7 @@ import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.services.FlowService;
 import com.manywho.services.twilio.services.twiml.FlowInputsService;
 import com.manywho.services.twilio.services.twiml.PageService;
+import com.manywho.services.twilio.services.twiml.TwilioComponentService;
 import com.manywho.services.twilio.services.twiml.TwimlResponseService;
 import com.twilio.sdk.verbs.TwiMLResponse;
 import javax.inject.Inject;
@@ -40,7 +41,7 @@ public class TwimlFromFlow {
         this.twimlFromInvoke = twimlFromInvoke;
     }
 
-    public TwiMLResponse createTwimlFromFlow(String callSid, String stateId, String digits, String recordingUrl, FlowState flowState) throws Exception {
+    public TwiMLResponse createTwimlFromFlow(String callSid, String stateId, String digits, String recordingUrl, FlowState flowState, TwilioComponentService.CallbackType callbackType) throws Exception {
 
         // If the flow still has a WAIT status, then return some TwiML to say that we're still waiting
         if (flowState.getInvokeType().equals(InvokeType.Wait)) {
@@ -49,7 +50,7 @@ public class TwimlFromFlow {
 
         // If there are no outcomes, then just speak the current step as normal
         if (!flowState.hasOutcomes()) {
-            return pageService.createTwimlResponseFromPage(stateId, flowState);
+            return pageService.createTwimlResponseFromPage(stateId, flowState, callbackType);
         }
 
         Optional<Outcome> outcomeForDigits = flowState.getOutcomes().stream()
@@ -60,7 +61,7 @@ public class TwimlFromFlow {
 
         // If there are no inputs, and the digits don't match with an outcome then repeat the current step as TwiML
         if (!outcomeForDigits.isPresent() && !inputsRecordExist) {
-            return  twimlFromInvoke.generateTwimlForInvoke(callSid, flowState);
+            return  twimlFromInvoke.generateTwimlForInvoke(callSid, flowState, callbackType);
         }
 
         PageComponentInputResponseRequestCollection inputs = new PageComponentInputResponseRequestCollection();
@@ -102,7 +103,7 @@ public class TwimlFromFlow {
             return twimlResponseService.createTwimlResponseWait(10, nextStepState.getInvokeResponse(), nextStepState.getInvokeResponse().getWaitMessage());
         }
 
-        return pageService.createTwimlResponseFromPage(stateId, nextStepState);
+        return pageService.createTwimlResponseFromPage(stateId, nextStepState, callbackType);
     }
 
 }

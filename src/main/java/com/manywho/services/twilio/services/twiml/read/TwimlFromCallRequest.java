@@ -7,6 +7,7 @@ import com.manywho.sdk.enums.InvokeType;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.services.FlowService;
 import com.manywho.services.twilio.services.twiml.PageService;
+import com.manywho.services.twilio.services.twiml.TwilioComponentService;
 import com.manywho.services.twilio.services.twiml.TwimlResponseService;
 import com.twilio.sdk.verbs.TwiMLResponse;
 
@@ -28,7 +29,7 @@ public class TwimlFromCallRequest {
         this.pageService = pageService;
     }
 
-    public TwiMLResponse createTwimlFromCallRequest(String callSid, String stateId, ServiceRequest serviceRequest) throws Exception {
+    public TwiMLResponse createTwimlFromCallRequest(String callSid, String stateId, ServiceRequest serviceRequest, TwilioComponentService.CallbackType callbackType) throws Exception {
 
         // Join the flow as we won't have executed it yet in the context of this service
         FlowState flowState = flowService.joinFlow(serviceRequest.getTenantId(), stateId);
@@ -39,6 +40,6 @@ public class TwimlFromCallRequest {
             return twimlResponseService.createTwimlResponseWait(10, flowState.getInvokeResponse(), flowState.getInvokeResponse().getWaitMessage());
         }
 
-        return pageService.createTwimlResponseFromPage(stateId, flowState);
+        return pageService.createTwimlResponseFromPage(stateId, flowState, callbackType);
     }
 }
