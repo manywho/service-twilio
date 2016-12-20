@@ -42,6 +42,10 @@ public class CallbackStatusController {
             @FormParam("RecordingSid") String recordingSid
     ) throws Exception {
 
+        if (cacheManager.isSimpleCall(callSid)) {
+            return;
+        }
+
         // Only progress if the call is outbound
         if (direction.equals("outbound-api") || direction.equals("outbound-dial")) {
             // Send a response back to ManyWho, updating the state with the current call status

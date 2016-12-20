@@ -1,0 +1,117 @@
+{
+    "joinPlayerUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?join=da80bb94-7e31-42e7-bfcb-4783f46c7d65",
+    "playerUri": "https://flow.manywho.com/1ad69220-0dba-40d2-ac8d-2de4f11c1837/play/default?flow-id=1ac2d958-9bb2-49e8-a648-461d5fb9e912",
+    "uri": "https://manywho-ex1.ngrok.io/api/twilio/2/calls/voicesimple",
+    "inputs": [
+        {
+            "valueElementId": "4d945ef8-8cd5-4b2f-b62b-6a848cd06171",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "From",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "+440123456789",
+            "contentType": "ContentString",
+            "objectData": null
+        },
+        {
+            "valueElementId": "be1bc78e-fd57-40ec-9a86-a815de2a9e28",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Message",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "Hello",
+            "contentType": "ContentString",
+            "objectData": null
+        },
+        {
+            "valueElementId": "a259783f-d58e-4b8e-9ad0-73ed9fe48277",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Language",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": null,
+            "contentType": "ContentString",
+            "objectData": null
+        },
+        {
+            "valueElementId": "41502d53-877a-4d22-ade2-4fc892ba65a3",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Voice",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": null,
+            "contentType": "ContentString",
+            "objectData": null
+        },
+        {
+            "valueElementId": "9d998e10-966d-4d6a-9abc-ecb03a0e2194",
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "To",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "+441234567899",
+            "contentType": "ContentString",
+            "objectData": null
+        }
+    ],
+    "outcomes": [
+        {
+            "id": "fb6ba83a-4ba8-4d77-bd71-19ad31a451e6",
+            "developerName": "1",
+            "label": "1",
+            "order": 0
+        }
+    ],
+    "token": "mock-token",
+    "tenantId": "mock-tenant-id",
+    "stateId": "da80bb94-7e31-42e7-bfcb-4783f46c7d65",
+    "callbackUri": "https://flow.manywho.com/api/run/1/response",
+    "culture": {
+        "id": null,
+        "developerName": null,
+        "developerSummary": null,
+        "brand": null,
+        "language": "EN",
+        "country": "USA",
+        "variant": null
+    },
+    "configurationValues": [
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Account SID",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "mockAppSid",
+            "contentType": null,
+            "objectData": null
+        },
+        {
+            "valueElementId": null,
+            "typeElementId": null,
+            "typeElementPropertyId": null,
+            "developerName": "Auth Token",
+            "typeElementDeveloperName": null,
+            "typeElementPropertyDeveloperName": null,
+            "contentValue": "mockAuthToken",
+            "contentType": null,
+            "objectData": null
+        }
+    ],
+    "authorization": {
+        "serviceElementId": "00f32a76-d237-4d06-94d0-0ddedb1bdd64",
+        "globalAuthenticationType": "PUBLIC",
+        "streamBehaviourType": "NONE",
+        "groups": null,
+        "users": null,
+        "locations": null
+    },
+    "annotations": null,
+    "attributes": null
+}

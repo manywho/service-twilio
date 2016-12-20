@@ -6,8 +6,14 @@ import com.manywho.services.twilio.services.CallService;
 import com.twilio.sdk.resource.instance.Call;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import java.net.URLEncoder;
 
 public class CallManager {
+
+    @Context
+    private UriInfo uriInfo;
 
     @Inject
     private CacheManager cacheManager;
@@ -26,12 +32,29 @@ public class CallManager {
                 from,
                 to,
                 timeout,
-                recordCallBool
+                recordCallBool,
+                null
         );
 
         // Cache the call SID for future callbacks to ManyWho
         cacheManager.saveCallRequest(call.getSid(), serviceRequest);
 
         return call.getSid();
+    }
+
+    public void voiceMessage(ServiceRequest serviceRequest, Configuration configuration, String from,  String to, String message, String voice, String language) throws Exception {
+
+        String twiml = "%3CResponse%3E"+"%3CSay%20voice%3D%22" + voice + "%22%20language%3D%22" + language + "%22%3E" + URLEncoder.encode(message) + "%3C%2FSay%3E" + "%3C%2FResponse%3E";
+
+        callService.startOutboundCall(
+            serviceRequest.getStateId(),
+            configuration.getAccountSid(),
+            configuration.getAuthToken(),
+            from,
+            to,
+            "60",
+            false,
+            this.uriInfo.getBaseUri().toString() + "callback/callbackTwiml/echotwiml?twiml=" + twiml
+        );
     }
 }

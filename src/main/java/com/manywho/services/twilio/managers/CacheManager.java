@@ -26,6 +26,7 @@ public class CacheManager {
     public static final String REDIS_KEY_TWIML_HANGUP_CALL = "service:twilio:callbackTwiml:hangup:call:%s";
     public static final String REDIS_KEY_WEBHOOK_SMS = "service:twilio:webhook:sms:%s";
     public static final String REDIS_KEY_FLOW_WAITTING_SMS_REPLAY = "service:twilio:flow:sms:waitting:replay:%s";
+    public static final String REDIS_KEY_SIMPLE_CALL = "service:twilio:flow:call:simple:%s";
 
 
     @Inject
@@ -226,6 +227,24 @@ public class CacheManager {
     public void deleteStateWaitingForSms(String smsIdentity) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.del(String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity));
+        }
+    }
+
+    public void saveSimpleCall(String callSid) {
+        String key = String.format(REDIS_KEY_SIMPLE_CALL, callSid);
+
+        try (Jedis jedis = jedisPool.getResource()) {
+            try {
+                jedis.set(key, objectMapper.writeValueAsString(callSid));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public boolean isSimpleCall(String callSid) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            return jedis.exists(String.format(REDIS_KEY_SIMPLE_CALL, callSid));
         }
     }
 }
