@@ -76,12 +76,12 @@ public class TwimlFromFlow {
                 RecordingCallback recordingCallback = null;
 
                 // has twilio call to the service with the transcription result?
-                if (cacheManager.hasRecordingCallback(flowState.getStateId(), callSid)) {
-                    recordingCallback = cacheManager.getRecordingCallback(flowState.getStateId(), callSid);
+                if (cacheManager.hasRecordingCallback(flowState.getState().toString(), callSid)) {
+                    recordingCallback = cacheManager.getRecordingCallback(flowState.getState().toString(), callSid);
                 }
 
                 flowInputsService.addRecordingToInputs(inputs, flowState, recordingUrl, recordingCallback);
-                cacheManager.deleteRecordingCallback(flowState.getStateId(), callSid);
+                cacheManager.deleteRecordingCallback(flowState.getState().toString(), callSid);
 
             } catch (WaitingForTranscriptionException ex) {
                 return twimlResponseService.createTwimlResponseWait(0, flowState.getInvokeResponse(), "Waiting for transcription");
@@ -97,7 +97,7 @@ public class TwimlFromFlow {
 
         FlowState nextStepState = flowService.progressToNextStep(flowState, outcomeForDigits.get(), inputs, InvokeType.Forward);
         // Updated the stored flow state with the new state
-        cacheManager.saveFlowExecution(flowState.getStateId(), callSid, flowState);
+        cacheManager.saveFlowExecution(flowState.getState().toString(), callSid, flowState);
 
         if (nextStepState.getInvokeType().equals(InvokeType.Wait)) {
             return twimlResponseService.createTwimlResponseWait(10, nextStepState.getInvokeResponse(), nextStepState.getInvokeResponse().getWaitMessage());

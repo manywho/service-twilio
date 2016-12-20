@@ -3,7 +3,10 @@ package com.manywho.services.twilio.managers;
 import com.manywho.sdk.entities.run.EngineValue;
 import com.manywho.sdk.entities.run.elements.type.Object;
 import com.manywho.sdk.entities.run.elements.type.*;
+import com.manywho.services.twilio.entities.MessageCallback;
+import com.manywho.services.twilio.services.ObjectMapperService;
 import com.manywho.services.twilio.types.CallRecording;
+import com.manywho.services.twilio.types.SmsWebhook;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -14,6 +17,9 @@ public class DataManager {
 
     @Inject
     CacheManager cacheManager;
+
+    @Inject
+    ObjectMapperService objectMapperService;
 
     @Inject
     CallbackManager callbackManager;
@@ -38,5 +44,14 @@ public class DataManager {
         object.setProperties(properties);
 
         return new ObjectCollection(object);
+    }
+
+    public MObject loadSmsWebhook(String messageSid) {
+        if (StringUtils.isNotEmpty(messageSid)) {
+            MessageCallback messageCall = cacheManager.getSmsWebhook(messageSid);
+            return objectMapperService.convertSmsWebhookToObject(messageCall);
+        } else {
+            throw new RuntimeException("Filter not supported for sms webhook");
+        }
     }
 }

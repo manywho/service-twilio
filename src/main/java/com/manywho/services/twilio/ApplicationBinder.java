@@ -1,7 +1,9 @@
 package com.manywho.services.twilio;
 
-import com.manywho.sdk.client.RunClient;
+import com.manywho.sdk.client.FlowClient;
+import com.manywho.sdk.client.raw.RawRunClient;
 import com.manywho.services.twilio.configuration.TwilioConfiguration;
+import com.manywho.services.twilio.factories.FlowClientFactory;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
 import com.manywho.services.twilio.managers.*;
 import com.manywho.services.twilio.services.*;
@@ -31,7 +33,8 @@ public class ApplicationBinder extends AbstractBinder {
         bind(MessageManager.class).to(MessageManager.class);
         bind(MessageService.class).to(MessageService.class);
         bind(ObjectMapperService.class).to(ObjectMapperService.class);
-        bind(RunClient.class).to(RunClient.class);
+        bind(RawRunClient.class).to(RawRunClient.class);
+        bindFactory(FlowClientFactory.class).to(FlowClient.class);
         bind(TwilioComponentService.class).to(TwilioComponentService.class);
         bind(DataManager.class).to(DataManager.class);
         bind(TwimlResponseService.class).to(TwimlResponseService.class);
@@ -41,5 +44,6 @@ public class ApplicationBinder extends AbstractBinder {
         bind(TwimlFromFlow.class).to(TwimlFromFlow.class);
         bind(TwimlFromInvoke.class).to(TwimlFromInvoke.class);
         bind(TwimlFromCallRequest.class).to(TwimlFromCallRequest.class);
+        bind(WebhookManager.class).to(WebhookManager.class);
     }
 }

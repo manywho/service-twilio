@@ -1,5 +1,5 @@
 {
-    "tenantId": "mock-tenant-id",
+    "tenantId": "fa460a94-c61c-11e6-9d9d-cec0c932ce01",
     "invokeResponse": {
         "culture": {
             "id": null,
@@ -10,7 +10,7 @@
             "country": "USA",
             "variant": null
         },
-        "stateId": "123456",
+        "stateId": "f8a15706-c61d-11e6-9d9d-cec0c932ce01",
         "parentStateId": null,
         "stateToken": "1e5db8a0-b8c8-4045-a0b6-10104e683e92",
         "alertEmail": "test@manywho.com",

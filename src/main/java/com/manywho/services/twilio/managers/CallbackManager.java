@@ -2,6 +2,7 @@ package com.manywho.services.twilio.managers;
 
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.sdk.enums.InvokeType;
+import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.services.CallbackMessageService;
 import com.manywho.services.twilio.services.CallbackVoiceService;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,7 @@ public class CallbackManager {
     @Inject
     private CallbackVoiceService callbackVoiceService;
 
-    public void processMessage(String accountSid, String messageSid, String messageStatus, String errorCode) throws Exception {
+    public void processMessage(String accountSid, String messageSid, String messageStatus, String errorCode, MessageCallback callback) throws Exception {
         String errorMessage = null;
 
         LOGGER.debug("Received a message callback for the SID {} with the status {}", messageSid, messageStatus);
@@ -43,6 +44,7 @@ public class CallbackManager {
 
         // If the message has been sent, and the Engine is waiting, assume we're waiting for a reply
         if (messageStatus.equalsIgnoreCase("sent") && response.equals(InvokeType.Wait)) {
+            cacheManager.stateWaitingForSms(callback.getFrom() + callback.getTo(), request.getStateId());
             callbackMessageService.sendMessageResponse(request, "Waiting for a reply to the SMS", null);
         }
 

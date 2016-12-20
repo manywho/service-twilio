@@ -34,7 +34,7 @@ public class TwimlFromCallRequest {
         // Join the flow as we won't have executed it yet in the context of this service
         FlowState flowState = flowService.joinFlow(serviceRequest.getTenantId(), stateId);
 
-        cacheManager.saveFlowExecution(flowState.getStateId(), callSid, flowState);
+        cacheManager.saveFlowExecution(flowState.getState().toString(), callSid, flowState);
 
         if (flowState.getInvokeType().equals(InvokeType.Wait)) {
             return twimlResponseService.createTwimlResponseWait(10, flowState.getInvokeResponse(), flowState.getInvokeResponse().getWaitMessage());

@@ -1,17 +1,21 @@
 package com.manywho.services.twilio.managers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.manywho.sdk.client.RunClient;
 import com.manywho.sdk.client.entities.FlowState;
+import com.manywho.sdk.client.raw.RawRunClient;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
+import com.manywho.services.twilio.types.SmsWebhook;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.UUID;
 
 public class CacheManager {
     public final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
@@ -20,6 +24,9 @@ public class CacheManager {
     public static final String REDIS_KEY_RECORDINGS = "service:twilio:recordings:%s:%s";
     public static final String REDIS_KEY_CALL_RECORDINGS = "service:twilio:recordings:call:%s";
     public static final String REDIS_KEY_TWIML_HANGUP_CALL = "service:twilio:callbackTwiml:hangup:call:%s";
+    public static final String REDIS_KEY_WEBHOOK_SMS = "service:twilio:webhook:sms:%s";
+    public static final String REDIS_KEY_FLOW_WAITTING_SMS_REPLAY = "service:twilio:flow:sms:waitting:replay:%s";
+
 
     @Inject
     private JedisPool jedisPool;
@@ -28,7 +35,7 @@ public class CacheManager {
     private ObjectMapper objectMapper;
 
     @Inject
-    private RunClient runClient;
+    private RawRunClient runClient;
 
     public void deleteCallRequest(String sid) {
         String key = String.format(REDIS_KEY_CALLS, sid);
@@ -89,7 +96,7 @@ public class CacheManager {
             if (StringUtils.isNotEmpty(json)) {
                 TenantInvokeResponseTuple tuple = objectMapper.readValue(json, TenantInvokeResponseTuple.class);
 
-                return new FlowState(runClient, tuple.getTenantId(), tuple.getInvokeResponse());
+                return new FlowState(runClient, UUID.fromString(tuple.getTenantId()), tuple.getInvokeResponse());
             }
         }
 
@@ -98,7 +105,7 @@ public class CacheManager {
 
     public void saveFlowExecution(@Nonnull String stateId, @Nonnull String callSid, @Nonnull FlowState flowState) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.set(String.format(REDIS_KEY_FLOWS, stateId, callSid), objectMapper.writeValueAsString(new TenantInvokeResponseTuple(flowState.getTenantId(), flowState.getInvokeResponse())));
+            jedis.set(String.format(REDIS_KEY_FLOWS, stateId, callSid), objectMapper.writeValueAsString(new TenantInvokeResponseTuple(flowState.getTenant().toString(), flowState.getInvokeResponse())));
         }
     }
 
@@ -162,4 +169,63 @@ public class CacheManager {
         }
     }
 
+    public void saveSmsWebhook(MessageCallback smsWebhook) {
+        String key = String.format(REDIS_KEY_WEBHOOK_SMS, smsWebhook.getMessageSid());
+
+        try (Jedis jedis = jedisPool.getResource()) {
+            try {
+                jedis.set(key, objectMapper.writeValueAsString(smsWebhook));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public MessageCallback getSmsWebhook(String id) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            String json = jedis.get(String.format(REDIS_KEY_WEBHOOK_SMS, id));
+
+            if (StringUtils.isNotEmpty(json)) {
+                return objectMapper.readValue(json, MessageCallback.class);
+            }
+        }catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+        throw new RuntimeException("Could not find a stored request for the message with SID" + id);
+
+    }
+
+    public void stateWaitingForSms(String smsIdentity, String stateId) {
+        String key = String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity);
+
+        try (Jedis jedis = jedisPool.getResource()) {
+            try {
+                jedis.set(key, objectMapper.writeValueAsString(stateId));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public String getStateWaitingForSms(String smsIdentity) {
+        String key = String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity);
+
+        try (Jedis jedis = jedisPool.getResource()) {
+            String state = jedis.get(key);
+
+            if (StringUtils.isNotEmpty(state)) {
+                return objectMapper.readValue(state, String.class);
+            }
+        }catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    public void deleteStateWaitingForSms(String smsIdentity) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.del(String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity));
+        }
+    }
 }

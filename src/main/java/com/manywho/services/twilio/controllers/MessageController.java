@@ -4,18 +4,23 @@ import com.manywho.sdk.entities.run.EngineValue;
 import com.manywho.sdk.entities.run.EngineValueCollection;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
+import com.manywho.sdk.entities.run.elements.type.MObject;
 import com.manywho.sdk.entities.run.elements.type.ObjectCollection;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.sdk.services.annotations.AuthorizationRequired;
 import com.manywho.sdk.services.controllers.AbstractController;
+import com.manywho.services.twilio.actions.FetchSmsWebhook;
 import com.manywho.services.twilio.actions.SendMms;
 import com.manywho.services.twilio.actions.SendSms;
 import com.manywho.services.twilio.actions.SendSmsSimple;
 import com.manywho.services.twilio.entities.Configuration;
+import com.manywho.services.twilio.managers.DataManager;
 import com.manywho.services.twilio.types.Mms;
 import com.manywho.services.twilio.managers.MessageManager;
 import com.manywho.services.twilio.types.Sms;
+import com.manywho.services.twilio.types.SmsWebhook;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -30,6 +35,9 @@ public class MessageController extends AbstractController {
 
     @Inject
     private MessageManager messageManager;
+
+    @Inject
+    private DataManager dataManager;
 
     @Path("/mms")
     @POST
@@ -121,5 +129,20 @@ public class MessageController extends AbstractController {
         serviceResponse.setOutputs(engineValues);
 
         return serviceResponse;
+    }
+
+    @Path("/webhook/sms")
+    @POST
+    @AuthorizationRequired
+    public ServiceResponse fetchWebhookSms(ServiceRequest serviceRequest) throws Exception {
+        FetchSmsWebhook smsWebhook = this.parseInputs(serviceRequest, FetchSmsWebhook.class);
+        MObject mObject = dataManager.loadSmsWebhook(smsWebhook.getMessageSid());
+
+        return new ServiceResponse(
+                InvokeType.Forward,
+                new EngineValue("SMS Webhook", ContentType.Object, SmsWebhook.NAME, new ObjectCollection(mObject)),
+                serviceRequest.getToken(),
+                "Fetch Message Webhook"
+        );
     }
 }

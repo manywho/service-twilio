@@ -19,14 +19,14 @@ public class TwimlFromInvoke {
     }
 
     public TwiMLResponse generateTwimlForInvoke(String callSid, FlowState flowState, TwilioComponentService.CallbackType callbackType) throws Exception {
-        cacheManager.saveFlowExecution(flowState.getStateId(), callSid, flowState);
+        cacheManager.saveFlowExecution(flowState.getState().toString(), callSid, flowState);
 
         // Check if there are any components in the returned Page Response, as we need to send one in the next invoke
         if (!flowState.hasPageComponents()) {
             throw new Exception("There are no components in the current step");
         }
 
-        return pageService.createTwimlResponseFromPage(flowState.getStateId(), flowState, callbackType);
+        return pageService.createTwimlResponseFromPage(flowState.getState().toString(), flowState, callbackType);
     }
 
 
