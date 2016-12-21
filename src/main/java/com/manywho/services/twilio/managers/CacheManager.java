@@ -8,7 +8,6 @@ import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
-import com.manywho.services.twilio.types.SmsWebhook;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -16,6 +15,8 @@ import redis.clients.jedis.JedisPool;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.UUID;
+
+import static java.lang.Thread.sleep;
 
 public class CacheManager {
     public final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
@@ -74,7 +75,8 @@ public class CacheManager {
 
     public ServiceRequest getMessageRequest(String accountSid, String id) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
-            String json = jedis.get(String.format(REDIS_KEY_MESSAGES, accountSid, id));
+            String key = String.format(REDIS_KEY_MESSAGES, accountSid, id);
+            String json = getWithRetry(jedis, key);
 
             if (StringUtils.isNotEmpty(json)) {
                 return objectMapper.readValue(json, ServiceRequest.class);
@@ -82,6 +84,26 @@ public class CacheManager {
         }
 
         throw new Exception("Could not find a stored request for the message with SID or From number: " + id);
+    }
+
+    private String getWithRetry(Jedis jedis, String key) throws InterruptedException {
+        String find = jedis.get(key);
+        if (StringUtils.isEmpty(find)) {
+            sleep(100L);
+            find = jedis.get(key);
+
+            if (StringUtils.isEmpty(find)) {
+                sleep(500L);
+                find = jedis.get(key);
+
+                if (StringUtils.isEmpty(find)) {
+                    sleep(2000L);
+                    find = jedis.get(key);
+                }
+            }
+        }
+
+        return find;
     }
 
     public void saveMessageRequest(String accountSid, String id, String request) {
