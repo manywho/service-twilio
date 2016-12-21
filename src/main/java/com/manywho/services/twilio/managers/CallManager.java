@@ -4,6 +4,8 @@ import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.services.twilio.entities.Configuration;
 import com.manywho.services.twilio.services.CallService;
 import com.twilio.sdk.resource.instance.Call;
+import com.twilio.sdk.verbs.Say;
+import com.twilio.sdk.verbs.TwiMLResponse;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
@@ -43,8 +45,11 @@ public class CallManager {
     }
 
     public void voiceMessage(ServiceRequest serviceRequest, Configuration configuration, String from,  String to, String message, String voice, String language) throws Exception {
-
-        String twiml = "%3CResponse%3E"+"%3CSay%20voice%3D%22" + voice + "%22%20language%3D%22" + language + "%22%3E" + URLEncoder.encode(message) + "%3C%2FSay%3E" + "%3C%2FResponse%3E";
+        TwiMLResponse twiMLResponse = new TwiMLResponse();
+        Say say = new Say(message);
+        say.setVoice(voice);
+        say.setLanguage(language);
+        twiMLResponse.append(say);
 
         callService.startOutboundCall(
             serviceRequest.getStateId(),
@@ -54,7 +59,7 @@ public class CallManager {
             to,
             "60",
             false,
-            this.uriInfo.getBaseUri().toString() + "callback/twiml/echotwiml?twiml=" + twiml
+            this.uriInfo.getBaseUri().toString() + "callback/twiml/echotwiml?twiml=" + twiMLResponse.asURL()
         );
     }
 }
