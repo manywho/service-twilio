@@ -30,12 +30,10 @@ public class WebhookController {
             @BeanParam MessageCallback messageCallback
             ) throws Exception {
 
-        Boolean messageWaitting = true;
         // if there isn't any flow waitting then I can execute the execute the flow
         if(cacheManager.getStateWaitingForSms(messageCallback.getTo()+ messageCallback.getFrom()) == null) {
             cacheManager.saveSmsWebhook(messageCallback);
             flowService.initializeAndExecuteFlow(flowId, null, tenantId, messageCallback);
-            messageWaitting = false;
         } else {
             webhookManager.handleMessageStatus(messageCallback);
             cacheManager.deleteStateWaitingForSms(messageCallback.getTo()+ messageCallback.getFrom());

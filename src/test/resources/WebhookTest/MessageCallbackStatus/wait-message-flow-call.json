@@ -1,0 +1,13 @@
+{
+    "token": "mock-token",
+    "tenantId": "3525b86c-c780-11e6-9d9d-cec0c932ce01",
+    "culture": null,
+    "annotations": null,
+    "invokeType": "FORWARD",
+    "waitMessage": "Waiting for a reply to the SMS",
+    "outputs": null,
+    "selectedOutcomeId": null,
+    "rootFaults": null,
+    "valueFaults": null,
+    "mode": null
+}
