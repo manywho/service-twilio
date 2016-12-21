@@ -37,7 +37,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/VoiceFlowState/cache/outbound-request.json")
         );
 
-        Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/21b14d12-c697-11e6-9d9d-cec0c932ce01")
+        Response responseMsg = target("/callback/twiml/voice/flow/state/21b14d12-c697-11e6-9d9d-cec0c932ce01")
                 .request()
                 .headers(headers)
                 .post(entity);
@@ -70,7 +70,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        headers.add("Referer", "http://localhost/api/twilio/2/callback/callbackTwiml/voice/flow/state/b84f8384-c61e-11e6-9d9d-cec0c932ce01");
+        headers.add("Referer", "http://localhost/api/twilio/2/callback/twiml/voice/flow/state/b84f8384-c61e-11e6-9d9d-cec0c932ce01");
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
 
         String redisKey =  String.format(CacheManager.REDIS_KEY_FLOWS, "9db74368-c61e-11e6-9d9d-cec0c932ce01", "CA12345");
@@ -80,7 +80,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForTranscription/cache/executed-flow.json")
         );
 
-        Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/9db74368-c61e-11e6-9d9d-cec0c932ce01")
+        Response responseMsg = target("/callback/twiml/voice/flow/state/9db74368-c61e-11e6-9d9d-cec0c932ce01")
                 .request()
                 .headers(headers)
                 .post(entity);
@@ -112,7 +112,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        headers.add("Referer", "http://localhost/api/twilio/2/callback/callbackTwiml/voice/flow/state/f8a15706-c61d-11e6-9d9d-cec0c932ce01");
+        headers.add("Referer", "http://localhost/api/twilio/2/callback/twiml/voice/flow/state/f8a15706-c61d-11e6-9d9d-cec0c932ce01");
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
 
         String redisKey =  String.format(CacheManager.REDIS_KEY_FLOWS, "fd5eda22-c61b-11e6-9d9d-cec0c932ce01", "CA12345");
@@ -122,7 +122,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
                 getJsonFormatFileContent("CallbackTwiml/VoiceFlowStateCallback/WaitingForStep/cache/executed-flow.json")
         );
 
-        Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/fd5eda22-c61b-11e6-9d9d-cec0c932ce01")
+        Response responseMsg = target("/callback/twiml/voice/flow/state/fd5eda22-c61b-11e6-9d9d-cec0c932ce01")
                 .request()
                 .headers(headers)
                 .post(entity);
@@ -148,7 +148,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        headers.add("Referer", "http://localhost/api/twilio/2/callback/callbackTwiml/voice/flow/state/12345678");
+        headers.add("Referer", "http://localhost/api/twilio/2/callback/twiml/voice/flow/state/12345678");
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
 
         mockJedis.set(
@@ -168,7 +168,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         mockHttpClient.addResponse(httpResponse);
 
-        Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/543eab22-c696-11e6-9d9d-cec0c932ce01")
+        Response responseMsg = target("/callback/twiml/voice/flow/state/543eab22-c696-11e6-9d9d-cec0c932ce01")
                 .request()
                 .headers(headers)
                 .post(entity);
@@ -199,7 +199,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
         headers.add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        headers.add("Referer", "http://localhost/api/twilio/2/callback/callbackTwiml/voice/flow/state/12345678");
+        headers.add("Referer", "http://localhost/api/twilio/2/callback/twiml/voice/flow/state/12345678");
         headers.add("Authorization", AuthorizationUtils.serialize(getDefaultAuthenticatedWho()));
 
         mockJedis.set(
@@ -219,7 +219,7 @@ public class VoiceFlowStateCallback extends TwilioServiceFunctionalTest {
 
         mockHttpClient.addResponse(httpResponse);
 
-        Response responseMsg = target("/callback/callbackTwiml/voice/flow/state/845cdc94-c613-11e6-9d9d-cec0c932ce01")
+        Response responseMsg = target("/callback/twiml/voice/flow/state/845cdc94-c613-11e6-9d9d-cec0c932ce01")
                 .request()
                 .headers(headers)
                 .post(entity);

@@ -1,11 +1,9 @@
 package com.manywho.services.twilio.configuration;
 
 import com.manywho.sdk.services.config.ServiceConfiguration;
-
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import java.util.HashMap;
 
 public class TwilioConfiguration {
 
@@ -20,11 +18,11 @@ public class TwilioConfiguration {
     }
 
     public String getSmsUrl() {
-        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message";
+        return uriInfo.getBaseUri().toString() + "callback/twiml/message";
     }
 
     public String getSmsFallbackUrl() {
-        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/message" ;
+        return uriInfo.getBaseUri().toString() + "callback/twiml/message";
     }
 
     public String getSmsStatusCallback() {
@@ -32,11 +30,11 @@ public class TwilioConfiguration {
     }
 
     public String getVoiceUrl() {
-        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice";
+        return uriInfo.getBaseUri().toString() + "callback/twiml/voice";
     }
 
     public String getVoiceFallbackUrl() {
-        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice";
+        return uriInfo.getBaseUri().toString() + "callback/twiml/voice";
     }
 
     public String getStatusCallback() {
@@ -44,11 +42,11 @@ public class TwilioConfiguration {
     }
 
     public String getCallbackTwimlVoiceFlowState(){
-        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/voice/flow/state/";
+        return uriInfo.getBaseUri().toString() + "callback/twiml/voice/flow/state/";
     }
 
     public String getCallbackTwimlSmsFlowState(){
-        return uriInfo.getBaseUri().toString() + "callback/callbackTwiml/sms/flow/state/";
+        return uriInfo.getBaseUri().toString() + "callback/twiml/sms/flow/state/";
     }
 
     public String getCallbackTranscription() {

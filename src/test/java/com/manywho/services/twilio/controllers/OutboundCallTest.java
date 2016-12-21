@@ -32,7 +32,7 @@ public class OutboundCallTest extends TwilioServiceFunctionalTest {
         callParameters.put("IfMachine", "Hangup");
         callParameters.put("Record", "true");
         callParameters.put("StatusCallback", "http://localhost:9998/callback/status/voice");
-        callParameters.put("Url", "http://localhost:9998/callback/callbackTwiml/voice/flow/state/da80bb94-7e31-42e7-bfcb-4783f46c7d65");
+        callParameters.put("Url", "http://localhost:9998/callback/twiml/voice/flow/state/da80bb94-7e31-42e7-bfcb-4783f46c7d65");
         Call mockCall = mock(Call.class);
 
         when(mockCall.getSid()).thenReturn("1234");
