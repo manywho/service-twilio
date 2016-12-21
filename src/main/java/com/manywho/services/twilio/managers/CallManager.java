@@ -54,7 +54,7 @@ public class CallManager {
             to,
             "60",
             false,
-            this.uriInfo.getBaseUri().toString() + "callback/callbackTwiml/echotwiml?twiml=" + twiml
+            this.uriInfo.getBaseUri().toString() + "callback/twiml/echotwiml?twiml=" + twiml
         );
     }
 }
