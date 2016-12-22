@@ -8,6 +8,7 @@ import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
 import com.manywho.sdk.entities.run.elements.type.MObject;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.InvokeType;
+import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.types.Sms;
 
 import javax.inject.Inject;
@@ -19,6 +20,9 @@ public class CallbackMessageService {
 
     @Inject
     private ObjectMapperService objectMapperService;
+
+    @Inject
+    private CacheManager cacheManager;
 
     public InvokeType sendMessageResponse(ServiceRequest serviceRequest, String waitMessageText, String errorMessageText) throws Exception {
         ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, serviceRequest.getToken());
@@ -35,7 +39,7 @@ public class CallbackMessageService {
         return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
     }
 
-    public void sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String body) throws Exception {
+    public void sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String to, String body) throws Exception {
         EngineValueCollection replyOutput = new EngineValueCollection();
 
         // If the action was SendSmsSimple, just add a "Reply" string as the output, otherwise use an Sms object
@@ -46,7 +50,7 @@ public class CallbackMessageService {
 
             replyOutput.add(new EngineValue("Reply", ContentType.Object, Sms.NAME, smsObject));
         }
-
+        cacheManager.deleteStateWaitingForSms(to+from);
         ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, replyOutput, serviceRequest.getToken());
         serviceResponse.setTenantId(serviceRequest.getTenantId());
 

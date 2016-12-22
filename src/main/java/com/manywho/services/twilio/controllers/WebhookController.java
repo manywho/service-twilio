@@ -4,7 +4,6 @@ import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.managers.WebhookManager;
 import com.manywho.services.twilio.services.FlowService;
-
 import javax.inject.Inject;
 import javax.ws.rs.*;
 
@@ -36,7 +35,6 @@ public class WebhookController {
             flowService.initializeAndExecuteFlow(flowId, null, tenantId, messageCallback);
         } else {
             webhookManager.handleMessageStatus(messageCallback);
-            cacheManager.deleteStateWaitingForSms(messageCallback.getTo()+ messageCallback.getFrom());
         }
     }
 }

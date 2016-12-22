@@ -6,6 +6,7 @@ import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.mashape.unirest.http.Unirest;
 import org.json.JSONException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -14,11 +15,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
 
 public class WebhookTest extends TwilioServiceFunctionalTest{
+
+    @Ignore
     @Test
-    public void testMessageCallbackStatusWhenThereIsFlowWaitting() throws URISyntaxException, IOException, JSONException {
+    public void testMessageCallbackStatusSent() throws URISyntaxException, IOException, JSONException {
 
         MultivaluedMap<String,Object> headers = defaultHeadersFromTwilio();
 
@@ -32,15 +35,22 @@ public class WebhookTest extends TwilioServiceFunctionalTest{
         form.param("SmsStatus", "sent");
         form.param("To", "+441234567899");
 
-        HttpClientForTest httpClientMock = new HttpClientForTest();
-        Unirest.setHttpClient(httpClientMock);
+        //HttpClientForTest httpClientMock = new HttpClientForTest();
+        Unirest.setHttpClient(mockHttpClient);
 
         // I will do to calls to the flow to know the status
         FlowResponseMock httpResponse = new FlowResponseMock();
-        httpClientMock.addResponse(httpResponse);
+        mockHttpClient.addResponse(httpResponse);
 
-        FlowResponseMock httpResponse1 = new FlowResponseMock();
-        httpClientMock.addResponse(httpResponse1);
+        FlowResponseMock httpResponse2 = new FlowResponseMock();
+        mockHttpClient.addResponse(httpResponse2);
+
+        FlowResponseMock httpResponse3 = new FlowResponseMock(
+                FlowResponseMock.getFullListHeaders(), "HTTP", 1, 1, 200, "ok","Content-Type: application/json; charset=utf-8",
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/join.json")
+        );
+        mockHttpClient.addResponse(httpResponse3);
+
 
         Entity entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
         String redisKey =  String.format(
@@ -51,42 +61,39 @@ public class WebhookTest extends TwilioServiceFunctionalTest{
 
         mockJedis.set(
                 redisKey,
-                getJsonFormatFileContent("WebhookTest/callbackstatus1-redis.json")
+                getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis.json")
         );
 
-        mockJedis.set(String.format(CacheManager.REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, "+441234567899+440123456789"), "true");
-
         // this call is coming from Twilio
-        Response responseMsg = target("/callback/sms/flow/3525b86c-c780-11e6-9d9d-cec0c932ce01/d2744eee-c780-11e6-9d9d-cec0c932ce01")
+        Response responseMsg = target("/callback/sms/flow/bbc6f524-c83a-11e6-9d9d-cec0c932ce01/5f942f66-7840-4e4d-8209-09647fc67261")
                 .request()
                 .headers(headers)
                 .post(entity);
 
         assertJsonSame(
-                getJsonFormatFileContent("WebhookTest/MessageCallbackStatus/forward-flow-call.json"),
-                httpClientMock.getExpectedRequestBody(0)
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/forward-flow-call.json"),
+                mockHttpClient.getExpectedRequestBody(0)
         );
 
         assertJsonSame(
-                getJsonFormatFileContent("WebhookTest/MessageCallbackStatus/wait-message-flow-call.json"),
-                httpClientMock.getExpectedRequestBody(1)
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/wait-message-flow-call.json"),
+                mockHttpClient.getExpectedRequestBody(1)
         );
 
-        assertNull(mockJedis.get(String.format(CacheManager.REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, "+441234567899+440123456789")));
-
         // headers used to call the flow in first call
-        checkHeaders(httpClientMock, 0);
-        checkHeaders(httpClientMock, 1);
+        checkHeaders(mockHttpClient, 0);
+        checkHeaders(mockHttpClient, 1);
 
-        assertEquals(2, httpClientMock.getResponsesHistory().size());
+        assertEquals(3, mockHttpClient.getResponsesHistory().size());
         assertEquals(204, responseMsg.getStatus());
         assertEquals("", responseMsg.readEntity(String.class));
     }
 
+
     private void checkHeaders(HttpClientForTest httpClientMock, Integer index) {
         // headers used to call the flow
         assertEquals(null, httpClientMock.getExpectedRequestHeader(index, "Authorization").getValue());
-        assertEquals("3525b86c-c780-11e6-9d9d-cec0c932ce01", httpClientMock.getExpectedRequestHeader(index, "ManyWhoTenant").getValue());
+        assertEquals("bbc6f524-c83a-11e6-9d9d-cec0c932ce01", httpClientMock.getExpectedRequestHeader(index, "ManyWhoTenant").getValue());
         assertEquals("gzip", httpClientMock.getExpectedRequestHeader(index, "accept-encoding").getValue());
         assertEquals("application/json", httpClientMock.getExpectedRequestHeader(index, "Content-Type").getValue());
     }
