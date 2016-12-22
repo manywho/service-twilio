@@ -11,6 +11,7 @@ import com.manywho.sdk.test.FunctionalTest;
 import com.manywho.sdk.test.MockFactory;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
 import com.manywho.services.twilio.managers.CacheManager;
+import com.manywho.services.twilio.services.ResourceReader;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.resource.factory.CallFactory;
 import com.twilio.sdk.resource.factory.MessageFactory;
@@ -32,8 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.net.URISyntaxException;
 
 import static org.mockito.Mockito.mock;
@@ -49,6 +49,7 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
     protected CallFactory mockCallFactory;
     protected HttpClientForTest mockHttpClient;
     protected RawRunClient rawRunClient;
+    protected ResourceReader resourceReader;
 
     private FlowClient runClient;
 
@@ -65,6 +66,13 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
         mockHttpClient = new HttpClientForTest();
         rawRunClient = new RawRunClient(mockHttpClient);
         runClient = new FlowClient(rawRunClient);
+        resourceReader = mock(ResourceReader.class);
+        try {
+            when(resourceReader.getFile("config.value.properties")).thenThrow(new FileNotFoundException());
+        } catch (URISyntaxException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         when(mockAccount.getMessageFactory()).thenReturn(mockMessageFactory);
         when(mockAccount.getCallFactory()).thenReturn(mockCallFactory);
@@ -79,6 +87,7 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
                 bind(CacheManager.class).to(CacheManager.class);
                 bindFactory(new MockFactory<RawRunClient>(rawRunClient)).to(RawRunClient.class).ranked(1);
                 bindFactory(new MockFactory<FlowClient>(runClient)).to(FlowClient.class).ranked(1);
+                bindFactory(new MockFactory<ResourceReader>(resourceReader)).to(ResourceReader.class).ranked(1);
             }
         });
     }

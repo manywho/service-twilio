@@ -19,4 +19,12 @@ public class Configuration {
     public String getAuthToken() {
         return authToken;
     }
+
+    public void setAccountSid(String accountSid) {
+        this.accountSid = accountSid;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 }

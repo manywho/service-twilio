@@ -16,6 +16,7 @@ import com.manywho.services.twilio.actions.SendSms;
 import com.manywho.services.twilio.actions.SendSmsSimple;
 import com.manywho.services.twilio.entities.Configuration;
 import com.manywho.services.twilio.managers.DataManager;
+import com.manywho.services.twilio.services.ForceConfigValuesService;
 import com.manywho.services.twilio.types.Mms;
 import com.manywho.services.twilio.managers.MessageManager;
 import com.manywho.services.twilio.types.Sms;
@@ -38,6 +39,9 @@ public class MessageController extends AbstractController {
 
     @Inject
     private DataManager dataManager;
+
+    @Inject
+    private ForceConfigValuesService forceConfigValuesService;
 
     @Path("/mms")
     @POST
@@ -102,7 +106,9 @@ public class MessageController extends AbstractController {
     @POST
     @AuthorizationRequired
     public ServiceResponse sendSmsSimple(ServiceRequest serviceRequest) throws Exception {
-        Configuration configuration = this.parseConfigurationValues(serviceRequest, Configuration.class);
+        Configuration configuration = forceConfigValuesService.overrideValues(
+                this.parseConfigurationValues(serviceRequest, Configuration.class));
+
         SendSmsSimple smsRequest = this.parseInputs(serviceRequest, SendSmsSimple.class);
 
         ServiceResponse serviceResponse = new ServiceResponse();

@@ -45,5 +45,7 @@ public class ApplicationBinder extends AbstractBinder {
         bind(TwimlFromInvoke.class).to(TwimlFromInvoke.class);
         bind(TwimlFromCallRequest.class).to(TwimlFromCallRequest.class);
         bind(WebhookManager.class).to(WebhookManager.class);
+        bind(ForceConfigValuesService.class).to(ForceConfigValuesService.class);
+        bind(ResourceReader.class).to(ResourceReader.class);
     }
 }
