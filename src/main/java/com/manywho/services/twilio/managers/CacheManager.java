@@ -2,6 +2,7 @@ package com.manywho.services.twilio.managers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.rholder.retry.*;
 import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.client.raw.RawRunClient;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
@@ -11,12 +12,13 @@ import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Objects;
 import java.util.UUID;
-
-import static java.lang.Thread.sleep;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class CacheManager {
     public final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
@@ -86,24 +88,21 @@ public class CacheManager {
         throw new Exception("Could not find a stored request for the message with SID or From number: " + id);
     }
 
-    private String getWithRetry(Jedis jedis, String key) throws InterruptedException {
-        String find = jedis.get(key);
-        if (StringUtils.isEmpty(find)) {
-            sleep(100L);
-            find = jedis.get(key);
+    private String getWithRetry(Jedis jedis, String key) throws InterruptedException, ExecutionException, RetryException {
+        Callable<String> executeCallable = () -> this.executeCallback(jedis, key);
 
-            if (StringUtils.isEmpty(find)) {
-                sleep(500L);
-                find = jedis.get(key);
+        // If the key is not in DB yet, then retry 13 times
+        // it will wait with exponential values with a limit of 4000: 2, 4, .. 2024, 4000, 4000, ...
+        return RetryerBuilder.<String>newBuilder()
+                .retryIfResult(Objects::isNull)
+                .withWaitStrategy(WaitStrategies.exponentialWait(2, 4000, TimeUnit.MILLISECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(13))
+                .build()
+                .call(executeCallable);
+    }
 
-                if (StringUtils.isEmpty(find)) {
-                    sleep(2000L);
-                    find = jedis.get(key);
-                }
-            }
-        }
-
-        return find;
+    private String executeCallback(Jedis jedis, String key) throws Exception {
+        return jedis.get(key);
     }
 
     public void saveMessageRequest(String accountSid, String id, String request) {
