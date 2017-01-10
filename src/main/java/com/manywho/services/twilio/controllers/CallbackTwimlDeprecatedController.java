@@ -6,6 +6,8 @@ import javax.ws.rs.*;
 /**
  * The path for this controller have been added by mistake use instead the methods in CallbackTwimlController
  *
+ * @deprecated use {@link CallbackTwimlController} instead
+ *
  */
 @Path("/callback/callbackTwiml")
 @Deprecated()
@@ -14,6 +16,10 @@ public class CallbackTwimlDeprecatedController {
     @Inject
     CallbackTwimlController callbackTwimlController;
 
+    /**
+     * @deprecated use {@link CallbackTwimlController} instead
+     */
+    @Deprecated()
     @POST
     @Path("/voice/flow/{tenantId}/{flowId}")
     @Consumes("application/x-www-form-urlencoded")
@@ -35,7 +41,10 @@ public class CallbackTwimlDeprecatedController {
      * is not ready we will return again a pause child).
      *
      * When the call finish this entry point is not called any more.
+     *
+     * @deprecated use {@link CallbackTwimlController} instead
      */
+    @Deprecated()
     @POST
     @Path("/voice/flow/state/{stateId}")
     @Consumes("application/x-www-form-urlencoded")
