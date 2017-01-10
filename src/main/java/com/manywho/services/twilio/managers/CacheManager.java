@@ -28,7 +28,7 @@ public class CacheManager {
     public static final String REDIS_KEY_CALL_RECORDINGS = "service:twilio:recordings:call:%s";
     public static final String REDIS_KEY_TWIML_HANGUP_CALL = "service:twilio:callbackTwiml:hangup:call:%s";
     public static final String REDIS_KEY_WEBHOOK_SMS = "service:twilio:webhook:sms:%s";
-    public static final String REDIS_KEY_FLOW_WAITTING_SMS_REPLAY = "service:twilio:flow:sms:waitting:replay:%s";
+    public static final String REDIS_KEY_FLOW_WAITING_SMS_REPLY = "service:twilio:flow:sms:waiting:reply:%s";
     public static final String REDIS_KEY_SIMPLE_CALL = "service:twilio:flow:call:simple:%s";
 
 
@@ -218,7 +218,7 @@ public class CacheManager {
     }
 
     public void stateWaitingForSms(String smsIdentity, String stateId) {
-        String key = String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity);
+        String key = String.format(REDIS_KEY_FLOW_WAITING_SMS_REPLY, smsIdentity);
 
         try (Jedis jedis = jedisPool.getResource()) {
             try {
@@ -230,7 +230,7 @@ public class CacheManager {
     }
 
     public String getStateWaitingForSms(String smsIdentity) {
-        String key = String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity);
+        String key = String.format(REDIS_KEY_FLOW_WAITING_SMS_REPLY, smsIdentity);
 
         try (Jedis jedis = jedisPool.getResource()) {
             String state = jedis.get(key);
@@ -247,7 +247,7 @@ public class CacheManager {
 
     public void deleteStateWaitingForSms(String smsIdentity) {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.del(String.format(REDIS_KEY_FLOW_WAITTING_SMS_REPLAY, smsIdentity));
+            jedis.del(String.format(REDIS_KEY_FLOW_WAITING_SMS_REPLY, smsIdentity));
         }
     }
 

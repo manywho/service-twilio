@@ -15,8 +15,6 @@ import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.FlowMode;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.services.twilio.entities.MessageCallback;
-import com.manywho.services.twilio.types.SmsWebhook;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -79,8 +77,7 @@ public class FlowService {
 
     public void initializeAndExecuteFlow(String flowId, String flowVersionId, String tenantId, MessageCallback smsWebhook) throws Exception {
         try {
-            EngineInitializationResponse flow;
-            flow = this.initializeFlowWithoutAuthentication(flowId, flowVersionId, tenantId, smsWebhook.getMessageSid());
+            EngineInitializationResponse flow = initializeFlowWithoutAuthentication(flowId, flowVersionId, tenantId, smsWebhook.getMessageSid());
             EngineInvokeRequest engineInvokeRequest = new EngineInvokeRequest();
             engineInvokeRequest.setStateId(flow.getStateId());
             engineInvokeRequest.setInvokeType(InvokeType.Forward);
