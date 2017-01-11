@@ -8,6 +8,7 @@ import com.manywho.sdk.enums.InvokeType;
 import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.managers.CallbackManager;
+import com.manywho.services.twilio.managers.WebhookManager;
 import com.manywho.services.twilio.services.FlowService;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,6 +29,9 @@ public class CallbackStatusController {
     @Inject
     private FlowService flowService;
 
+    @Inject
+    private WebhookManager webhookManager;
+
     @POST
     @Path("/voice")
     @Consumes("application/x-www-form-urlencoded")
@@ -37,6 +41,10 @@ public class CallbackStatusController {
             @FormParam("AnsweredBy") String answeredBy,
             @FormParam("RecordingSid") String recordingSid
     ) throws Exception {
+
+        if (cacheManager.isSimpleCall(callSid)) {
+            return;
+        }
 
         // Only progress if the call is outbound
         if (direction.equals("outbound-api") || direction.equals("outbound-dial")) {
@@ -83,27 +91,6 @@ public class CallbackStatusController {
     @Consumes("application/x-www-form-urlencoded")
     public void messageCallback(@BeanParam MessageCallback callback) throws Exception {
         // If the callback is from a message reply, process it
-        if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("received")) {
-            callbackManager.processMessageReply(
-                    callback.getAccountSid(),
-                    callback.getMessageSid(),
-                    callback.getFrom(),
-                    callback.getTo(),
-                    callback.getBody()
-            );
-        } else if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("delivered")) {
-            // we ignore the 'delivered' status (because some carrier don't sent this information), we will process the
-            // message in status 'sent' because all the carrier sent this status.
-
-            return;
-        } else {
-            // Otherwise, send back the status
-            callbackManager.processMessage(
-                    callback.getAccountSid(),
-                    callback.getMessageSid(),
-                    callback.getMessageStatus(),
-                    callback.getErrorCode()
-            );
-        }
+        webhookManager.handleMessageStatus(callback);
     }
 }

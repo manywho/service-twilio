@@ -3,20 +3,17 @@ package com.manywho.services.test;
 import com.fiftyonred.mock_jedis.MockJedis;
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import com.google.common.io.Files;
-import com.manywho.sdk.client.RunClient;
-import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.sdk.client.FlowClient;
+import com.manywho.sdk.client.raw.RawRunClient;
 import com.manywho.sdk.entities.run.elements.type.ObjectDataRequest;
 import com.manywho.sdk.services.providers.ObjectMapperProvider;
 import com.manywho.sdk.test.FunctionalTest;
 import com.manywho.sdk.test.MockFactory;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
 import com.manywho.services.twilio.managers.CacheManager;
-import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
-import com.sun.org.apache.xerces.internal.xni.parser.XMLDocumentSource;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.resource.factory.CallFactory;
 import com.twilio.sdk.resource.factory.MessageFactory;
-import com.twilio.sdk.resource.factory.SmsFactory;
 import com.twilio.sdk.resource.instance.Account;
 import junit.framework.TestCase;
 import org.apache.commons.io.Charsets;
@@ -51,8 +48,9 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
     protected MessageFactory mockMessageFactory;
     protected CallFactory mockCallFactory;
     protected HttpClientForTest mockHttpClient;
+    protected RawRunClient rawRunClient;
 
-    private RunClient runClient;
+    private FlowClient runClient;
 
     @Override
     protected Application configure(){
@@ -65,8 +63,8 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
         mockTwilioClientFactory = mock(TwilioRestClientFactory.class);
         mockCallFactory = mock(CallFactory.class);
         mockHttpClient = new HttpClientForTest();
-
-        runClient = new RunClient(mockHttpClient);
+        rawRunClient = new RawRunClient(mockHttpClient);
+        runClient = new FlowClient(rawRunClient);
 
         when(mockAccount.getMessageFactory()).thenReturn(mockMessageFactory);
         when(mockAccount.getCallFactory()).thenReturn(mockCallFactory);
@@ -79,7 +77,8 @@ public class TwilioServiceFunctionalTest extends FunctionalTest
                 bindFactory(new MockFactory<MockJedisPool>(mockJedisPool)).to(JedisPool.class).ranked(1);
                 bindFactory(new MockFactory<TwilioRestClientFactory>(mockTwilioClientFactory)).to(TwilioRestClientFactory.class).ranked(1);
                 bind(CacheManager.class).to(CacheManager.class);
-                bindFactory(new MockFactory<RunClient>(runClient)).to(RunClient.class).ranked(1);
+                bindFactory(new MockFactory<RawRunClient>(rawRunClient)).to(RawRunClient.class).ranked(1);
+                bindFactory(new MockFactory<FlowClient>(runClient)).to(FlowClient.class).ranked(1);
             }
         });
     }

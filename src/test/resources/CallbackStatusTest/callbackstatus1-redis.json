@@ -79,7 +79,7 @@
     ],
     "outcomes": null,
     "token": "mock-token",
-    "tenantId": "mock-tenant-id",
+    "tenantId": "bbc6f524-c83a-11e6-9d9d-cec0c932ce01",
     "stateId": "b6ad80af-d085-4f51-80b3-4571200e5b4f",
     "callbackUri": "https://flow.manywho.com/api/run/1/response",
     "culture": {

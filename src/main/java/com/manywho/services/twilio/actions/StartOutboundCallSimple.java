@@ -16,7 +16,7 @@ public class StartOutboundCallSimple {
     @ActionInput(name = "To", contentType = ContentType.String)
     private String to;
 
-    @ActionInput(name = "Timeout", contentType = ContentType.Number)
+    @ActionInput(name = "Timeout", contentType = ContentType.Number, required = false)
     private String timeout;
 
     @ActionInput(name = "Record?", contentType = ContentType.Boolean)

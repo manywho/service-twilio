@@ -7,12 +7,7 @@ import com.manywho.services.twilio.configuration.TwilioConfiguration;
 import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.verbs.Unsupported;
 import com.manywho.services.twilio.services.ObjectMapperService;
-import com.twilio.sdk.verbs.Pause;
-import com.twilio.sdk.verbs.Play;
-import com.twilio.sdk.verbs.Record;
-import com.twilio.sdk.verbs.Redirect;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.Verb;
+import com.twilio.sdk.verbs.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 
@@ -23,6 +18,10 @@ public class TwilioComponentService {
     final private ObjectMapperService objectMapperService;
     final private TranscriptionService transcriptionService;
 
+    public enum CallbackType {
+        SMS_CALLBACK, PHONE_CALL_CALLBACK
+    }
+
     @Inject
     public TwilioComponentService(TwilioConfiguration twilioConfiguration, ObjectMapperService objectMapperService,
                                   TranscriptionService transcriptionService) {
@@ -31,12 +30,16 @@ public class TwilioComponentService {
         this.transcriptionService = transcriptionService;
     }
 
-    public Verb createTwimlForComponent(PageComponent component, String stateId) {
+    public Verb createTwimlForComponent(PageComponent component, String stateId, CallbackType callbackType) {
         switch (component.getType()) {
             case "Play":
                 return createPlayComponent(component);
             case "PRESENTATION":
-                return createSayPresentationComponent(component);
+                if (callbackType == CallbackType.PHONE_CALL_CALLBACK) {
+                    return createSayPresentationComponent(component);
+                } else {
+                    return createMessagePresentationComponent(component);
+                }
             case "Record":
                 return createRecordComponent(component, stateId);
             case "Say":
@@ -117,6 +120,13 @@ public class TwilioComponentService {
 
         return new Say(plainText);
     }
+
+    static Message createMessagePresentationComponent(PageComponent component) {
+        String plainText = Jsoup.parse(component.getData().getContent()).text();
+
+        return new Message(plainText);
+    }
+
 
     static Say createSayComponent(PageComponent component) {
         Say say = new Say(component.getData().getContent());

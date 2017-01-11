@@ -207,6 +207,149 @@
             ]
         },
         {
+            "elementType": "TYPE",
+            "developerName": "SMS Webhook",
+            "developerSummary": "The SMS Webhook object structure",
+            "id": null,
+            "serviceElementId": null,
+            "properties": [{
+                "id": null,
+                "developerName": "Account Sid",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Api Version",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Body",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "From",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "From City",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "From Country",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "From State",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "From Zip",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Message Sid",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Num Media",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Num Segments",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Sms Message Sid",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Sms Sid",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "Sms Status",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "To",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "To City",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "To Country",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "To State",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }, {
+                "id": null,
+                "developerName": "To Zip",
+                "contentFormat": null,
+                "contentType": "ContentString",
+                "typeElementId": null,
+                "typeElementDeveloperName": null
+            }],
+            "bindings": null,
+            "updateByName": false
+        },
+        {
             "serviceElementId": null,
             "updateByName": false,
             "developerSummary": "The SMS object structure",
@@ -254,6 +397,29 @@
     "providesVoting": false,
     "providesNotifications": false,
     "actions": [
+        {
+            "uriPart": "messages/webhook/sms",
+            "developerName": "Fetch SMS Webhook",
+            "developerSummary": "Fetch data about the SMS that have triggered the webhook",
+            "serviceActionOutcomes": null,
+            "serviceOutputs": [{
+                "developerName": "SMS Webhook",
+                "contentValue": null,
+                "contentType": "ContentObject",
+                "typeElementDeveloperName": "SMS Webhook",
+                "ordinal": 0,
+                "required": false
+            }],
+            "viewMessageAction": false,
+            "serviceInputs": [{
+                "developerName": "Message Sid",
+                "contentValue": null,
+                "contentType": "ContentString",
+                "typeElementDeveloperName": null,
+                "ordinal": 0,
+                "required": true
+            }]
+        },
         {
             "uriPart": "messages/mms",
             "developerSummary": "Send an MMS message to a phone number",
@@ -400,7 +566,57 @@
                     "developerName": "Timeout",
                     "contentType": "ContentNumber",
                     "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "To",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
                     "required": true,
+                    "ordinal": 0
+                }
+            ]
+        },
+        {
+            "uriPart": "calls/voicesimple",
+            "developerSummary": "Call a number and use text to speech to vocalize a message",
+            "serviceActionOutcomes": null,
+            "viewMessageAction": false,
+            "developerName": "Voice (Simple)",
+            "serviceOutputs": [],
+            "serviceInputs": [
+                {
+                    "contentValue": null,
+                    "developerName": "From",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Message",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Voice",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
+                    "ordinal": 0
+                },
+                {
+                    "contentValue": null,
+                    "developerName": "Language",
+                    "contentType": "ContentString",
+                    "typeElementDeveloperName": null,
+                    "required": false,
                     "ordinal": 0
                 },
                 {

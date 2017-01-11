@@ -29,15 +29,22 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         form.param("SmsStatus", "sent");
         form.param("To", "+441234567899");
 
-        HttpClientForTest httpClientMock = new HttpClientForTest();
-        Unirest.setHttpClient(httpClientMock);
+        //HttpClientForTest httpClientMock = new HttpClientForTest();
+        Unirest.setHttpClient(mockHttpClient);
 
         // I will do to calls to the flow to know the status
         FlowResponseMock httpResponse = new FlowResponseMock();
-        httpClientMock.addResponse(httpResponse);
+        mockHttpClient.addResponse(httpResponse);
 
-        FlowResponseMock httpResponse1 = new FlowResponseMock();
-        httpClientMock.addResponse(httpResponse1);
+        FlowResponseMock httpResponse2 = new FlowResponseMock();
+        mockHttpClient.addResponse(httpResponse2);
+
+        FlowResponseMock httpResponse3 = new FlowResponseMock(
+                FlowResponseMock.getFullListHeaders(), "HTTP", 1, 1, 200, "ok","Content-Type: application/json; charset=utf-8",
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/join.json")
+        );
+        mockHttpClient.addResponse(httpResponse3);
+
 
         Entity entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
         String redisKey =  String.format(
@@ -59,19 +66,19 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
 
         assertJsonSame(
                 getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/forward-flow-call.json"),
-                httpClientMock.getExpectedRequestBody(0)
+                mockHttpClient.getExpectedRequestBody(0)
         );
 
         assertJsonSame(
                 getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatus/wait-message-flow-call.json"),
-                httpClientMock.getExpectedRequestBody(1)
+                mockHttpClient.getExpectedRequestBody(1)
         );
 
         // headers used to call the flow in first call
-        checkHeaders(httpClientMock, 0);
-        checkHeaders(httpClientMock, 1);
+        checkHeaders(mockHttpClient, 0);
+        checkHeaders(mockHttpClient, 1);
 
-        assertEquals(2, httpClientMock.getResponsesHistory().size());
+        assertEquals(3, mockHttpClient.getResponsesHistory().size());
         assertEquals(204, responseMsg.getStatus());
         assertEquals("", responseMsg.readEntity(String.class));
     }
@@ -171,7 +178,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
     private void checkHeaders(HttpClientForTest httpClientMock, Integer index) {
         // headers used to call the flow
         assertEquals(null, httpClientMock.getExpectedRequestHeader(index, "Authorization").getValue());
-        assertEquals("mock-tenant-id", httpClientMock.getExpectedRequestHeader(index, "ManyWhoTenant").getValue());
+        assertEquals("bbc6f524-c83a-11e6-9d9d-cec0c932ce01", httpClientMock.getExpectedRequestHeader(index, "ManyWhoTenant").getValue());
         assertEquals("gzip", httpClientMock.getExpectedRequestHeader(index, "accept-encoding").getValue());
         assertEquals("application/json", httpClientMock.getExpectedRequestHeader(index, "Content-Type").getValue());
     }

@@ -2,5 +2,5 @@
 <Response>
     <Say>Waiting for a reply to the SMS</Say>
     <Pause length="10"></Pause>
-    <Redirect>http://localhost:9998/callback/callbackTwiml/voice/flow/state/123456</Redirect>
+    <Redirect>http://localhost:9998/callback/twiml/voice/flow/state/fd5eda22-c61b-11e6-9d9d-cec0c932ce01</Redirect>
 </Response>
