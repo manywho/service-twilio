@@ -1,25 +1,23 @@
 package com.manywho.services.twilio.managers;
 
-
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.manywho.services.twilio.entities.MessageCallback;
-import com.manywho.services.twilio.utilities.PrefixUtil;
-
 import javax.inject.Inject;
 
 public class WebhookManager {
     private CallbackManager callbackManager;
-    private CacheManager cacheManager;
 
     @Inject
-    public WebhookManager(CallbackManager callbackManager, CacheManager cacheManager) {
+    public WebhookManager(CallbackManager callbackManager) {
         this.callbackManager = callbackManager;
-        this.cacheManager = cacheManager;
     }
 
     public void handleMessageStatus(MessageCallback callback) throws Exception {
         if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("received")) {
-            String from = PrefixUtil.internationalFormatE164(callback.getFrom(), callback.getFromCountry());
-            String to = PrefixUtil.internationalFormatE164(callback.getTo(), callback.getToCountry());
+            String from = internationalFormatE164(callback.getFrom(), callback.getFromCountry());
+            String to = internationalFormatE164(callback.getTo(), callback.getToCountry());
 
             callbackManager.processMessageReply(
                     callback.getAccountSid(),
@@ -44,5 +42,12 @@ public class WebhookManager {
                     callback
             );
         }
+    }
+
+    public static String internationalFormatE164(String number, String country) throws NumberParseException {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        Phonenumber.PhoneNumber phoneNumber = phoneUtil.parse(number, country);
+
+        return phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
     }
 }
