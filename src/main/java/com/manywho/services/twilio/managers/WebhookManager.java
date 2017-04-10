@@ -2,6 +2,8 @@ package com.manywho.services.twilio.managers;
 
 
 import com.manywho.services.twilio.entities.MessageCallback;
+import com.manywho.services.twilio.utilities.PrefixUtil;
+
 import javax.inject.Inject;
 
 public class WebhookManager {
@@ -16,11 +18,14 @@ public class WebhookManager {
 
     public void handleMessageStatus(MessageCallback callback) throws Exception {
         if (callback.getSmsStatus() != null && callback.getSmsStatus().equalsIgnoreCase("received")) {
+            String from = PrefixUtil.internationalFormatE164(callback.getFrom(), callback.getFromCountry());
+            String to = PrefixUtil.internationalFormatE164(callback.getTo(), callback.getToCountry());
+
             callbackManager.processMessageReply(
                     callback.getAccountSid(),
                     callback.getMessageSid(),
-                    callback.getFrom(),
-                    callback.getTo(),
+                    from,
+                    to,
                     callback.getBody()
             );
 

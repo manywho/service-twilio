@@ -90,6 +90,11 @@
             <artifactId>sdk-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>libphonenumber</artifactId>
+            <version>8.4.0</version>
+        </dependency>
     </dependencies>
 
     <build>

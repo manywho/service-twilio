@@ -23,7 +23,7 @@
                         {
                             "typeElementPropertyId": "9d2bacbc-aeb3-4bf6-b0c2-5eb67d7f8ce1",
                             "developerName": "To",
-                            "contentValue": "+440123456789",
+                            "contentValue": "+1123456789",
                             "contentType": "ContentString",
                             "contentFormat": null,
                             "objectData": null
@@ -31,7 +31,7 @@
                         {
                             "typeElementPropertyId": "885b7488-975a-4f03-a84d-c12d2cea9edb",
                             "developerName": "From",
-                            "contentValue": "+44123456788",
+                            "contentValue": "1123456788",
                             "contentType": "ContentString",
                             "contentFormat": null,
                             "objectData": null
