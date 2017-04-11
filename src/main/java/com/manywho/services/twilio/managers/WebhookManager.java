@@ -44,7 +44,7 @@ public class WebhookManager {
         }
     }
 
-    public static String internationalFormatE164(String number, String country) throws NumberParseException {
+    private static String internationalFormatE164(String number, String country) throws NumberParseException {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         Phonenumber.PhoneNumber phoneNumber = phoneUtil.parse(number, country);
 
