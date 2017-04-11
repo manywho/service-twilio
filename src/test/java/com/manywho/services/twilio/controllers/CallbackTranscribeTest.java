@@ -2,6 +2,7 @@ package com.manywho.services.twilio.controllers;
 
 import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.manywho.services.twilio.managers.CacheManager;
+import org.json.JSONException;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CallbackTranscribeTest extends TwilioServiceFunctionalTest{
     @Test
-    public void testCallbackTranscribe() throws IOException, URISyntaxException {
+    public void testCallbackTranscribe() throws IOException, URISyntaxException, JSONException {
         final Form form = new Form();
         form.param("TranscriptionText", "Hello World!");
         form.param("RecordingUrl", "https://api.twilio.com/2010-04-01/Accounts/AC1234/Recordings/RE1234");

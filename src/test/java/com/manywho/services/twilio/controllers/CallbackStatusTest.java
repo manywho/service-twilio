@@ -122,7 +122,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         form.param("AccountSid", "mockAppSid");
         form.param("ApiVersion", "2010-04-01");
         form.param("Body","Hi");
-        form.param("From", "+440123456789");
+        form.param("From", "+44123456788");
         form.param("FromCity","");
         form.param("FromCountry","GB");
         form.param("FromState","");
@@ -133,7 +133,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         form.param("SmsMessageSid","SM16a2ee26ba827371462e6de51c2cdca6");
         form.param("SmsSid", "SM16a2ee26ba827371462e6de51c2cdca6");
         form.param("SmsStatus", "received");
-        form.param("To", "+440123456789");
+        form.param("To", "+44123456789");
         form.param("ToCity","");
         form.param("ToCountry","GB");
         form.param("ToState","Ely");
@@ -144,7 +144,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
         String redisKey =  String.format(
                 CacheManager.REDIS_KEY_MESSAGES,
                 "mockAppSid",
-                "+440123456789+440123456789"
+                "+44123456789+44123456788"
         );
 
         mockJedis.set(
@@ -166,6 +166,70 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
 
         assertJsonSame(
                 getJsonFormatFileContent("CallbackStatusTest/MessageReplyCallbackStatus/user-replay-flow-call.json"),
+                httpClientMock.getExpectedRequestBody(0)
+        );
+
+        checkHeaders(httpClientMock, 0);
+
+        assertEquals(204, responseMsg.getStatus());
+        assertEquals("", responseMsg.readEntity(String.class));
+    }
+
+
+
+    @Test
+    public void testMessageCallbackStatusLocalWithReply() throws URISyntaxException, IOException, JSONException {
+
+        MultivaluedMap<String,Object> headers = defaultHeadersFromTwilio();
+
+        final Form form = new Form();
+        form.param("AccountSid", "mockAppSid");
+        form.param("ApiVersion", "2010-04-01");
+        form.param("Body","Hi");
+        form.param("From", "123456788");
+        form.param("FromCity","");
+        form.param("FromCountry","US");
+        form.param("FromState","");
+        form.param("FromZip","");
+        form.param("MessageSid", "SMd931e01d8ce64158b8c962c6a1b24e5c");
+        form.param("NumMedia","0");
+        form.param("NumSegments","1");
+        form.param("SmsMessageSid","SM16a2ee26ba827371462e6de51c2cdca6");
+        form.param("SmsSid", "SM16a2ee26ba827371462e6de51c2cdca6");
+        form.param("SmsStatus", "received");
+        form.param("To", "123456789");
+        form.param("ToCity","PHILADELPHIA");
+        form.param("ToCountry","US");
+        form.param("ToState","PA");
+        form.param("ToZip","");
+
+        Entity entity = Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+
+        String redisKey =  String.format(
+                CacheManager.REDIS_KEY_MESSAGES,
+                "mockAppSid",
+                "+1123456789+1123456788"
+        );
+
+        mockJedis.set(
+                redisKey,
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatusLocalWithReply/callbackstatus1-redis.json")
+        );
+
+        HttpClientForTest httpClientMock = new HttpClientForTest();
+        Unirest.setHttpClient(httpClientMock);
+
+        // I will do to calls to the flow to know the status
+        FlowResponseMock httpResponse = new FlowResponseMock();
+        httpClientMock.addResponse(httpResponse);
+
+        Response responseMsg = target("/callback/status/message")
+                .request()
+                .headers(headers)
+                .post(entity);
+
+        assertJsonSame(
+                getJsonFormatFileContent("CallbackStatusTest/MessageCallbackStatusLocalWithReply/user-replay-flow-call.json"),
                 httpClientMock.getExpectedRequestBody(0)
         );
 
