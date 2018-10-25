@@ -10,6 +10,9 @@ import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import javax.annotation.Nonnull;
@@ -21,6 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class CacheManager {
+    private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
+
     public final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
     public static final String REDIS_KEY_MESSAGES = "service:twilio:requests:message:%s:%s";
     public static final String REDIS_KEY_FLOWS = "service:twilio:flows:%s:%s";
@@ -83,6 +88,9 @@ public class CacheManager {
             if (StringUtils.isNotEmpty(json)) {
                 return objectMapper.readValue(json, ServiceRequest.class);
             }
+
+            // When the service return 500 Twilio will call again, but this should't happen, the entry should always exist in redis when the reply is sent
+            LOGGER.error("Message request with key {} not found in Redis", key);
         }
 
         throw new Exception("Could not find a stored request for the message with SID or From number: " + id);
