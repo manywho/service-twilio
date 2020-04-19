@@ -10,10 +10,14 @@ import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.types.Sms;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 
 import javax.inject.Inject;
 
 public class CallbackMessageService {
+    private static final Logger LOGGER = LogManager.getLogger("com.manywho.services.twilio", new ParameterizedMessageFactory());
 
     @Inject
     private RunService runService;
@@ -42,6 +46,7 @@ public class CallbackMessageService {
     public void sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String to, String body) throws Exception {
         EngineValueCollection replyOutput = new EngineValueCollection();
 
+        LOGGER.debug("Processing reply from {} to {}", from, to);
         // If the action was SendSmsSimple, just add a "Reply" string as the output, otherwise use an Sms object
         if (serviceRequest.getUri().endsWith("simple")) {
             replyOutput.add(new EngineValue("Reply", ContentType.String, body));
@@ -54,6 +59,7 @@ public class CallbackMessageService {
         ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, replyOutput, serviceRequest.getToken());
         serviceResponse.setTenantId(serviceRequest.getTenantId());
 
-        runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
+        InvokeType invokeType = runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
+        LOGGER.debug("Send response to engine {}", invokeType);
     }
 }
