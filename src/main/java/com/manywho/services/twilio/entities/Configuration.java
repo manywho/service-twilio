@@ -13,10 +13,18 @@ public class Configuration {
     private String authToken;
 
     public String getAccountSid() {
-        return accountSid;
+        if (accountSid == null) {
+            return null;
+        }
+
+        return accountSid.trim();
     }
 
     public String getAuthToken() {
-        return authToken;
+        if (authToken == null) {
+            return null;
+        }
+
+        return authToken.trim();
     }
 }
