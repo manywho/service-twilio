@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.googlecode.libphonenumber</groupId>
             <artifactId>libphonenumber</artifactId>
-            <version>8.4.0</version>
+            <version>8.12.10</version>
         </dependency>
 
         <!-- Java 11 compatibility -->
