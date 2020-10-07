@@ -70,9 +70,10 @@ public class MessageService {
         cacheManager.saveMessageRequest(accountSid, from + to, serializedServiceRequest);
     }
 
-    public void storeAuthenticatedWho(String accountSid, String messageSid, AuthenticatedWho authenticatedWho) throws Exception {
+    public void storeAuthenticatedWho(String accountSid, String messageSid, String from, String to, AuthenticatedWho authenticatedWho) throws Exception {
         String serializedAuthenticatedWho = objectMapper.writeValueAsString(authenticatedWho);
         
         cacheManager.saveAuthenticatedWho(accountSid, messageSid, serializedAuthenticatedWho);
+        cacheManager.saveAuthenticatedWho(accountSid, from + to, serializedAuthenticatedWho);
     }
 }

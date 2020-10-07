@@ -67,8 +67,9 @@ public class CallbackManager {
 
     public void processMessageReply(String accountSid, String messageSid, String from, String to, String body) throws Exception {
         ServiceRequest request = cacheManager.getMessageRequest(accountSid, to + from);
+        AuthenticatedWho authenticatedWho = cacheManager.getAuthenticatedWho(accountSid, to + from);
 
-        callbackMessageService.sendMessageReplyResponse(request, messageSid, from, to, body);
+        callbackMessageService.sendMessageReplyResponse(request, authenticatedWho, messageSid, from, to, body);
     }
 
     public void sendCallResponse(String callSid, String answeredBy) throws Exception {

@@ -1,18 +1,24 @@
 package com.manywho.services.twilio.controllers;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-import javax.ws.rs.core.*;
-import com.manywho.sdk.utils.AuthorizationUtils;
-import com.manywho.services.test.TwilioServiceFunctionalTest;
-import com.twilio.sdk.resource.instance.Message;
-import com.twilio.sdk.resource.instance.Sms;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.manywho.sdk.utils.AuthorizationUtils;
+import com.manywho.services.test.TwilioServiceFunctionalTest;
+import com.twilio.sdk.resource.instance.Message;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -68,6 +74,15 @@ public class SendSmsSimpleTest extends TwilioServiceFunctionalTest {
         assertJsonSame(
                 getJsonFormatFileContent("SendSmsSimpleTest/smssimple1-ok-request.json"),
                 mockJedis.get("service:twilio:requests:message:mockAppSid:44012345678900440123456788")
+        );
+        String authenticatedWhoJson = new ObjectMapper().writeValueAsString(getDefaultAuthenticatedWho()); 
+        assertJsonSame(
+                authenticatedWhoJson,
+                mockJedis.get("service:twilio:requests:who:mockAppSid:1")
+        );
+        assertJsonSame(
+                authenticatedWhoJson,
+                mockJedis.get("service:twilio:requests:who:mockAppSid:44012345678900440123456788")
         );
     }
 

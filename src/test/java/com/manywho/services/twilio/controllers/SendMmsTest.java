@@ -1,5 +1,6 @@
 package com.manywho.services.twilio.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manywho.sdk.utils.AuthorizationUtils;
 import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.twilio.sdk.resource.instance.Message;
@@ -70,6 +71,11 @@ public class SendMmsTest extends TwilioServiceFunctionalTest {
         assertJsonSame(
                 getJsonFormatFileContent("SendMmsTest/mms1-ok-request.json"),
                 mockJedis.get("service:twilio:requests:message:mockAppSid:44012345678900440123456788")
+        );
+        String authenticatedWhoJson = new ObjectMapper().writeValueAsString(getDefaultAuthenticatedWho()); 
+        assertJsonSame(
+                authenticatedWhoJson,
+                mockJedis.get("service:twilio:requests:who:mockAppSid:44012345678900440123456788")
         );
     }
 

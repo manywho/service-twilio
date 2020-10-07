@@ -30,7 +30,7 @@ public class MessageManager {
         messageService.storeMessageRequest(mms.getAccountSid(), mms.getSid(), mms.getFrom(), mms.getTo(), serviceRequest);
 
         // Store the authenticatedWho for the request in Redis for any callbacks later
-        messageService.storeAuthenticatedWho(mms.getAccountSid(), mms.getSid(), authenticatedWho);
+        messageService.storeAuthenticatedWho(mms.getAccountSid(), mms.getSid(), mms.getFrom(), mms.getTo(), authenticatedWho);
 
         return new ObjectCollection(objectMapperService.convertMmsToObject(new Mms(
                 mms.getSid(),
@@ -49,7 +49,7 @@ public class MessageManager {
         messageService.storeMessageRequest(sms.getAccountSid(), sms.getSid(), sms.getFrom(), sms.getTo(), serviceRequest);
 
         // Store the authenticatedWho for the request in Redis for any callbacks later
-        messageService.storeAuthenticatedWho(sms.getAccountSid(), sms.getSid(), authenticatedWho);
+        messageService.storeAuthenticatedWho(sms.getAccountSid(), sms.getSid(), sms.getFrom(), sms.getTo(), authenticatedWho);
 
         return new ObjectCollection(objectMapperService.convertSmsToObject(new com.manywho.services.twilio.types.Sms(
                 sms.getSid(),

@@ -31,7 +31,7 @@ public class CallbackMessageService {
     private CacheManager cacheManager;
 
     public InvokeType sendMessageResponse(ServiceRequest serviceRequest, AuthenticatedWho authenticatedWho, String waitMessageText, String errorMessageText) throws Exception {
-        ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Wait, serviceRequest.getToken());
+        ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, serviceRequest.getToken());
         serviceResponse.setTenantId(serviceRequest.getTenantId());
 
         if (errorMessageText != null) {
@@ -45,7 +45,7 @@ public class CallbackMessageService {
         return runService.sendResponse(null, authenticatedWho, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
     }
 
-    public void sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String to, String body) throws Exception {
+    public void sendMessageReplyResponse(ServiceRequest serviceRequest, AuthenticatedWho authenticatedWho, String messageSid, String from, String to, String body) throws Exception {
         EngineValueCollection replyOutput = new EngineValueCollection();
 
         LOGGER.debug("Processing reply from {} to {}", from, to);
@@ -61,7 +61,7 @@ public class CallbackMessageService {
         ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, replyOutput, serviceRequest.getToken());
         serviceResponse.setTenantId(serviceRequest.getTenantId());
 
-        InvokeType invokeType = runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
+        InvokeType invokeType = runService.sendResponse(null, authenticatedWho, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
         LOGGER.debug("Send response to engine {}", invokeType);
     }
 }
