@@ -6,8 +6,10 @@ import com.manywho.sdk.entities.run.EngineValueCollection;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
 import com.manywho.sdk.entities.run.elements.config.ServiceResponse;
 import com.manywho.sdk.entities.run.elements.type.MObject;
+import com.manywho.sdk.entities.security.AuthenticatedWho;
 import com.manywho.sdk.enums.ContentType;
 import com.manywho.sdk.enums.InvokeType;
+import com.manywho.sdk.services.providers.ObjectMapperProvider;
 import com.manywho.services.twilio.managers.CacheManager;
 import com.manywho.services.twilio.types.Sms;
 import org.apache.logging.log4j.LogManager;
@@ -28,8 +30,8 @@ public class CallbackMessageService {
     @Inject
     private CacheManager cacheManager;
 
-    public InvokeType sendMessageResponse(ServiceRequest serviceRequest, String waitMessageText, String errorMessageText) throws Exception {
-        ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Forward, serviceRequest.getToken());
+    public InvokeType sendMessageResponse(ServiceRequest serviceRequest, AuthenticatedWho authenticatedWho, String waitMessageText, String errorMessageText) throws Exception {
+        ServiceResponse serviceResponse = new ServiceResponse(InvokeType.Wait, serviceRequest.getToken());
         serviceResponse.setTenantId(serviceRequest.getTenantId());
 
         if (errorMessageText != null) {
@@ -39,8 +41,8 @@ public class CallbackMessageService {
         if (waitMessageText != null) {
             serviceResponse.setWaitMessage(waitMessageText);
         }
-
-        return runService.sendResponse(null, null, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
+        
+        return runService.sendResponse(null, authenticatedWho, serviceRequest.getTenantId(), serviceRequest.getCallbackUri(), serviceResponse);
     }
 
     public void sendMessageReplyResponse(ServiceRequest serviceRequest, String messageSid, String from, String to, String body) throws Exception {

@@ -26,7 +26,7 @@ public class TwilioConfiguration {
     }
 
     public String getSmsStatusCallback() {
-        return uriInfo.getBaseUri().toString() + "callback/status/message";
+        return "http://04d618b2f04a.ngrok.io/" + "callback/status/message";
     }
 
     public String getVoiceUrl() {

@@ -49,6 +49,7 @@ public class MessageController extends AbstractController {
         ObjectCollection replyObject = messageManager.sendMms(
                 serviceRequest,
                 configuration,
+                getAuthenticatedWho(),
                 mms.getMessage().getTo(),
                 mms.getMessage().getFrom(),
                 mms.getMessage().getBody(),
@@ -80,6 +81,7 @@ public class MessageController extends AbstractController {
             replyObject = messageManager.sendSms(
                     serviceRequest,
                     configuration,
+                    getAuthenticatedWho(),
                     smsRequest.getMessage().getTo(),
                     smsRequest.getMessage().getFrom(),
                     smsRequest.getMessage().getBody()
@@ -97,7 +99,7 @@ public class MessageController extends AbstractController {
 
         return serviceResponse;
     }
-
+    
     @Path("/smssimple")
     @POST
     @AuthorizationRequired
@@ -113,6 +115,7 @@ public class MessageController extends AbstractController {
             messageManager.sendSms(
                     serviceRequest,
                     configuration,
+                    getAuthenticatedWho(),
                     smsRequest.getTo(),
                     smsRequest.getFrom(),
                     smsRequest.getBody()
