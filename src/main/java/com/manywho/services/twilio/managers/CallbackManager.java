@@ -3,6 +3,7 @@ package com.manywho.services.twilio.managers;
 import com.manywho.sdk.client.FlowClient;
 import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.sdk.entities.security.AuthenticatedWho;
 import com.manywho.sdk.enums.InvokeType;
 import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.services.CallbackMessageService;
@@ -43,14 +44,15 @@ public class CallbackManager {
         }
 
         ServiceRequest request = cacheManager.getMessageRequest(accountSid, messageSid);
+        AuthenticatedWho authenticatedWho = cacheManager.getAuthenticatedWho(accountSid, messageSid);
 
         // Send the callback back to ManyWho, with any WAIT messages or error messages
-        InvokeType response = callbackMessageService.sendMessageResponse(request, errorMessage, errorMessage);
+        InvokeType response = callbackMessageService.sendMessageResponse(request, authenticatedWho, errorMessage, errorMessage);
 
         // If the message has been sent, and the Engine is waiting, assume we're waiting for a reply
         if (messageStatus.equalsIgnoreCase("sent") && response.equals(InvokeType.Wait)) {
             cacheManager.stateWaitingForSms(callback.getFrom() + callback.getTo(), request.getStateId());
-            callbackMessageService.sendMessageResponse(request, "Waiting for a reply to the SMS", null);
+            callbackMessageService.sendMessageResponse(request, authenticatedWho, "Waiting for a reply to the SMS", null);
 
             FlowState flowState = flowClient.join(UUID.fromString(request.getTenantId()), UUID.fromString(request.getStateId()), null);
             if(!flowState.getInvokeType().equals(InvokeType.Wait)) {
@@ -65,8 +67,9 @@ public class CallbackManager {
 
     public void processMessageReply(String accountSid, String messageSid, String from, String to, String body) throws Exception {
         ServiceRequest request = cacheManager.getMessageRequest(accountSid, to + from);
+        AuthenticatedWho authenticatedWho = cacheManager.getAuthenticatedWho(accountSid, to + from);
 
-        callbackMessageService.sendMessageReplyResponse(request, messageSid, from, to, body);
+        callbackMessageService.sendMessageReplyResponse(request, authenticatedWho, messageSid, from, to, body);
     }
 
     public void sendCallResponse(String callSid, String answeredBy) throws Exception {

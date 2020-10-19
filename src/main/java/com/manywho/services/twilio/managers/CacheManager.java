@@ -6,6 +6,7 @@ import com.github.rholder.retry.*;
 import com.manywho.sdk.client.entities.FlowState;
 import com.manywho.sdk.client.raw.RawRunClient;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.sdk.entities.security.AuthenticatedWho;
 import com.manywho.services.twilio.entities.MessageCallback;
 import com.manywho.services.twilio.entities.RecordingCallback;
 import com.manywho.services.twilio.entities.TenantInvokeResponseTuple;
@@ -28,6 +29,7 @@ public class CacheManager {
 
     public final static String REDIS_KEY_CALLS = "service:twilio:requests:calls:%s";
     public static final String REDIS_KEY_MESSAGES = "service:twilio:requests:message:%s:%s";
+    public static final String REDIS_KEY_WHO = "service:twilio:requests:who:%s:%s";
     public static final String REDIS_KEY_FLOWS = "service:twilio:flows:%s:%s";
     public static final String REDIS_KEY_RECORDINGS = "service:twilio:recordings:%s:%s";
     public static final String REDIS_KEY_CALL_RECORDINGS = "service:twilio:recordings:call:%s";
@@ -81,12 +83,20 @@ public class CacheManager {
     }
 
     public ServiceRequest getMessageRequest(String accountSid, String id) throws Exception {
+        return getByKey(accountSid, id, REDIS_KEY_MESSAGES, ServiceRequest.class);
+    }
+
+    public AuthenticatedWho getAuthenticatedWho(String accountSid, String id) throws Exception {
+        return getByKey(accountSid, id, REDIS_KEY_WHO, AuthenticatedWho.class);
+    }
+
+    private <T> T getByKey(String accountSid, String id, String keyName, Class<T> type) throws Exception {
         try (Jedis jedis = jedisPool.getResource()) {
-            String key = String.format(REDIS_KEY_MESSAGES, accountSid, id);
+            String key = String.format(keyName, accountSid, id);
             String json = getWithRetry(jedis, key);
 
             if (StringUtils.isNotEmpty(json)) {
-                return objectMapper.readValue(json, ServiceRequest.class);
+                return objectMapper.readValue(json, type);
             }
 
             // When the service return 500 Twilio will call again, but this should't happen, the entry should always exist in redis when the reply is sent
@@ -116,6 +126,12 @@ public class CacheManager {
     public void saveMessageRequest(String accountSid, String id, String request) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(String.format(REDIS_KEY_MESSAGES, accountSid, id), request);
+        }
+    }
+
+    public void saveAuthenticatedWho(String accountSid, String id, String serializedAuthenticatedWho) {
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.set(String.format(REDIS_KEY_WHO, accountSid, id), serializedAuthenticatedWho);
         }
     }
 

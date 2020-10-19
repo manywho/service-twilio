@@ -2,6 +2,7 @@ package com.manywho.services.twilio.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manywho.sdk.entities.run.elements.config.ServiceRequest;
+import com.manywho.sdk.entities.security.AuthenticatedWho;
 import com.manywho.services.twilio.configuration.TwilioConfiguration;
 import com.manywho.services.twilio.factories.TwilioRestClientFactory;
 import com.manywho.services.twilio.managers.CacheManager;
@@ -67,5 +68,12 @@ public class MessageService {
         cacheManager.saveMessageRequest(accountSid, messageSid, serializedServiceRequest);
         // Store the request under the To number, as it's the only way to match an incoming message to a sent one
         cacheManager.saveMessageRequest(accountSid, from + to, serializedServiceRequest);
+    }
+
+    public void storeAuthenticatedWho(String accountSid, String messageSid, String from, String to, AuthenticatedWho authenticatedWho) throws Exception {
+        String serializedAuthenticatedWho = objectMapper.writeValueAsString(authenticatedWho);
+        
+        cacheManager.saveAuthenticatedWho(accountSid, messageSid, serializedAuthenticatedWho);
+        cacheManager.saveAuthenticatedWho(accountSid, from + to, serializedAuthenticatedWho);
     }
 }

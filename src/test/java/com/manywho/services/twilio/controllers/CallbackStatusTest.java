@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import static org.junit.Assert.assertEquals;
 import com.manywho.services.test.HttpClientForTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.manywho.sdk.entities.security.AuthenticatedWho;
 import com.manywho.services.test.FlowResponseMock;
 import com.manywho.services.test.TwilioServiceFunctionalTest;
 import com.manywho.services.twilio.managers.CacheManager;
@@ -52,7 +54,21 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
                 "mockAppSid",
                 "SMd931e01d8ce64158b8c962c6a1b24e5c"
         );
+        String redisKeyAuth =  String.format(
+                CacheManager.REDIS_KEY_WHO,
+                "mockAppSid",
+                "SMd931e01d8ce64158b8c962c6a1b24e5c"
+        );
+        
+        AuthenticatedWho authenticatedWho = new AuthenticatedWho();
+        authenticatedWho.setUsername("mockUser");
+        String mockAuthenticatedWho = new ObjectMapper().writeValueAsString(authenticatedWho);
 
+        mockJedis.set(
+                redisKeyAuth,
+                mockAuthenticatedWho
+        );
+        
         mockJedis.set(
                 redisKey,
                 getJsonFormatFileContent("CallbackStatusTest/callbackstatus1-redis.json")
@@ -146,6 +162,20 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
                 "mockAppSid",
                 "+44123456789+44123456788"
         );
+        String redisKeyAuth =  String.format(
+                CacheManager.REDIS_KEY_WHO,
+                "mockAppSid",
+                "+44123456789+44123456788"
+        );
+        
+        AuthenticatedWho authenticatedWho = new AuthenticatedWho();
+        authenticatedWho.setUsername("mockUser");
+        String mockAuthenticatedWho = new ObjectMapper().writeValueAsString(authenticatedWho);
+
+        mockJedis.set(
+                redisKeyAuth,
+                mockAuthenticatedWho
+        );
 
         mockJedis.set(
                 redisKey,
@@ -210,6 +240,20 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
                 "mockAppSid",
                 "+1123456789+1123456788"
         );
+        String redisKeyAuth =  String.format(
+                CacheManager.REDIS_KEY_WHO,
+                "mockAppSid",
+                "+1123456789+1123456788"
+        );
+        
+        AuthenticatedWho authenticatedWho = new AuthenticatedWho();
+        authenticatedWho.setUsername("mockUser");
+        String mockAuthenticatedWho = new ObjectMapper().writeValueAsString(authenticatedWho);
+
+        mockJedis.set(
+                redisKeyAuth,
+                mockAuthenticatedWho
+        );
 
         mockJedis.set(
                 redisKey,
@@ -241,7 +285,7 @@ public class CallbackStatusTest extends TwilioServiceFunctionalTest {
 
     private void checkHeaders(HttpClientForTest httpClientMock, Integer index) {
         // headers used to call the flow
-        assertEquals(null, httpClientMock.getExpectedRequestHeader(index, "Authorization").getValue());
+        assertEquals("ManyWhoTenantId%3Dnull%26ManyWhoUserId%3Dnull%26ManyWhoToken%3Dnull%26DirectoryId%3Dnull%26DirectoryName%3Dnull%26Email%3Dnull%26IdentityProvider%3Dnull%26TenantName%3Dnull%26Token%3Dnull%26Username%3DmockUser%26UserId%3Dnull%26FirstName%3Dnull%26LastName%3Dnull", httpClientMock.getExpectedRequestHeader(index, "Authorization").getValue());
         assertEquals("bbc6f524-c83a-11e6-9d9d-cec0c932ce01", httpClientMock.getExpectedRequestHeader(index, "ManyWhoTenant").getValue());
         assertEquals("gzip", httpClientMock.getExpectedRequestHeader(index, "accept-encoding").getValue());
         assertEquals("application/json", httpClientMock.getExpectedRequestHeader(index, "Content-Type").getValue());
